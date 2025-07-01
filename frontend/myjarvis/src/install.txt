@@ -1,0 +1,10 @@
+
+
+ -- 김기덕 --
+설치 목록 npm
+
+npm install react-router-dom
+npm install axios 
+npm install sweetalert2 --force    
+npm install zustand 
+npm install @mui/material @emotion/react @emotion/styled --force

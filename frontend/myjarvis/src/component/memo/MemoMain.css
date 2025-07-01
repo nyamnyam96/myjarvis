@@ -1,0 +1,26 @@
+.memo-main {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.memo-tab-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+.memo-list {
+  padding: 0;
+  list-style: none;
+}
+.memo-list-item {
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 12px;
+  box-shadow: 0 1px 4px #e0e7ef33;
+  cursor: pointer;
+  position: relative;
+}
+.memo-list-item.selected {
+  background: #e0e7ef33;
+}
