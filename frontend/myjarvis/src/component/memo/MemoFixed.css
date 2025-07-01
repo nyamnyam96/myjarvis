@@ -1,0 +1,97 @@
+/* MemoFixed 컴포넌트 스타일 */
+.memofixed-folded {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 9999;
+  background: #fffbe6;
+  border: 1.5px solid #ffe066;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #e0e7ef55;
+  padding: 0.7rem 1.2rem;
+  min-width: 120px;
+  max-width: 180px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+}
+.memofixed-folded-btn {
+  background: #ffe066;
+  color: #fab005;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+}
+.memofixed-root {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 9999;
+  background: #fffbe6;
+  border: 1.5px solid #ffe066;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #e0e7ef55;
+  padding: 1.2rem 1.2rem 1.6rem 1.2rem;
+  min-width: 260px;
+  max-width: 340px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-size: 1rem;
+}
+.memofixed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.memofixed-title {
+  font-weight: 700;
+  color: #fab005;
+  font-size: 1.1rem;
+}
+.memofixed-close-btn {
+  background: #ffe066;
+  color: #fab005;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 0.2rem 0.8rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.memofixed-textarea {
+  width: 100%;
+  min-height: 70px;
+  border: 1px solid #ffe066;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 1rem;
+  background: #fffde4;
+  resize: vertical;
+}
+.memofixed-save-btn {
+  margin-top: 10px;
+  background: #ffe066;
+  color: #fab005;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.memofixed-save-btn.saved {
+  background: #fab005;
+  color: #fff;
+}
+.memofixed-saved-msg {
+  color: #228be6;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}

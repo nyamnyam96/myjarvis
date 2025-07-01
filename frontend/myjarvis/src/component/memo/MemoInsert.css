@@ -1,0 +1,22 @@
+.memo-insert-form {
+  max-width: 400px;
+}
+.memo-insert-form textarea,
+.memo-insert-form select {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+}
+.memo-insert-form button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
