@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./component/member/LoginPage";
 import Main from "./component/common/Main";
 import CompanyList from "./component/company/CompanyList";
+import StyleGuide from "./pages/StyleGuide";
 
 function App() {
   return (
