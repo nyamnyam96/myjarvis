@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.iei.company.model.dao.CompanyDao">
+  
+  <select id="selectCompanyList" resultType="kr.or.iei.company.model.dto.Company">  	
+  	 SELECT  		
+	        COMP_CD as compCd,
+	        MEMBER_NO as memberNo,
+	        COMP_NAME as compName,
+	        COMP_TEL as compTel,
+	        COMP_ADDR as compAddr,
+	        OWNER_NAME as ownerName,
+	        TRADE_STATUS as tradeStatus,
+	        COMP_TYPE as compType,
+	        COMP_NO as compNo,
+	        TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
+   	   FROM TBL_COMPANY
+      ORDER BY REG_DATE DESC  		
+  </select>  
+  
+</mapper>

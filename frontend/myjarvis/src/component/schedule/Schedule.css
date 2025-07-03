@@ -1,0 +1,47 @@
+.schedule-main {
+  background: #f4f8fb;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #e0e7ef33;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+}
+.schedule-main h2 {
+  color: #3b5bdb;
+}
+.schedule-tab-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+.schedule-tab-btns button {
+  background: #e7f0fa;
+  color: #3b5bdb;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.schedule-tab-btns button:hover {
+  background: #5c7cfa;
+  color: #fff;
+}
+.schedule-main form {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px #e0e7ef22;
+  padding: 1.2rem;
+}
+.schedule-main ul {
+  margin-top: 1rem;
+}
+.schedule-main li {
+  border-left: 4px solid #5c7cfa;
+  margin-bottom: 0.5rem;
+  background: #f8fafc;
+}
+.schedule-main select {
+  margin-left: 0.5rem;
+}

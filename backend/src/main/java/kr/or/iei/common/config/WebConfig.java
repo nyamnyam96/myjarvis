@@ -3,11 +3,12 @@ package kr.or.iei.common.config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import jakarta.servlet.Filter;
 import kr.or.iei.common.filter.EncodingFilter;
-import kr.or.iei.common.filter.JwtFilter;
 
 @Configuration // 설정 파일임을 알려주는 어노테이션
 public class WebConfig implements WebMvcConfigurer {
@@ -20,15 +21,13 @@ public class WebConfig implements WebMvcConfigurer {
         filterReg.setOrder(1);                             // 필터 실행 순서
         filterReg.addUrlPatterns("/*");                    // 모든 요청에 대해 필터 적용
         return filterReg;
-    }
+    }    
     
-    // JWT 필터
+    //패스워드 암호화 객체 등록
     @Bean
-    public FilterRegistrationBean<Filter> jwtFilter(JwtFilter jwtFilter) {
-        FilterRegistrationBean<Filter> filterReg = new FilterRegistrationBean<>();
-        filterReg.setFilter(jwtFilter);
-        filterReg.setOrder(2); // Encoding 필터 이후 실행
-        filterReg.addUrlPatterns("/*");
-        return filterReg;
-    }
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }  
+        
+       
 }

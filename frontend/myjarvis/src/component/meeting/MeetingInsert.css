@@ -1,0 +1,23 @@
+.meeting-insert-form {
+  max-width: 400px;
+}
+.meeting-insert-form input,
+.meeting-insert-form textarea,
+.meeting-insert-form select {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+}
+.meeting-insert-form button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}

@@ -1,0 +1,104 @@
+/* WorkRemind 컴포넌트 스타일 */
+.workremind-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.workremind-desc {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.workremind-list {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px #e0e7ef33;
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.workremind-item {
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.workremind-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 12px;
+}
+.workremind-item-title {
+  flex: 1;
+  text-align: center;
+}
+.workremind-type {
+  font-weight: 600;
+  color: #2563eb;
+}
+.workremind-date {
+  margin-left: 12px;
+  color: #555;
+}
+.workremind-set {
+  margin-left: 10px;
+  color: #22c55e;
+  font-weight: 500;
+  font-size: 0.95em;
+}
+.remind-btn {
+  background: #fff;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.workremind-edit {
+  margin-top: 10px;
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.workremind-edit-row {
+  margin-bottom: 8px;
+}
+.workremind-edit-label {
+  margin-left: 16px;
+}
+.workremind-edit-input {
+  margin-left: 8px;
+}
+.workremind-edit-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.remind-btn.save {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 4px 16px;
+}
+.remind-btn.cancel {
+  background: #fff;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  padding: 4px 16px;
+}
