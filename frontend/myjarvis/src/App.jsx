@@ -1,19 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
 import StyleGuide from "./pages/StyleGuide";
 
 function App() {
-    return (
+  return (
     <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<StyleGuide />} /> {/* 기본 경로 */}
-          <Route path="/style-guide" element={<StyleGuide />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Dashboard />} /> {/* 메인 대시보드 */}
+        <Route path="/style-guide" element={<StyleGuide />} />
+      </Routes>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;
