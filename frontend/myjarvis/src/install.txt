@@ -10,7 +10,13 @@ npm install zustand
 npm install @mui/material @emotion/react @emotion/styled --force
 
 
+-- 임동주 --
+설치 목록 npm
+
 2025-07-02 임동주
 npm install   
 npm install axios
 npm install react-router-dom
+
+2025-07-03 임동주
+npm install zustand

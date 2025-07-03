@@ -28,26 +28,41 @@ export default function CompanyList(){
     }, []);
 
     return (
-        <div>
-            <h2>고객사 목록</h2>
-            <hr />
-            <table border="1" style={{ width: "100%", textAlign: "center" }}>
-                <thead>
-                <tr>
-                    <th>회사명</th>
-                    <th>대표자명</th>
-                    <th>연락처</th>
-                    <th>사업자번호</th>
-                    <th>등록일</th>
-                </tr>
-                </thead>
-                <tbody>
-                {/* state에 저장된 데이터를 map 함수로 반복하며 화면에 렌더링 */}
-                {companyList.map(function(company, index){
-                    return <Company key={"commany"+index} company={company} />;
-                })}
-                </tbody>
-            </table>
+        <div className="content-wrap">            
+            <div className="content-header">
+                <span className="content-title">고객사 관리</span>
+                <button className="header-btn">신규 등록</button>
+            </div>
+            <div className="content-body">
+                <div className="filter-bar">
+                    <div className="search-box">
+                        <span className="material-symbols-outlined">search</span>
+                        <input type="text" placeholder="고객사 검색" />
+                    </div>
+                    {/* 필터 버튼 등 추가 공간 */}
+                </div>
+                <table className="styled-table">
+                    <thead>
+                        <tr>
+                        <th>회사명</th>
+                        <th>대표자명</th>
+                        <th>연락처</th>
+                        <th>사업자번호</th>
+                        <th>등록일</th>
+                        <th className="manage-btns">관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {companyList.map((company) =>
+                        company ? <Company key={company.compCd} company={company} /> : null
+                        )}
+                    </tbody>
+                </table>
+
+                <div className="pagination">
+                {/* 페이지네이션 기능 구현 시 여기에 컴포넌트 추가 */}
+                </div>
+            </div>
         </div>
     );
 };
