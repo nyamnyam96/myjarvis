@@ -1,15 +1,26 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+
+import { Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./component/member/LoginPage";
+import Main from "./component/common/Main";
+import CompanyList from "./component/company/CompanyList";
 import StyleGuide from "./pages/StyleGuide";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} /> {/* 메인 대시보드 */}
+    <Routes>
+      
+      {/* 로그아웃 상태에서만 보이는 페이지 */}
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* 로그인 상태에서만 보이는 대시보드 페이지 */}      
+      <Route path="/" element={<Main />}>        
+        <Route path="company/list" element={<CompanyList />} />
         <Route path="/style-guide" element={<StyleGuide />} />
-      </Routes>
-    </BrowserRouter>
+      </Route>
+
+    </Routes>
+
   );
 }
 
