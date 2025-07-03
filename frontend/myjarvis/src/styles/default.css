@@ -1,0 +1,694 @@
+/* ===================================================
+ 📁 default.css
+ 📌 MyJarvis 프론트엔드 디자인 시스템 (팀원 안내용 포함)
+ 📌 목적: 스타일 일관성 유지 + 컴포넌트 기준 제시
+ 📌 사용법: 공통 버튼/카드/입력창/뱃지 등은 반드시 이 파일의 클래스 기준으로 제작
+ =================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------
+ 🎨 색상 변수 정의
+ - 반드시 :root 변수만 사용하여 색상 지정
+ - 직접 색상(hex 등)을 컴포넌트에서 쓰지 않도록 함
+ ------------------------------ */
+:root {
+  --primary-color: #4f46e5;           /* 메인 색상: 버튼, 강조, 포커스 등 */
+  --primary-light: #6366f1;          /* 메인 색상의 hover 효과용 */
+  --secondary-color: #10b981;        /* 성공/확인 상태용 */
+  --gray-100: #f3f4f6;               /* 연한 배경 (섹션 백그라운드 등) */
+  --gray-200: #e5e7eb;               /* 구분선/테두리 */
+  --gray-700: #374151;               /* 텍스트용 진한 회색 */
+  --danger-color: #ef4444;           /* 삭제, 경고용 */
+  --warning-color: #f59e0b;          /* 마감임박, 경고 */
+
+ /*  Horizon UI 스타일 확장용 컬러 (추가됨) */
+  --brand-500: #422afb;       /* Horizon 메인 컬러 */
+  --brand-600: #3311db;       /* Hover 또는 강조용 */
+  --navy-700: #1b254b;        /* 진한 텍스트 컬러 */
+  --gray-hz: #f4f7fe;         /* Horizon 밝은 배경 */
+  --shadow-hz: 0 4px 10px rgba(112, 144, 176, 0.08); /* Horizon 부드러운 그림자 */
+
+  --border-radius: 0.75rem;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ------------------------------
+ 🔘 버튼 클래스 (버튼 컴포넌트 제작 시 이 기준 사용)
+ - .btn: 공통 기본 형태
+ - .btn-primary: 주요 액션 (등록, 저장 등)
+ - .btn-outline: 보조 액션 (취소, 필터 등)
+ - .btn-danger: 삭제/경고용
+ - .btn-disabled: 완전 비활성 버튼 (다른 타입과 조합 금지)
+ ------------------------------ */
+
+.btn {
+  @apply rounded-xl px-5 py-2.5 font-medium text-sm transition duration-200;
+}
+
+/*  주요 액션 버튼: brand 계열 (등록, 저장 등) */
+.btn-primary {
+  background-color: var(--brand-500);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--brand-600);
+}
+
+/*  보조/아웃라인 버튼: border 강조형 (취소, 필터 등) */
+.btn-outline {
+  @apply border;
+  background-color: var(--gray-hz); /* Horizon 밝은 회색 배경 */
+  border-color: var(--brand-500);
+  color: var(--brand-500);
+}
+.btn-outline:hover {
+  background-color: #e9ecf8; /* brand hover와 잘 어울리는 연보라 배경 */
+}
+
+/*  삭제/경고 버튼: 붉은색 강조 */
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+.btn-danger:hover {
+  background-color: #dc2626; /* 더 진한 red */
+}
+
+/*  완전 비활성 버튼: 연회색, 커서 제거 */
+.btn-disabled {
+  @apply rounded-xl px-5 py-2.5 font-medium text-sm;
+  background-color: #e2e8f0; /* Horizon용 중간 회색 */
+  color: #a0aec0; /* 텍스트 흐리게 */
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+
+
+/* ------------------------------
+ 🧱 카드 스타일 (.card)
+ - 페이지 내 박스형 섹션을 만들 때 사용
+ - 예: 계약 요약, 회의 정보, 통계 블록 등
+ ------------------------------ */
+.card {
+  @apply bg-white p-6 rounded-2xl;
+  box-shadow: 0 4px 12px rgba(17, 17, 26, 0.05); /* 더 Horizon스러운 soft shadow */
+  border: 1px solid var(--gray-200); /* 테두리 추가로 경계감 강화 */
+}
+
+
+
+/* ------------------------------
+ 📝 입력창 (.input)
+ - 모든 Input 컴포넌트에 공통 적용
+ - label은 컴포넌트에서 <label>로 따로 처리
+ ------------------------------ */
+.input {
+  @apply w-full px-4 py-2 rounded-lg border text-sm text-gray-800 bg-white;
+  border-color: var(--gray-200);
+  transition: all 0.2s ease;
+}
+.input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); /* primary 색상 기반 focus 효과 */
+  outline: none;
+}
+
+/* ❗ 유효성 실패 시 피드백 */
+.input.input-error {
+  border-color: #ef4444 !important;       /* Tailwind red-500 */
+  box-shadow: 0 0 0 3px #fecaca !important; /* red-200 느낌 */
+}
+
+
+
+/* ------------------------------
+ 🏷️ 뱃지 (.badge-*)
+ - 상태 표시, 태그, 소형 정보에 사용
+ - 반드시 의미에 따라 클래스를 선택해서 사용
+ ------------------------------ */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full;
+  line-height: 1.25;
+}
+/*  기본(회색) 배지: 보통 상태 또는 중립 */
+.badge-gray {
+  background-color: var(--gray-100);     /* 밝은 회색 배경 */
+  color: var(--gray-700);                /* 중간 회색 텍스트 */
+}
+
+/*  성공 상태: 작업 완료, 활성 등 */
+.badge-success {
+  background-color: var(--secondary-color); /* 예: green-500 */
+  color: #f9fafb; /* 밝은 회백색으로 시인성 개선 */
+}
+
+/*  경고 상태: 주의, 대기, 비활성 등 */
+.badge-warning {
+  background-color: var(--warning-color);   /* 예: yellow-400 */
+  color: #f9fafb; 
+}
+
+/*  오류 상태: 실패, 삭제, 중단 등 */
+.badge-danger {
+  background-color: var(--danger-color);    /* 예: red-500 */
+  color: #f9fafb;
+}
+
+
+
+/* ------------------------------
+ 🧩 섹션 제목 (.section-title)
+ - 페이지 섹션 제목에만 사용
+ - Card 내부 제목에는 사용하지 말 것
+ ------------------------------ */
+.section-title {
+  @apply text-lg font-semibold tracking-tight text-gray-800 mb-5;
+  letter-spacing: -0.015em; /* Horizon의 타이포 감성 반영 */
+}
+
+
+/* ------------------------------
+ 🪟 모달 스타일
+ - 모달 레이아웃을 구성할 때 재사용
+ ------------------------------ */
+.modal-bg {
+  @apply fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm z-40;
+}
+
+.modal-box {
+  @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-8 rounded-2xl shadow-xl z-50 max-w-xl mx-auto mt-24;
+  transition: all 0.3s ease;
+}
+
+
+/* ------------------------------
+ 📢 토스트 알림 (.toast)
+ - 간단한 사용자 메시지에 사용 (ex. 저장 완료)
+ ------------------------------ */
+.toast {
+  @apply fixed top-6 right-6 px-4 py-2 rounded-lg z-[999] text-sm font-medium;
+
+  /* 배경은 어두운 톤으로 */
+  background-color: #1e293b; /* Tailwind gray-800에 가까운 색상 */
+  color: #f9fafb; /* white보다 덜 눈부신 밝은 회색 */
+
+  /* Horizon 스타일 드롭 쉐도우 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.toast-success {
+  background-color: #22c55e; /* green-500 */
+}
+.toast-error {
+  background-color: #ef4444; /* red-500 */
+}
+
+
+
+
+/* ------------------------------
+ 📏 여백/간격 유틸리티
+ - 팀 내 기준화된 여백 적용
+ ------------------------------ */
+.spacing-sm { @apply p-2; }
+.spacing-md { @apply p-4; }
+.spacing-lg { @apply p-6; }
+
+
+/* ------------------------------
+ 🔤 텍스트 계층화 (제목/본문/설명 텍스트 전용)
+ - 제목, 본문, 설명 텍스트에 통일된 계층 적용
+ - 페이지 내 타이포그래피 스타일링에 활용
+ ------------------------------ */
+.text-title {
+  @apply text-xl font-bold leading-tight text-gray-800; /* 더 선명하고 구조적인 제목 */
+}
+
+.text-body {
+  @apply text-base font-medium text-gray-700; /* 일반 본문도 약간 강조 */
+}
+
+.text-subtle {
+  @apply text-sm font-normal text-gray-500; /* 부가 설명은 Horizon의 설명색 계열 */
+}
+
+/* ------------------------------
+ 🔗 링크 스타일 (.link)
+ - 모든 텍스트 링크는 이 클래스 사용
+ - ex) <a class="link">자세히 보기</a>
+ ------------------------------ */
+.link {
+  @apply transition-colors duration-150 hover:underline;
+  color: var(--primary-color); /* 예: #4f46e5 등 */
+}
+.link:hover {
+  color: var(--primary-light); /* 예: #6366f1 */
+}
+
+
+
+/* ------------------------------
+ 🕳️ 스켈레톤 UI (.skeleton)
+ - 로딩 중 카드, 텍스트 등에 사용
+ - 부드럽고 세련된 로딩 애니메이션
+ - ex) <div class="skeleton h-4 w-1/2"></div>
+ ------------------------------ */
+.skeleton {
+  @apply animate-pulse bg-gray-100 rounded-lg;
+  background-image: linear-gradient(
+    90deg,
+    #f3f4f6 0%,
+    #e5e7eb 50%,
+    #f3f4f6 100%
+  );
+  background-size: 200% 100%;
+  background-position: left;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+
+/* ------------------------------
+ ─ 구분선 (.divider)
+ - 섹션 간 시각적 구분이 필요할 때 사용
+ - ex) <div class="divider"></div>
+ ------------------------------ */
+.divider {
+  @apply w-full h-px my-6;
+  background-color: #e2e8f0; /* Tailwind slate-200과 유사 */
+  opacity: 0.8;
+  border: none;
+}
+
+
+/* ------------------------------
+ 📋 테이블 스타일 (.table, .th, .td)
+ - 계약 목록, 회의 목록 등 리스트 테이블에 공통 적용
+ - 반드시 테이블 구조에 따라 class 분리 적용
+ ------------------------------ */
+.table {
+  @apply w-full border-collapse text-sm text-gray-700;
+}
+.th {
+  @apply px-4 py-3 text-left text-gray-600 font-semibold bg-gray-50 border-b;
+  font-size: 0.875rem; /* text-sm */
+}
+.td {
+  @apply px-4 py-3 border-b;
+  font-size: 0.875rem;
+  color: #4b5563; /* Tailwind gray-700 */
+}
+
+
+/* ------------------------------
+ ❗ 입력창 오류 상태 (.input-error)
+ - 유효성 검사 실패 시 시각 피드백 제공
+ - ex) <input class="input input-error" />
+ ------------------------------ */
+.input-error {
+  @apply border-red-500 ring-1 ring-red-300;
+  background-color: #fef2f2; /* Tailwind red-50 */
+}
+
+
+/* ------------------------------
+ 🧱 페이지 섹션 래퍼 (.section-wrapper)
+ - 전체 페이지 블록에 카드 스타일보다 넓은 구역 구성
+ - 예: 회의 등록 폼, 계약 상세 폼 등의 외곽 블록
+ ------------------------------ */
+.section-wrapper {
+  @apply bg-white p-8 rounded-2xl shadow-md;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); /* Horizon-style soft shadow */
+}
+
+/* ------------------------------
+📊 통계 카드 (.stat-card)
+- 대시보드 요약 숫자에 사용
+- 아이콘, 숫자, 설명 텍스트 포함
+------------------------------ */
+.stat-card {
+  @apply bg-white p-5 rounded-xl shadow-md flex items-center justify-between border;
+  border-color: var(--gray-100);
+}
+.stat-icon {
+  @apply p-3 rounded-full bg-gray-100 text-xl text-gray-700;
+}
+.stat-number {
+  @apply text-2xl font-bold text-gray-800;
+}
+.stat-label {
+  @apply text-sm text-gray-500 mt-1;
+}
+
+
+/* ------------------------------
+⏳ 진행률 바 (.progress-bar)
+- 계약 진행률, 일정 완료율 등에 사용
+------------------------------ */
+.progress-bar {
+  @apply w-full h-2 bg-gray-200 rounded-full overflow-hidden;
+}
+.progress-fill {
+  @apply h-full rounded-full transition-all;
+  background-color: var(--primary-color);
+}
+.progress-label {
+  @apply text-xs text-gray-500 mt-1 text-right;
+}
+
+/* ------------------------------
+ 체크리스트 (.checklist)
+- 작업 관리, 할일 트래킹 등에 사용
+------------------------------ */
+.checklist {
+  @apply bg-white p-4 rounded-lg shadow-sm border border-gray-100;
+}
+.todo-item {
+  @apply flex items-center gap-2 py-2;
+}
+.todo-checkbox {
+  @apply w-4 h-4 rounded border-gray-300 text-primary focus:ring-0;
+}
+.todo-label {
+  @apply text-sm text-gray-700;
+}
+.todo-checked .todo-label {
+  @apply line-through text-gray-400;
+}
+
+/* ------------------------------
+ 🗂️ 탭 그룹 (.tab-group, .tab-item)
+ - 페이지 내 섹션 전환 UI에 사용 (예: 설정/통계/계약 탭 등)
+ - .active 클래스와 함께 상태 구분
+ ------------------------------ */
+
+.tab-group .tab-item {
+  @apply py-2 text-sm font-medium text-gray-500 cursor-pointer;
+  border-bottom: 2px solid transparent;
+}
+.tab-group .tab-item:hover {
+  color: var(--primary-color);
+}
+.tab-group .tab-item.active {
+  @apply text-gray-800;
+  border-color: var(--primary-color);
+}
+
+/* 일반 탭 네비게이션 */
+.tabs .tab-item {
+  @apply px-4 py-2 text-sm font-semibold text-gray-600 rounded-md;
+}
+.tabs .tab-item.active {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* ------------------------------
+  캘린더/일정 태그 (.calendar-tag)
+- 일정 마감일, 회의 예정일 등에 사용
+------------------------------ */
+.calendar-tag {
+  @apply inline-block text-xs px-2 py-1 rounded-full font-medium;
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+}
+
+
+/* 일정 카드 박스 */
+.schedule-card {
+  @apply bg-white p-4 rounded-lg shadow-sm border border-gray-100;
+}
+.schedule-date {
+  @apply text-sm font-semibold text-gray-700 mb-1;
+}
+.schedule-title {
+  @apply text-base font-bold text-gray-800;
+}
+
+
+/* ------------------------------
+📈 차트 카드 (.chart-card)
+- 통계용 차트 또는 시각화 박스에 사용
+------------------------------ */
+.chart-card {
+  @apply bg-white p-6 rounded-xl shadow-md;
+  border: 1px solid var(--gray-100);
+}
+.chart-title {
+  @apply text-base font-semibold text-gray-700 mb-2;
+}
+.chart-subtext {
+  @apply text-sm text-gray-500 mb-4;
+}
+.chart-container {
+  @apply w-full h-64;
+}
+
+
+/* ------------------------------
+📂 파일 드롭존 (.dropzone)
+- 파일 업로드 영역에 사용 (drag & drop)
+------------------------------ */
+.dropzone {
+  @apply flex items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg cursor-pointer text-center bg-gray-50 transition;
+}
+.dropzone:hover {
+  @apply bg-gray-100;
+}
+.dropzone-text {
+  @apply text-sm text-gray-500;
+}
+
+
+/* ------------------------------
+🧭 브레드크럼 (.breadcrumb)
+- 현재 위치 경로 안내 (ex. 고객 > 계약 > 상세)
+------------------------------ */
+.breadcrumb {
+  @apply flex items-center text-sm text-gray-500 space-x-1;
+}
+.breadcrumb-item {
+  @apply hover:underline text-gray-600;
+}
+.breadcrumb-separator {
+  @apply text-gray-400;
+}
+
+
+/* ------------------------------
+📜 활동 카드 (.activity-card)
+- 최근 작업/이력/알림 등 리스트 출력
+------------------------------ */
+.activity-card {
+  @apply bg-white p-4 rounded-xl shadow-sm border border-gray-100;
+}
+.activity-item {
+  @apply flex items-start gap-3 py-2;
+}
+.activity-icon {
+  @apply w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-sm;
+}
+.activity-text {
+  @apply text-sm text-gray-700;
+}
+.activity-time {
+  @apply text-xs text-gray-400 mt-0.5;
+}
+
+
+/* ------------------------------
+🔔 알림 메시지 (.notification)
+- 알림 센터 또는 팝오버 내부
+------------------------------ */
+.notification {
+  @apply flex items-start gap-3 p-3 hover:bg-gray-50 cursor-pointer transition rounded-md;
+}
+.notification-icon {
+  @apply w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600;
+}
+.notification-content {
+  @apply flex flex-col text-sm;
+}
+.notification-title {
+  @apply font-medium text-gray-800;
+}
+.notification-time {
+  @apply text-xs text-gray-400 mt-0.5;
+}
+
+/* ------------------------------
+🔍 검색 입력창 (.search-bar)
+- 상단 검색, 필터용 인풋
+------------------------------ */
+.search-bar {
+  @apply w-full flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm;
+  transition: box-shadow 0.2s ease-in-out;
+}
+.search-bar input {
+  @apply w-full outline-none bg-transparent text-sm text-gray-700;
+}
+.search-bar:focus-within {
+  box-shadow: 0 0 0 2px var(--primary-light);
+  border-color: var(--primary-light);
+}
+
+
+/* ------------------------------
+👤 사용자 아바타 (.user-avatar)
+- 프로필 이미지 및 상태 뱃지
+------------------------------ */
+.user-avatar {
+  @apply relative inline-block w-10 h-10 rounded-full overflow-hidden;
+}
+.user-avatar img {
+  @apply w-full h-full object-cover;
+}
+.user-avatar .status {
+  @apply absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white;
+}
+.status-online {
+  background-color: #22c55e; /* green-500 */
+}
+.status-offline {
+  background-color: #9ca3af; /* gray-400 */
+}
+
+
+/* ------------------------------
+⬇️ 드롭다운 메뉴 (.dropdown-menu)
+- 설정, 필터, 프로필 옵션 등
+------------------------------ */
+.dropdown-menu {
+  @apply absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-50;
+}
+.dropdown-item {
+  @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition;
+}
+.dropdown-item-danger {
+  @apply text-red-500 hover:bg-red-50;
+}
+
+
+/* ------------------------------
+🔘 스위치 토글 (.switch-toggle)
+- 설정, 활성화/비활성화 제어
+------------------------------ */
+.switch-toggle {
+  @apply relative inline-flex items-center h-6 rounded-full w-11 transition;
+  background-color: #d1d5db; /* gray-300 */
+}
+.switch-toggle.checked {
+  background-color: var(--primary-color);
+}
+.switch-toggle-circle {
+  @apply inline-block w-4 h-4 bg-white rounded-full transform transition;
+  transform: translateX(2px);
+}
+.switch-toggle.checked .switch-toggle-circle {
+  transform: translateX(24px);
+}
+
+
+/* ------------------------------
+📆 타임라인 리스트 (.timeline-list)
+- 계약 이력, 일정 흐름 등 시각적 흐름 표현
+------------------------------ */
+.timeline-list {
+  @apply space-y-4 pl-4 border-l-2 border-gray-200;
+}
+.timeline-item {
+  @apply relative pl-4;
+}
+.timeline-item::before {
+  content: '';
+  @apply absolute w-2 h-2 bg-blue-500 rounded-full left-[-6px] top-1.5;
+}
+.timeline-content {
+  @apply text-sm text-gray-700;
+}
+.timeline-time {
+  @apply text-xs text-gray-400 mt-1;
+}
+
+
+
+/* ------------------------------
+ 🪜 스텝 UI (.stepper, .step)
+ - 프로세스 진행 단계를 시각적으로 표시
+ - 예: 계약 진행 단계, 회원가입 절차 등
+ ------------------------------ */
+.stepper {
+  @apply flex items-center gap-4;
+}
+.step {
+  @apply w-8 h-8 rounded-full flex items-center justify-center border text-sm font-medium;
+  border-color: var(--gray-300);
+  color: var(--gray-500);
+}
+.step.active {
+  background-color: var(--primary-color);
+  color: #f9fafb; /* 밝은 회백색 */
+  border-color: var(--primary-color);
+}
+.step-line {
+  @apply h-0.5 flex-1 bg-gray-200;
+}
+
+
+/* ------------------------------
+ 📅 달력 셀 (.calendar-cell)
+ - 일정/마감일 등을 달력 형식으로 표시할 때 사용
+ - .today, .selected 등으로 상태 구분
+ ------------------------------ */
+.calendar-cell {
+  @apply w-10 h-10 flex items-center justify-center text-sm rounded-md;
+  color: var(--gray-700);
+}
+.calendar-cell.today {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+.calendar-cell.selected {
+  background-color: var(--primary-color);
+  color: #f9fafb;
+}
+
+
+/* ------------------------------
+ 🏷️ 필터 칩 (.filter-chip)
+ - 태그/필터 선택에 사용 (예: 통계, 리스트 필터 등)
+ - .active 클래스 사용 시 선택 상태 표현
+ ------------------------------ */
+.filter-chip {
+  @apply inline-flex items-center px-3 py-1 text-sm font-medium rounded-full border;
+  border-color: var(--gray-300);
+  color: var(--gray-700);
+  background-color: white;
+}
+.filter-chip.active {
+  background-color: var(--primary-color);
+  color: #f9fafb;
+  border-color: var(--primary-color);
+}
+
+
+/* 📊 차트 래퍼 (.chart-wrapper)
+ - 통계 차트, 계약 현황, 매출 흐름 등 시각적 데이터 요소 감싸기
+ - 예: <div class="chart-wrapper"><BarChart /></div>
+*/
+.chart-wrapper {
+  @apply bg-white p-6 rounded-xl shadow-md;
+  overflow-x: auto;
+}
