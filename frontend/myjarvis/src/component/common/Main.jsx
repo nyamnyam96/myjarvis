@@ -30,19 +30,19 @@ function Main() {
             <ul className="gnb-menu">
               <li>
               <NavLink to="/">
-                <span className="material-symbols-outlined">dashboard</span>
+                <span className="material-symbols-outlined">home</span>
                 <span>대시보드 홈</span>
               </NavLink>
               </li>
               <li>
                 <NavLink to="/company/list">
-                  <span className="material-symbols-outlined">business_center</span>
+                  <span className="material-symbols-outlined">group</span>
                   <span>고객사 관리</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/contracts">
-                  <span className="material-symbols-outlined">request_quote</span>
+                  <span className="material-symbols-outlined">contract</span>
                   <span>계약 관리</span>
                 </NavLink>
               </li>
