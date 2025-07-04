@@ -10,6 +10,7 @@ import Agree from "./component/member/Agree";
 import AgreeText from "./component/member/AgreeText";
 import MemberMain from "./component/member/MemberMain";
 import MemberUpd from "./component/member/MemberUpd";
+import LoginPage from "./component/member/LoginPage";
 function App() {
   return (
     
@@ -19,20 +20,21 @@ function App() {
     <Link to="/member">마이페이지</Link>
     <Routes>
 
+      {/* 로그아웃 상태에서만 보이는 페이지 */}
+      <Route path='/loginPage' element={<LoginPage /> } />
       {/* 로그인후 동의하기 */} 
       <Route path='/agree' element={<Agree />} />
       <Route path='/agreeText' element={<AgreeText />} />
       {/* 동의후 회원가입 창 */} 
       <Route path="/join" element={<Join />} />
+      <Route path='/login' element={<Login />} />
 
       {/* 마이페이지 */}
       <Route path='/member/*' element={<MemberMain />} /> {/* /member로 시작하는 path는 MemberMain 컴포넌트를 라우팅 */}
       {/* 마이페이지 수정하기*/}
       <Route path='/memberUpd/:memberId' element={<MemberUpd />} />
 
-      {/* 로그아웃 상태에서만 보이는 페이지 */}
       
-      <Route path='/login' element={<Login />} />
       {/* 로그인 상태에서만 보이는 대시보드 페이지 */}      
       <Route path="/" element={<Main />}>        
         <Route path="company/list" element={<CompanyList />} />

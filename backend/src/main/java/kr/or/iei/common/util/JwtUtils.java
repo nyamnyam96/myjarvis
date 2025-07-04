@@ -28,7 +28,7 @@ public class JwtUtils {
 	
 	
 	//AccessToken 발급 메소드
-	public String createAccessToken(String memberId, int memberLevel) {
+	public String createAccessToken(String memberId, String string) {
 		//1. 내부에서 사용할 방식으로, 정의한 key 변환
 		SecretKey key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
 		
@@ -45,14 +45,14 @@ public class JwtUtils {
 								 .expiration(expireTime)				//만료시간
 								 .signWith(key)							//암호화 서명
 								 .claim("memberId", memberId)			//토큰 포함 정보(key ~ value 형태)
-								 .claim("memberLevel", memberLevel)		//토큰 포함 정보(key ~ value 형태)
+								 .claim("memberLevel", string)		//토큰 포함 정보(key ~ value 형태)
 								 .compact();							//생성
 		
 		return accessToken;
 	}
 	
 	//RefreshToken 발급 메소드
-	public String createRefreshToken(String memberId, int memberLevel) {
+	public String createRefreshToken(String memberId, String string) {
 		//1. 내부에서 사용할 방식으로, 정의한 key 변환
 		SecretKey key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
 		
@@ -69,7 +69,7 @@ public class JwtUtils {
 								 .expiration(expireTime)				//만료시간
 								 .signWith(key)							//암호화 서명
 								 .claim("memberId", memberId)			//토큰 포함 정보(key ~ value 형태)
-								 .claim("memberLevel", memberLevel)		//토큰 포함 정보(key ~ value 형태)
+								 .claim("memberLevel", string)		//토큰 포함 정보(key ~ value 형태)
 								 .compact();							//생성
 		
 		return refreshToken;
