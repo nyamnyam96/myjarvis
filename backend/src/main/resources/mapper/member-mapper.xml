@@ -26,7 +26,7 @@
   		   )
   		   values
   		   (
-  		   seq_member_no.nextval,
+  		   seq_tbl_member_no.nextval,
   		   #{memberId},
   		   #{memberPw},
   		   #{memberName},
