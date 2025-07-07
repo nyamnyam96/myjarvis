@@ -5,7 +5,7 @@ import useUserStore from "../../store/useUserStore";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import MemberUpd from "./MemberUpd";
-
+import "./MemberMain.css";
 
 export default function MemberMain(){
 

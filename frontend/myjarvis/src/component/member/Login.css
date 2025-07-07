@@ -1,0 +1,100 @@
+/* 섹션 스타일 (배경 등 전체 박스) */
+.mypage-container {
+  
+  min-height: 70vh;           /* 뷰포트 높이만큼 채움 */
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+
+.page-container{
+  margin-top: 60px; /* 원하는 만큼 내려줌 */
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px 20px;
+  background-color: white;
+  border-radius: 12px;
+
+}
+/* 제목 */
+.page-title {
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* 라벨 + input 묶음 */
+.input-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* 왼쪽 라벨 */
+.input-title {
+  width: 80px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 오른쪽 input 필드 */
+.input-item {
+  flex: 1;
+}
+
+.input-item input {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.input-item input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* 로그인 버튼 박스 */
+.login-button-box {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.btn-primary.lg {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary.lg:hover {
+  background-color: #2563eb;
+}
+
+/* 회원가입 링크 */
+.login-button-box p {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+a {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: purple;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}

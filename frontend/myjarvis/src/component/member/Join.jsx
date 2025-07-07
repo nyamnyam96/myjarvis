@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate} from "react-router-dom";
 import createInstance from "../../axios/interceptor";
-
+import './Join.css';
 
 
 export default function Join(){
@@ -43,7 +43,7 @@ export default function Join(){
     const [emailChk, setEmailChk] = useState(0);
 
     function checkMemberEmail(){
-        const regExp= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const regExp= /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if(!regExp.test(member.memberEmail)){
             setEmailChk(2);
@@ -54,9 +54,9 @@ export default function Join(){
 
             axiosInstance(options)
             .then(function(res){
-                if(res.data.resData ==1){
+                if(res.data.resData == 1){
                     setEmailChk(3);
-                }else if(res.data.resData ==0){
+                } else if(res.data.resData == 0){
                     setEmailChk(1);
                 }
 
@@ -254,18 +254,18 @@ export default function Join(){
                  <div className="input-item">
                     <input type="text" id="memberEmail" value={member.memberEmail} onChange={chgMember}  onBlur={checkMemberEmail}/>
                  </div>
-                    <p className={"input-msg" + (emailChk == 0 ? '': emailChk == 1 ? ' valid' : ' invalid')}>
+                    <p className={"input-msg" + (emailChk == 0 ? '' : emailChk == 1 ? ' valid' : ' invalid')}>
                         {
-                            emailChk == 0 
+                            emailChk === 0
                             ? ''
-                                : emailChk == 1
-                                    ? '사용 가능한 이메일입니다.'
-                                        : emailChk == 2
-                                            ? '존재하는 이메일을 입력해주세요'
-                                                : '이미 사용중인 이메일입니다.'
+                            : emailChk === 1
+                                ? '사용 가능한 이메일입니다.'
+                                : emailChk === 2
+                                ? '이메일 형식이 올바르지 않습니다.'
+                                : '이미 사용 중인 이메일입니다.'
                         }
-                    </p>
-                    
+                     </p>
+                                            
             </div>
             <div className="input-wrap">
                 <div className="input-title">

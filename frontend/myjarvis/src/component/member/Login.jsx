@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 import useUserStore from '../../store/useUserStore';
 import createInstance from '../../axios/interceptor';
 import Swal from 'sweetalert2';
-
+import "./Login.css";
 
 
 
@@ -83,7 +83,7 @@ export default function Login(){
                     setRefreshToken(loginMember.refreshToken);
 
                     //Main 컴포넌트로 전환
-                    navigate('/main');
+                    navigate('/');
                 }
 
             })
@@ -97,12 +97,14 @@ export default function Login(){
 
     return (
          <section className="mypage-container">
-            <div className="page-title">로그인 챗</div>
-            <form autoComplete="off"
-                  onSubmit={function(e){
-                    e.preventDefault(); //form태그 기본 이벤트  
-                    login();            //로그인시 요청 함수
-            }}>
+            
+                <div className='page-container'>
+                    <div className="page-title">MyJarvis</div>
+                        <form autoComplete="off"
+                            onSubmit={function(e){
+                                e.preventDefault(); //form태그 기본 이벤트  
+                                login();            //로그인시 요청 함수
+                        }}>
                 <div className="input-wrap">
                     <div className="input-title">
                         <label htmlFor="memberId">아이디</label>
@@ -126,8 +128,11 @@ export default function Login(){
                     </button>  
                     <p>아직 회원이 아니신가요?</p>
                 </div>
+               
             </form>
                     <Link to="/Agree">회원가입 하러가기</Link>
+                </div>
+            
          </section>
     )
 

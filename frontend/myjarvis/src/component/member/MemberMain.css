@@ -1,0 +1,111 @@
+.mypage-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 30px 20px;
+ background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  color: black;
+}
+
+.tbl.my-info {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 20px;
+  color: black;
+}
+
+.tbl.my-info th, 
+.tbl.my-info td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+.tbl.my-info th {
+  width: 25%;
+  font-weight: 600;
+  color: black;
+  text-align: left;
+}
+
+.tbl.my-info td .input-item {
+  background-color: #f9fafb;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: #222;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.btn-first, .btn-second {
+  padding: 12px 36px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+  user-select: none;
+}
+
+.btn-first {
+  background-color: blue;
+  color: white;
+}
+
+.btn-first:hover {
+  background-color: #2563eb;
+}
+
+.btn-second {
+  background-color: red;
+  color: white;
+}
+
+.btn-second:hover {
+  background-color: #dc2626;
+}
+
+
+.button {
+  display: flex;
+  align-items: center;  /* 세로 가운데 정렬 */
+  justify-content: center;
+  gap: 30px;
+  
+}
+
+.btn-second {
+  height: 50px;               /* ✅ 높이 고정 */
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: red;
+  color: white;
+  line-height: 1;             /* ✅ 텍스트 정렬 */
+ 
+}
+
+.btn-first {
+  position: relative; 
+  top: -6px; /* 필요에 따라 -1px, -3px 등 조절 가능 */
+}

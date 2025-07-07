@@ -168,7 +168,7 @@ public class MemberController {
 	}
 	@GetMapping("/{memberEmail}/chkEmail")
 	public ResponseEntity<ResponseDTO> chkMemberEmail(@PathVariable String memberEmail){
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 체크 실패", "false", "error");
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 체크 실패", false, "error");
 		
 		try {
 			int count = service.chkMemberEmail(memberEmail);

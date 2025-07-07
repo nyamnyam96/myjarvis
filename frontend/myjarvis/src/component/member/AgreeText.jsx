@@ -1,12 +1,14 @@
 import { Route } from "react-router-dom";
 import { Link } from "react-router-dom";
+import './AgreeText.css';
 
 export default function AgreeText() {
 
   return (
     <section className="agree-text">
-      <h2>이용약관 전문</h2>
-      <div className="content-box">
+      <div className="main-container">
+        <div style={{ height: 50, fontWeight: 800 }}>이용약관 전문</div>
+      
         <p>
           본 약관은 귀하가 서비스를 이용함에 있어 회사와 귀하 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
         </p>
@@ -15,7 +17,8 @@ export default function AgreeText() {
           <br />
           (여기에 전체 약관 내용을 입력)
         </p>
-            <Link to="/agree">이동</Link>
+            <Link to="/agree">확인</Link>
+          
       </div>
     </section>
   );

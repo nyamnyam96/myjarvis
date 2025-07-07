@@ -11,6 +11,8 @@ import AgreeText from "./component/member/AgreeText";
 import MemberMain from "./component/member/MemberMain";
 import MemberUpd from "./component/member/MemberUpd";
 import LoginPage from "./component/member/LoginPage";
+
+import AgreeTextSelect from "./component/member/AgreeTextSelect";
 function App() {
   return (
     
@@ -25,6 +27,9 @@ function App() {
       {/* 로그인후 동의하기 */} 
       <Route path='/agree' element={<Agree />} />
       <Route path='/agreeText' element={<AgreeText />} />
+      <Route path='/agreeTextSelect' element={<AgreeTextSelect />} />
+      
+      
       {/* 동의후 회원가입 창 */} 
       <Route path="/join" element={<Join />} />
       <Route path='/login' element={<Login />} />
@@ -36,7 +41,7 @@ function App() {
 
       
       {/* 로그인 상태에서만 보이는 대시보드 페이지 */}      
-      <Route path="/" element={<Main />}>        
+        <Route path="/" element={<Main />}>        
         <Route path="company/list" element={<CompanyList />} />
         <Route path="/style-guide" element={<StyleGuide />} />
         
