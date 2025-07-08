@@ -23,16 +23,7 @@ public class CompanyController {
 	@Autowired
 	private CompanyService companyService;
 	
-	/*
-	
-	@NoTokenCheck
-	@GetMapping("/list")
-	public List<Company> companyList() {
-		return companyService.selectCompanyList();
-	}
-	
-	*/
-	
+
 	@NoTokenCheck
 	@GetMapping("/list")
 	public HashMap<String, Object> companyMap(@RequestParam int reqPage, @RequestParam String sortKey, @RequestParam String sortDirection) {

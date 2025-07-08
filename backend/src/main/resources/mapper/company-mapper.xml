@@ -30,7 +30,7 @@
   <select id="selectCompanyList" parameterType="map" resultType="Company">
     SELECT * FROM (
         SELECT ROWNUM AS RNUM, C.* FROM (
-            -- [수정 1] 가장 안쪽에서 별칭(as)까지 모두 지정합니다.
+          
             SELECT 
                 COMP_CD        AS compCd,
                 MEMBER_NO      AS memberNo,
@@ -42,8 +42,7 @@
                 COMP_TYPE      AS compType,
                 COMP_NO        AS compNo,
                 TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
-            FROM TBL_COMPANY
-            -- [수정 2] ORDER BY는 여기에 한 번만 씁니다.
+            FROM TBL_COMPANY           
             ORDER BY
             <choose>
                 <when test="sortKey == 'compName'">COMP_NAME ${sortDirection}</when>

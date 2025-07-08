@@ -58,7 +58,7 @@ export default function CompanyList(){
             
             {/* 페이지 제목과 설명 */}
             <div className="content-header">
-                <span className="content-title">고객사 관리</span>
+                <span className="content-title">고객사 관리</span> 
                 <span className="content-subtitle">전체 고객사 목록을 확인하고 관리합니다.</span>
                 <button className="header-btn">신규 등록</button>
             </div>
@@ -125,17 +125,17 @@ function Company(props){
         <tr>
             <td>{company.compName}</td>
             <td style={{ textAlign: 'center' }}>                
-                {company.compType === 1 ?
-                    <span className="type-badge type-corp">법인</span> :
-                    <span className="type-badge type-indiv">개인</span>
+                {company.compType == 'P' 
+                   ? <span className="type-badge type-corp">법인</span>
+                   : <span className="type-badge type-indiv">개인</span>
                 }
             </td>
             <td>{company.ownerName}</td>
             <td>{company.compTel}</td>
             <td style={{ textAlign: 'center' }}>                
-                {company.tradeStatus === 1 ?
-                    <span className="status-badge status-active">거래 중</span> :
-                    <span className="status-badge status-inactive">거래 중지</span>
+                {company.tradeStatus == 1 
+                   ? <span className="status-badge status-active">거래 중</span> 
+                   : <span className="status-badge status-inactive">거래 중지</span>
                 }
             </td>
             <td>{company.regDate}</td>     
