@@ -1,0 +1,222 @@
+/* --- 전체 레이아웃 --- */
+.content-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 카드 사이의 간격 */
+    padding: 30px;
+}
+
+.content-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+.content-title {
+    font-size: 26px;
+    font-weight: 700;
+}
+.content-subtitle {
+    font-size: 14px;
+    color: #888;
+}
+
+/* --- 1. 필터 및 액션 카드 --- */
+.filter-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.filter-groups {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+.search-box {
+    position: relative;
+}
+.search-box > .material-symbols-outlined {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 20px;
+}
+.search-box > input {
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    width: 250px;
+}
+
+/* [추가] 필터 버튼 스타일 */
+.filter-buttons {
+    display: flex;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 4px;
+}
+.filter-buttons button {
+    background-color: transparent;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s ease-in-out;
+}
+.filter-buttons button.active {
+    background-color: white;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 신규 등록 버튼 */
+.header-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+.header-btn:hover {
+    background-color: #000;
+}
+
+/* --- 2. 테이블 카드 --- */
+.table-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /* [핵심] 이 속성으로 내부 테이블의 각진 모서리를 숨겨 둥글게 보이게 합니다. */
+    overflow: hidden;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+}
+/* 테이블 내부 스타일은 이전과 유사하게 유지 */
+.styled-table th, .styled-table td {
+    padding: 16px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+.styled-table thead tr {
+    background-color: #fafafa;
+}
+/* 마지막 줄의 하단 보더 제거 */
+.styled-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* 각 셀 정렬 */
+.styled-table th:not(:first-child), .styled-table td:not(:first-child) {
+    text-align: center;
+}
+
+/* [추가] 정렬 헤더 컨테이너 */
+.sort-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px; /* 텍스트와 아이콘 사이 간격 */
+}
+
+
+/* --- 유형 및 거래상태 뱃지(스티커) 스타일 --- */
+.type-badge, .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px; /* 둥근 모서리 */
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* 유형 뱃지 색상 */
+.type-corp { /* 법인 */
+    background-color: #e6f4ff;
+    color: #007bff;
+}
+.type-indiv { /* 개인 */
+    background-color: #e7f7ef;
+    color: #28a745;
+}
+
+/* 거래상태 뱃지 색상 */
+.status-active { /* 거래 중 */
+    background-color: #e7f7ef;
+    color: #28a745;
+}
+.status-inactive { /* 거래 중지 */
+    background-color: #fdeeee;
+    color: #dc3545;
+}
+
+
+/* --- 페이지네이션 스타일 --- */
+.pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-top: 30px;
+    gap: 8px; /* 버튼 사이 간격 */
+    user-select: none; /* 텍스트 드래그 방지 */
+}
+
+.page-item {
+    color: #888; /* 기본 아이콘/숫자 색상 */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* 숫자 버튼 기본 크기 */
+.page-number {
+    width: 36px;
+    height: 36px;
+    font-weight: 500;
+}
+.page-number:hover {
+    background-color: #f0f0f0;
+}
+
+/* 활성화된 페이지 스타일 */
+.active-page {
+    font-weight: 700;
+    color: #fff; /* 활성화 시 글자색 */
+    background-color: #555; /* 활성화 시 배경색 */
+}
+.active-page:hover {
+    background-color: #333;
+}
+
+/* 화살표 아이콘 스타일 */
+.page-arrow .material-symbols-outlined {
+    font-size: 24px;
+}
+.page-arrow:hover {
+    color: #333;
+}

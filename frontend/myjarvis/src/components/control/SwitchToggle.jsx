@@ -3,11 +3,11 @@
 
 import React from 'react';
 
-const SwitchToggle = ({ checked, onToggle }) => {
+const SwitchToggle = ({ checked, onChange }) => {
   return (
     <div
       className={`switch-toggle ${checked ? 'checked' : ''}`}
-      onClick={onToggle}
+      onClick={() => onChange(!checked)}
     >
       <div className="switch-toggle-circle" />
     </div>

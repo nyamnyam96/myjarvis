@@ -1,56 +1,107 @@
 import { useEffect } from "react";
-import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 
 function Main() {
-  const { isLogined, logout } = useUserStore();
+  const { isLogined } = useUserStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 로그인 상태가 아니라면 로그인 페이지로 튕겨내는 로직
   useEffect(() => {
     if (!isLogined) {
       navigate("/login");
     }
   }, [isLogined, navigate]);
 
-  // 로그인 상태가 아닐 때는 아무것도 보여주지 않음 (튕겨내는 중)
-  if (!isLogined) {
-    return null;
-  }
+  if (!isLogined) return null;
 
-  // 로그인 상태일 때만 GNB와 컨텐츠 영역을 보여줌
+  const mainMenus = [
+    { to: "/search", icon: "search", label: "검색" },
+    { to: "/", icon: "home", label: "대시보드" },
+    { to: "/company/list", icon: "domain", label: "고객관리" },
+    { to: "/schedule", icon: "calendar_today", label: "일정관리" },
+    { to: "/meeting", icon: "groups", label: "회의관리" },
+    { to: "/invoice", icon: "receipt_long", label: "결제관리" },
+    { to: "/contract", icon: "request_quote", label: "계약관리" },
+  ];
+
+  const bottomMenus = [
+    { to: "/stats", icon: "analytics", label: "통계확인" },
+    { to: "/setting", icon: "settings", label: "환경설정" },
+    { to: "/logout", icon: "logout", label: "로그아웃" },
+  ];
+
+  const renderMenuItem = (item) => {
+    const isActive =
+      item.to === "/"
+        ? location.pathname === "/"
+        : location.pathname.startsWith(item.to);
+
+    return (
+      <li key={item.to} className="relative">
+        <NavLink
+          to={item.to}
+          className={`
+            group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+            transition-all duration-200 ease-in-out cursor-pointer
+            ${
+              isActive
+                ? "text-[#2b3674] font-bold"
+                : "text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]"
+            }
+          `}
+        >
+          {/* 아이콘: 활성 시 강조 색상, 비활성 시 hover 효과 추가 */}
+          <span
+            className={`material-symbols-outlined text-[20px] transition-all duration-200 ${
+              isActive
+                ? "text-[#4318ff]"
+                : "text-[#a3aed0] group-hover:text-[#4318ff]"
+            }`}
+          >
+            {item.icon}
+          </span>
+          <span>{item.label}</span>
+        </NavLink>
+
+        {/* 선택된 메뉴에만 우측 강조선 표시 */}
+        {isActive && (
+          <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] rounded-full" />
+        )}
+      </li>
+    );
+  };
+
   return (
-    <div className="app-container">      
-        <nav className="gnb">
-          <div className="gnb-header">  
-            <Link to="/">
-              <h1 className="gnb-title">MyJarvis</h1>
-            </Link>   
-          </div>          
-            <ul className="gnb-menu">
-              <li>
-              <NavLink to="/">
-                <span className="material-symbols-outlined">dashboard</span>
-                <span>대시보드 홈</span>
-              </NavLink>
-              </li>
-              <li>
-                <NavLink to="/company/list">
-                  <span className="material-symbols-outlined">business_center</span>
-                  <span>고객사 관리</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/contracts">
-                  <span className="material-symbols-outlined">request_quote</span>
-                  <span>계약 관리</span>
-                </NavLink>
-              </li>
-            </ul>
-        </nav>    
 
-      {/* 위의 링크 클릭 시 내용이 뿌려지는 영역임. */}
-      <div className="content-container">        
+    <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] text-[#2a3547] font-['Pretendard']">
+      
+      {/* 좌측 GNB */}
+      <nav className="w-[260px] bg-white rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
+        main
+        
+        {/* 로고 */}
+        <div className="pb-5 mb-0 border-b border-[#e5eaef]">
+          <Link to="/" className="flex items-center justify-center h-16">
+            <h1 className="text-[30px] font-extrabold tracking-tight text-[#1B254B] font-logo">
+              MyJarvis
+            </h1>
+          </Link>
+        </div>
+
+        {/* 기본 메뉴 */}
+        <ul className="flex-grow py-4 space-y-1">
+          {mainMenus.map(renderMenuItem)}
+        </ul>
+
+        {/* 하단 고정 메뉴 */}
+        <ul className="pt-3 border-t border-[#e5eaef] space-y-1">
+          {bottomMenus.map(renderMenuItem)}
+        </ul>
+      </nav>
+
+      {/* 메인 콘텐츠 */}
+      <div className="flex-grow bg-[#f4f7fe] overflow-y-auto p-6">
         <Outlet />
       </div>
     </div>
