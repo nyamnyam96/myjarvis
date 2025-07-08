@@ -78,7 +78,6 @@ function Main() {
       
       {/* 좌측 GNB */}
       <nav className="w-[260px] bg-white rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
-        main
         
         {/* 로고 */}
         <div className="pb-5 mb-0 border-b border-[#e5eaef]">

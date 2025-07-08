@@ -12,6 +12,7 @@ const Setting = () => {
   const [sessionTime, setSessionTime] = React.useState(true);
   const [signatureSave, setSignatureSave] = React.useState(false);
 
+  
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* 환경 설정 카드 */}
@@ -42,6 +43,8 @@ const Setting = () => {
       </div>
 
       {/* 마이페이지 카드 */}
+      
+
       <div className="card flex flex-col justify-between">
         <div>
           <h2 className="section-title mb-2">마이 페이지</h2>
@@ -49,7 +52,7 @@ const Setting = () => {
         </div>
         <div>
           <Button size="sm" color="gray" onClick={() => window.location.href = '/mypage'}>
-            마이페이지 바로 가기
+            마이페이지 바로 가기 {/*마이페이지  */}
           </Button>
         </div>
       </div>
