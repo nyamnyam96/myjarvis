@@ -1,6 +1,5 @@
 /* 섹션 스타일 (배경 등 전체 박스) */
 .mypage-container {
-  
   min-height: 70vh;           /* 뷰포트 높이만큼 채움 */
   padding: 40px 20px;
   box-sizing: border-box;
@@ -9,7 +8,7 @@
 
 .page-container{
   margin-top: 60px; /* 원하는 만큼 내려줌 */
-  max-width: 600px;
+  max-width: 300px;
   margin-left: auto;
   margin-right: auto;
   padding: 20px 20px;
@@ -19,24 +18,30 @@
 }
 /* 제목 */
 .page-title {
-  font-size: 50px;
+  font-size: 80px;
   font-weight: bold;
-  text-align: center;
+  
   margin-bottom: 30px;
 }
 
 /* 라벨 + input 묶음 */
 .input-wrap {
-  display: flex;
+ 
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  
 }
 
-/* 왼쪽 라벨 */
-.input-title {
-  width: 80px;
-  font-weight: bold;
-  color: #333;
+.input-item2 input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 1rem;
+
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color:  #f4f7fe;
+  outline: none;
+  transition: border-color 0.3s;
 }
 
 /* 오른쪽 input 필드 */
@@ -44,17 +49,9 @@
   flex: 1;
 }
 
-.input-item input {
-  width: 100%;
-  padding: 12px 14px;
-  background-color: #f0f2f5;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-}
 
+ 
 .input-item input:focus {
-  outline: none;
   box-shadow: none;
 }
 
@@ -64,16 +61,7 @@
   text-align: center;
 }
 
-.btn-primary.lg {
-  padding: 12px 24px;
-  font-size: 16px;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
+
 
 .btn-primary.lg:hover {
   background-color: #2563eb;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import createInstance from "../../axios/interceptor";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import './MemberUpd.css';
 //마이페이지 - 회원 정보 수정
 export default function MemberUpd(){
     //MemberMain 수정하기 Link 클릭 시, URL Path에 포함시켜 전달한 회원 아이디 추출
@@ -37,11 +37,14 @@ export default function MemberUpd(){
 
         axiosInstance(options)
         .then(function(res){
+
             if(res.data.resData){
+                
                 setIsAuth(true);    
                 
                 setMember({...member});
 
+               
                 
                 //기존 비밀번호 일치하면 ID로 기존 회원 정보 조회
                 let options = {};
@@ -51,6 +54,7 @@ export default function MemberUpd(){
                 axiosInstance(options)
                 .then(function(res){
                     if(res.data.resData != null){
+                        
                         setMember(res.data.resData);
                     }
                 })
@@ -58,6 +62,14 @@ export default function MemberUpd(){
                     console.log(err);
                 });
 
+            }else {
+                //비밀번호 불일치 시 경고창 띄우기
+              Swal.fire({
+                title : '알림',
+                text : '비밀번호를 잘못 입력하셨습니다.',
+                icon : 'warning',
+                confirmButtonText : '확인'
+             })
             }
         })
         .catch(function(err){
@@ -138,6 +150,7 @@ export default function MemberUpd(){
                             <div className="input-item">
                                 <input type="password" id="newPw" name="memberPw" value={member.memberPw} onChange={chgMember}/>
                             </div>
+                              <p> 기존 비밀번호 다시 입력, 새로운 비밀번호 입력 가능합니다.</p>
                         </div>
                         <div className="input-wrap">
                             <div className="input-title">
@@ -146,6 +159,7 @@ export default function MemberUpd(){
                             <div className="input-item">
                                 <input type="password" id="newPwRe" name="memberPw" value={memberPwRe} onChange={chgMemberPwRe}/>
                             </div>
+                               <p> 기존 비밀번호 입력, 새로운 비밀번호 입력 가능합니다.</p>
                         </div>
                         <div className="input-wrap">
                             <div className="input-title">
@@ -171,12 +185,12 @@ export default function MemberUpd(){
                 </>
                 :
                 <>
-                    <div className="input-wrap">
+                    <div className="sub-container">
                         <div className="input-title">
                             <label htmlFor="oldPw">기존 비밀번호 입력</label>
                         </div>
-                        <div className="input-item">
-                            <input type="password" id="oldPw" name="memberPw" value={member.memberPw} onChange={chgMemberPw}/>
+                        <div className="input-item2">
+                            <input type="password" id="oldPw" name="memberPw"  value={member.memberPw} onChange={chgMemberPw}/>
                         </div>
                         <div className="button-zone">
                             <button type="button" className="btn-primary lg" onClick={checkPw}>확인</button>

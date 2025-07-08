@@ -197,7 +197,7 @@ export default function Join(){
                 <div className="input-title">
                     <label htmlFor="memberId">아이디</label>
                 </div>
-                <div className="input-item">
+                <div className="input-item3">
                     <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId}/>
                 </div>
                 <p className={"input-msg" + (idChk == 0 ? '' : idChk == 1 ? ' valid' : ' invalid')}>
@@ -216,7 +216,7 @@ export default function Join(){
                 <div className="input-title">
                     <label htmlFor="memberPw">비밀번호</label>
                 </div>
-                <div className="input-item">
+                <div className="input-item3">
                     <input type="password" id="memberPw" value={member.memberPw}  onChange={chgMember} onBlur={chkMemberPw}  /> {/** onChange={chgMember} onBlur={chkMemberPw} */}
                 </div>
             </div>
@@ -224,7 +224,7 @@ export default function Join(){
                     <div className="input-title">
                         <label htmlFor="memberPwRe">비밀번호 확인</label>
                     </div>
-                    <div className="input-item">
+                    <div className="input-item3">
                         <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={chkMemberPw}/>
                     </div>
                  <p className={"input-msg" + (pwChk == 0 ? '' : pwChk == 1 ? ' valid' : ' invalid')}>
@@ -243,7 +243,7 @@ export default function Join(){
                 <div className="input-title">
                     <label htmlFor="memberName">이름</label>
                 </div>
-                <div className="input-item">
+                <div className="input-item3">
                     <input type="text" id="memberName" value={member.memberName} onChange={chgMember} />
                  </div>
             </div>
@@ -251,7 +251,7 @@ export default function Join(){
                 <div className="input-title">
                     <label htmlFor="memberEmail">이메일</label>
                 </div>
-                 <div className="input-item">
+                 <div className="input-item3">
                     <input type="text" id="memberEmail" value={member.memberEmail} onChange={chgMember}  onBlur={checkMemberEmail}/>
                  </div>
                     <p className={"input-msg" + (emailChk == 0 ? '' : emailChk == 1 ? ' valid' : ' invalid')}>
@@ -271,7 +271,7 @@ export default function Join(){
                 <div className="input-title">
                     <label className="input-title">전화번호</label>
                 </div>
-                <div className="input-item">
+                <div className="input-item3">
                     <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
                 </div>
                 

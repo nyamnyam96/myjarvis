@@ -13,7 +13,7 @@
   font-weight: 600;
   text-align: center;
   margin-bottom: 30px;
-  color: #333;
+  
 }
 
 .input-wrap {
@@ -29,10 +29,9 @@
   font-size: 18px;
 }
 
-.input-item input .input-item input[type="text"].input-item input[type="password"]{
-  border: 1.5px solid #ccc;
-  background-color: white;
-  color: #333;
+.input-item3 input{
+ 
+  background-color: #f4f7fe;
   padding: 10px 14px;
   font-size: 16px;
   border-radius: 6px;
