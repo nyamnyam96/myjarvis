@@ -74,6 +74,7 @@ function Main() {
   };
 
   return (
+
     <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] text-[#2a3547] font-['Pretendard']">
       
       {/* 좌측 GNB */}
