@@ -1,0 +1,100 @@
+/* public/css/default.css (최종본) */
+
+/* --- 기본 & 폰트 설정 --- */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+:root {
+  --gnb-bg: #ffffff;
+  --app-bg: #f7f9fc;
+  --text-primary: #2a3547;
+  --text-secondary: #5a6a85;
+  --border-color: #e5eaef;
+  --primary-color: #5d87ff;
+  --primary-hover: #4570ea;
+  --delete-color: #fa896b;
+  --delete-hover: #e37456;
+}
+
+body {
+  margin: 0;
+  font-family: "Pretendard", sans-serif;
+  background-color: var(--app-bg);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* --- 전체 레이아웃 --- */
+.app-container {
+  display: flex;
+  height: 100vh;
+  padding: 20px;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+/* --- 왼쪽 GNB 메뉴 --- */
+.gnb {
+  width: 260px;
+  background-color: var(--gnb-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.gnb-header {
+  padding: 15px 20px 20px 20px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.gnb-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.gnb-menu {
+  list-style-type: none;
+  padding: 10px 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.gnb-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-bottom: 3px;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--text-secondary);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.gnb-menu li a:hover {
+  background-color: #ecf2ff;
+  color: var(--primary-color);
+}
+.gnb-menu li a.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* --- 오른쪽 컨텐츠 영역 --- */
+.content-container {
+  flex-grow: 1;
+  background-color: var(--gnb-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
