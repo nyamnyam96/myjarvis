@@ -1,5 +1,4 @@
 import React from "react";
-import Sidebar from "../components/layout/Sidebar";
 import Card from "../components/common/Card";
 import Checklist from "../components/control/Checklist";
 import TimelineList from "../components/feedback/TimelineList";
@@ -17,39 +16,49 @@ export default function Dashboard() {
     { content: "회의록 업로드", time: "어제" },
   ];
 
+  const backgroundImage = null; // 추후 useState 등으로 동적 설정 예정
+
   return (
-    <div className="flex min-h-screen bg-[#F4F7FE]">
-      {/* 좌측 사이드바 */}
-      <Sidebar />
-
-      {/* 우측 메인 콘텐츠 */}
-      <main className="flex-1 px-6 py-8 overflow-y-auto max-w-screen-2xl w-full mx-auto">
-        {/* 상단 제목 (Horizon 감성 반영) */}
-        <div className="mb-8">
-          <h2 className="text-[22px] font-bold text-gray-700 tracking-tight">사용자 커스터마이징 배경</h2>
-        </div>
-
-        {/* 12열 기반 카드 레이아웃 */}
+    <>
+      {/* 사용자 배경 커스터마이징 카드: 12열 전체 사용 */}
+      <div className="xl:col-span-12 mb-6 -mt-[23px]">
+        <Card className="relative p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white min-h-[220px] overflow-hidden">
+          <div className="w-full h-full flex items-center justify-center">
+            {backgroundImage ? (
+              <img
+                src={backgroundImage}
+                alt="사용자 배경"
+                className="object-contain max-h-full max-w-full"
+              />
+            ) : (
+              <span className="text-gray-400 text-center">
+                사용자 배경 커스터마이징 영역<br />(파일 업로드 예정)
+              </span>
+            )}
+          </div>
+        </Card>
+      </div>
+        {/* 카드 컨테이너: 12열 그리드 */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-          {/* TO-DO 리스트: 좌측 8열 */}
-          <div className="xl:col-span-8">
-            <Card className="p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
+          {/* TO-DO 리스트 카드 (좌측 8열) */}
+          <div className="xl:col-span-6">
+            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
               <h2 className="section-title">TO-DO LIST</h2>
               <Checklist items={todoItems} />
             </Card>
           </div>
 
-          {/* 타임라인: 우측 4열 */}
-          <div className="xl:col-span-4">
-            <Card className="p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
+          {/* 최근 활동 내역 카드 (우측 4열) */}
+          <div className="xl:col-span-6">
+            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
               <h2 className="section-title">최근 활동 내역</h2>
               <TimelineList items={timelineItems} />
             </Card>
           </div>
 
-          {/* 업무 리마인더: 좌측 6열 */}
+          {/* 업무 리마인더 카드 (좌측 6열) */}
           <div className="xl:col-span-6">
-            <Card className="p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
+            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
               <h2 className="section-title">업무 리마인더</h2>
               <div className="mt-3 space-y-4">
                 <Notification
@@ -66,14 +75,13 @@ export default function Dashboard() {
             </Card>
           </div>
 
-          {/* 향후 영역 확장: 우측 6열 */}
+          {/* 통계/일정 추가 카드 (우측 6열) */}
           <div className="xl:col-span-6">
-            <Card className="p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white flex items-center justify-center text-gray-400 min-h-[200px]">
+            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white flex items-center justify-center text-gray-400">
               통계 차트 또는 최근 일정 등 추가 영역
             </Card>
           </div>
         </div>
-      </main>
-    </div>
+</>
   );
 }

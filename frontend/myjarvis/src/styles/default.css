@@ -373,7 +373,7 @@
 - 작업 관리, 할일 트래킹 등에 사용
 ------------------------------ */
 .checklist {
-  @apply bg-white p-4 rounded-lg shadow-sm border border-gray-100;
+  @apply w-full bg-white p-4 rounded-lg shadow-sm border border-gray-100;
 }
 .todo-item {
   @apply flex items-center gap-2 py-2;
