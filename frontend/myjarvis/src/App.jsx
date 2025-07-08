@@ -1,5 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// 0. 시작 페이지
+import Home from "./pages/Home";
+
 // 1. 공통 레이아웃 & 인증 페이지
 import Main from "./component/common/Main";
 import LoginPage from "./component/member/LoginPage";
@@ -34,19 +37,27 @@ import Setting from "./component/setting/Setting";
 // 11. UI 스타일 가이드 (개발자 도구용)
 import StyleGuide from "./pages/StyleGuide";
 
+// 12. 소개 페이지 (임시 연결용)
+import IntroSchedule from "./pages/IntroSchedule";
+import IntroMeeting from "./pages/IntroMeeting";
+import IntroContract from "./pages/IntroContract";
+import IntroInvoice from "./pages/IntroInvoice";
 
 function App() {
   return (
     <Routes>
 
+      {/*  시작 페이지 (홈 랜딩) */}
+      <Route path="/" element={<Home />} />
+
       {/*  로그인 전 페이지 (로그인 전용) */}
       <Route path="/login" element={<LoginPage />} />
 
       {/*  로그인 후 메인 레이아웃 (좌측 GNB + 우측 Outlet) */}
-      <Route path="/" element={<Main />}>
+      <Route path="/main" element={<Main />}>
 
         {/* ▶ 검색 */}
-        <Route path="/search" element={<Search />} />
+        <Route path="search" element={<Search />} />
 
         {/* ▶ 대시보드 (기본 페이지) */}
         <Route index element={<Dashboard />} />
@@ -58,7 +69,7 @@ function App() {
         <Route path="contract" element={<Contract />} />
 
         {/* ▶ 일정관리 */}
-        <Route path="schedule" element={<MySchedule/>} />
+        <Route path="schedule" element={<MySchedule />} />
 
         {/* ▶ 회의관리 */}
         <Route path="meeting" element={<MeetingList />} />
@@ -76,8 +87,14 @@ function App() {
         <Route path="style-guide" element={<StyleGuide />} />
       </Route>
 
-      {/*  잘못된 경로 접근 시 로그인으로 리다이렉트 */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      {/* 🔹 소개 페이지 (홈 외부 링크용 임시 라우트) */}
+      <Route path="/intro/schedule" element={<IntroSchedule />} />
+      <Route path="/intro/meeting" element={<IntroMeeting />} />
+      <Route path="/intro/contract" element={<IntroContract />} />
+      <Route path="/intro/invoice" element={<IntroInvoice />} />
+
+      {/*  잘못된 경로 접근 시 홈으로 리다이렉트 */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
