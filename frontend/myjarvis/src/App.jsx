@@ -1,4 +1,6 @@
+
 import { Routes, Route, Navigate, Link } from "react-router-dom";
+
 import Login from "./component/member/Login";
 
 // 1. 공통 레이아웃 & 인증 페이지
@@ -55,6 +57,7 @@ function App() {
     <Link to="/Login">로그인 여기</Link>
     <hr/> {/* <LeftMenu/> 쪽에 넣어야할것*/}
     <Link to="/member">마이페이지</Link>
+    <Link to="/loginPage">로그아웃</Link>
     <Routes>
 <<<<<<< HEAD
 

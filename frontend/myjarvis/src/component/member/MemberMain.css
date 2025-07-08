@@ -16,6 +16,7 @@
   color: black;
 }
 
+
 .tbl.my-info {
   width: 100%;
   border-collapse: collapse;
@@ -38,7 +39,7 @@
 }
 
 .tbl.my-info td .input-item {
-  background-color: #f9fafb;
+  background-color: #f4f7fe;
   padding: 10px 15px;
   border-radius: 8px;
   color: #222;

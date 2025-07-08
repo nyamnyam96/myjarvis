@@ -99,6 +99,8 @@ export default function Login(){
          <section className="mypage-container">
             
                 <div className='page-container'>
+                    <img className='logo' />
+                    
                     <div className="page-title">MyJarvis</div>
                         <form autoComplete="off"
                             onSubmit={function(e){
@@ -109,15 +111,16 @@ export default function Login(){
                     <div className="input-title">
                         <label htmlFor="memberId">아이디</label>
                     </div>
-                    <div className="input-item">
-                        <input type="text"   id="memberId" value={member.memberId} onChange={chgMember} />
+                    <div className="input-item2">
+                        <input type="text"   id="memberId" value={member.memberId} onChange={chgMember} 
+                        />
                     </div>
                 </div>
                 <div className="input-wrap">
                     <div className="input-title">
                         <label htmlFor="memberPw">비밀번호</label>
                     </div>
-                    <div className="input-item">
+                    <div className="input-item2">
                         <input type="password" id="memberPw" value={member.memberPw} onChange={chgMember}/>
                     </div>
                 </div>
