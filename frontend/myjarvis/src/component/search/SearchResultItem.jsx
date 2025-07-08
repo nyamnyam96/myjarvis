@@ -1,0 +1,57 @@
+import React from 'react';
+import Breadcrumb from '../../components/navigation/Breadcrumb';
+
+const SearchResultItem = ({
+  category = '',
+  date = '',
+  content = '',
+  keyword = '',
+  breadcrumbPath = [],
+  tags = [],
+}) => {
+  const highlightKeyword = (text, keyword) => {
+    if (!text || !keyword) return text;
+    const regex = new RegExp(`(${keyword})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, i) => (
+      regex.test(part) ? (
+        <span key={i} className="font-semibold text-primary">{part}</span>
+      ) : (
+        <span key={i}>{part}</span>
+      )
+    ));
+  };
+
+  return (
+    <li className="p-4 border rounded hover:bg-gray-50 space-y-2">
+      {/* 메뉴 경로 (Breadcrumb) */}
+      {breadcrumbPath.length > 0 && (
+        <Breadcrumb paths={breadcrumbPath} className="text-sm text-gray-400" />
+      )}
+
+      {/* 카테고리 (검색어 강조 적용) */}
+      <p className="font-medium">
+        {highlightKeyword(category, keyword)}
+      </p>
+
+      {/* 내용 (검색어 강조 적용) */}
+      <p className="text-sm text-gray-600">
+        {highlightKeyword(content, keyword)}
+      </p>
+
+      {/* 날짜 + 태그 */}
+      <div className="flex justify-between items-center mt-2">
+        <span className="text-xs text-gray-400">{date}</span>
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {tags.map((tag, idx) => (
+              <span key={idx} className="badge-outline text-xs">#{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </li>
+  );
+};
+
+export default SearchResultItem;

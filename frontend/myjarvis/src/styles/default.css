@@ -373,7 +373,7 @@
 - 작업 관리, 할일 트래킹 등에 사용
 ------------------------------ */
 .checklist {
-  @apply bg-white p-4 rounded-lg shadow-sm border border-gray-100;
+  @apply w-full bg-white p-4 rounded-lg shadow-sm border border-gray-100;
 }
 .todo-item {
   @apply flex items-center gap-2 py-2;
@@ -624,27 +624,27 @@
 
 
 
-/* ------------------------------
- 🪜 스텝 UI (.stepper, .step)
- - 프로세스 진행 단계를 시각적으로 표시
- - 예: 계약 진행 단계, 회원가입 절차 등
- ------------------------------ */
-.stepper {
-  @apply flex items-center gap-4;
-}
-.step {
-  @apply w-8 h-8 rounded-full flex items-center justify-center border text-sm font-medium;
-  border-color: var(--gray-300);
-  color: var(--gray-500);
-}
-.step.active {
-  background-color: var(--primary-color);
-  color: #f9fafb; /* 밝은 회백색 */
-  border-color: var(--primary-color);
-}
-.step-line {
-  @apply h-0.5 flex-1 bg-gray-200;
-}
+  /* ------------------------------
+  🪜 스텝 UI (.stepper, .step)
+  - 프로세스 진행 단계를 시각적으로 표시
+  - 예: 계약 진행 단계, 회원가입 절차 등
+  ------------------------------ */
+  .stepper {
+    @apply flex items-center gap-4;
+  }
+  .step {
+    @apply w-8 h-8 rounded-full flex items-center justify-center border text-sm font-medium;
+    border-color: var(--gray-300);
+    color: var(--gray-500);
+  }
+  .step.active {
+    background-color: var(--primary-color);
+    color: #f9fafb; /* 밝은 회백색 */
+    border-color: var(--primary-color);
+  }
+  .step-line {
+    @apply h-0.5 flex-1 bg-gray-200;
+  }
 
 
 /* ------------------------------
@@ -691,4 +691,41 @@
 .chart-wrapper {
   @apply bg-white p-6 rounded-xl shadow-md;
   overflow-x: auto;
+}
+
+
+/* ------------------------------
+📚 사이드바 (.sidebar)
+- Horizon UI 스타일 기반 좌측 네비게이션 바
+- 로고, 메뉴 리스트, 로그아웃까지 포함
+------------------------------ */
+.sidebar {
+  @apply flex flex-col w-64 h-screen bg-white shadow-lg border-r border-gray-200;
+}
+.sidebar-header {
+  @apply flex items-center justify-center h-20 text-2xl font-bold text-gray-800;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.03em;
+}
+.sidebar-menu {
+  @apply flex-1 px-6 py-4 overflow-y-auto;
+}
+.sidebar-item {
+  @apply flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-medium text-gray-700 transition;
+}
+.sidebar-item:hover {
+  @apply bg-gray-100 text-gray-900;
+}
+.sidebar-item.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+.sidebar-divider {
+  @apply border-t border-gray-200 my-4;
+}
+.sidebar-footer {
+  @apply px-6 py-4;
+}
+.sidebar-icon {
+  @apply text-lg;
 }
