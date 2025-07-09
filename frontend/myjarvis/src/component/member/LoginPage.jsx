@@ -12,7 +12,7 @@ function LoginPage() {
     // zustand 스토어의 상태를 '로그인'으로 변경합니다.
     login();
     // 4. 상태 변경 직후, 메인 페이지('/')로 강제 이동시킵니다.
-    navigate("/");
+    navigate("/Main");
   };
 
   return (

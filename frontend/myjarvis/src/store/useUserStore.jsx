@@ -1,18 +1,35 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const useUserStore = create(
-  persist(
-    (set) => ({
-      // 개발 중에는 true로 설정하여 바로 대시보드 확인 가능. 
-      isLogined: false, 
-      
-      // 로그인/로그아웃 함수
-      login: () => set({ isLogined: true }),
-      logout: () => set({ isLogined: false }),
-      
-    })
-  )
+const useUserStore = create (
+    persist (
+        (set) => ({
+            isLogined : false,
+            setIsLogined : function(loginChk){
+                set({
+                    isLogined : loginChk
+                })
+            },
+            loginMember : null,
+            setLoginMember : function(memberObj){
+                set({
+                    loginMember : memberObj
+                })
+            },
+            accessToken : null,
+            setAccessToken : function(accessToken){
+                set({
+                    accessToken : accessToken
+                })
+            },
+            refreshToken : null,
+            setRefreshToken : function(refreshToken){
+                set({
+                    refreshToken : refreshToken
+                })
+            }
+        })
+    )
 );
 
 export default useUserStore;

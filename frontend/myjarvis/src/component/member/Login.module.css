@@ -1,0 +1,104 @@
+/* 섹션 스타일 (배경 등 전체 박스) */
+.mypageContainer {
+ 
+  padding: 40px 20px;
+  box-sizing: border-box;
+  display: flex;
+  
+}
+.mypageContainer{
+  background-color: #f4f7fe; /* 연한 파란 배경 */
+  min-height: 100vh;         /* 화면 전체 채우기 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.pageContainer {
+  margin-top: 60px; /* 원하는 만큼 내려줌 */
+  max-width: 600px;  /* 기존 300px에서 600px로 확대 */
+  min-width: 650px; /* 최소 너비 설정 */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 50px 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-sizing: border-box;display: flex;
+  justify-content: center;  /* 가로 중앙 */
+  align-items: center;      /* 세로 중앙 */
+  flex-direction: column;   /* 아이템 세로 정렬 */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+/* 제목 */
+.pageTitle {
+  font-size: 80px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 30px;
+}
+
+/* 라벨 + input 묶음 */
+.inputWrap {
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.inputItem2 input {
+ width: 300px; /* 부모가 줄면 따라 줄어듦 */
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color:  #f4f7fe;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+/* 오른쪽 input 필드 */
+.inputItem {
+  flex: 1;
+}
+
+.inputItem input:focus {
+  box-shadow: none;
+}
+
+/* 로그인 버튼 박스 */
+.loginButtonBox {
+  margin-top: 30px;
+  text-align: center;
+  
+}
+
+.loginButtonBoxP {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+.btnPrimaryLg:hover {
+  background-color: #2563eb;
+}
+
+/* 회원가입 링크 */
+.link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: purple;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 80px;
+  padding: 20px;
+}
