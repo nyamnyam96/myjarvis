@@ -11,11 +11,14 @@ export default function CompanyList(){
     const [pageInfo, setPageInfo] = useState({});           //페이지 네비게이션
     
     const [sortConfig, setSortConfig] = useState({ key: 'regDate', direction: 'desc' }); //정렬을 위한 state
-
+    
+    const [filterType, setFilterType] = useState('ALL'); // 유형 (전체, 법인, 개인)
+    const [filterStatus, setFilterStatus] = useState(0); // 거래상태 (전체, 거래 중, 거래 중지)
+    const [searchTerm, setSearchTerm] = useState(""); // 검색어
 
     useEffect(function(){
-        //URL 뒤에 붙일 쿼리스트링
-        const queryString = `?reqPage=${reqPage}&sortKey=${sortConfig.key}&sortDirection=${sortConfig.direction}`;
+        //URL 뒤에 붙일 쿼리스트링(필터값을 포함하고 있음.)
+        const queryString = `?reqPage=${reqPage}&sortKey=${sortConfig.key}&sortDirection=${sortConfig.direction}&type=${filterType}&status=${filterStatus}&search=${searchTerm}`;
 
         let options = {};
         options.url = serverUrl + "/company/list" + queryString;
@@ -30,12 +33,13 @@ export default function CompanyList(){
         })
         .catch(function(err){
             console.log(err)
-        });
+        });      
 
-    }, [reqPage, sortConfig]);
+    }, [reqPage, sortConfig, filterType, filterStatus, searchTerm]); // 의존성 배열에 새 필터 추가
+
 
     // 정렬 요청 함수
-    const requestSort = (key) => {
+    function requestSort(key){
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
@@ -45,35 +49,61 @@ export default function CompanyList(){
     };
 
     //구글 아이콘을 반환 함수
-    const getSortIcon = (key) => {
+    function getSortIcon(key){
         const iconName = sortConfig.key !== key ? 'unfold_more' // 기본 양방향 화살표
             : sortConfig.direction === 'asc' ? 'expand_less' // 위쪽 화살표
                 : 'expand_more'; // 아래쪽 화살표
         return <span className="material-symbols-outlined">{iconName}</span>;
     };
+
+    //검색어 변경을 처리하는 새로운 함수
+    function handleSearchChange(e){
+        // 1. 검색어 상태를 업데이트하고,
+        setSearchTerm(e.target.value);
+        // 2. 페이지 번호를 1로 초기화
+        setReqPage(1);
+    };  
     
 
-    return (
+    return (        
         <div className="content-wrap">
             
             {/* 페이지 제목과 설명 */}
             <div className="content-header">
                 <span className="content-title">고객사 관리</span> 
-                <span className="content-subtitle">전체 고객사 목록을 확인하고 관리합니다.</span>
-                <button className="header-btn">신규 등록</button>
+                <span className="content-subtitle">전체 고객사 목록을 확인하고 관리합니다.</span>                
             </div>
             
-            {/* 1. 필터 및 액션 카드 */}
+            {/* 필터 및 액션 카드 */}
             <div className="filter-card">
-                <div className="filter-groups">
+                <div className="filter-controls">
+                    {/* 검색창 */}
                     <div className="search-box">
-                        {/* ... 검색창 ... */}
+                        <span className="material-symbols-outlined">search</span>
+                        <input
+                            type="text"
+                            placeholder="고객사명 검색"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
                     </div>
-                    {/* [제안] 거래상태 필터 버튼 그룹 */}
-                    <div className="filter-buttons">
-                        <button>전체</button>
-                        <button>거래 중</button>
-                        <button>거래 중지</button>
+                    {/* 유형 필터 */}
+                    <div className="select-group">
+                        <label htmlFor="type-filter">사업자 유형</label>
+                        <select id="type-filter" value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                            <option value="ALL">전체</option>
+                            <option value="C">법인</option>
+                            <option value="P">개인</option>
+                        </select>
+                    </div>
+                    {/* 거래상태 필터 */}
+                    <div className="select-group">
+                        <label htmlFor="status-filter">거래상태</label>
+                        <select id="status-filter" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                            <option value={0}>전체</option>
+                            <option value={1}>거래 중</option>
+                            <option value={2}>거래 중지</option>
+                        </select>
                     </div>
                 </div>
                 <button className="header-btn">
@@ -82,39 +112,40 @@ export default function CompanyList(){
                 </button>
             </div>
 
-            {/* 2. 테이블 카드 */}
+            {/* 테이블 카드 */}
             <div className="table-card">
-                <table className="styled-table">
-                    <thead>
-                        <tr>
-                            <th><div className="sort-header" onClick={() => requestSort('compName')}>
-                                회사명 {getSortIcon('compName')}
-                            </div></th>
-                            <th><div className="sort-header">유형</div></th>
-                            <th><div className="sort-header">대표자명</div></th>
-                            <th><div className="sort-header">연락처</div></th>
-                            <th><div className="sort-header" onClick={() => requestSort('tradeStatus')}>
-                                거래상태 {getSortIcon('tradeStatus')}
-                            </div></th>
-                            <th><div className="sort-header" onClick={() => requestSort('regDate')}>
-                                최초등록일 {getSortIcon('regDate')}
-                            </div></th>            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {companyList.map(function(company){                            
-                            return <Company key={company.compCd} company={company} serverUrl={serverUrl}/>
-                        })}
-                    </tbody>
-                </table>
+                <div className="table-card-inner">
+                    <table className="styled-table">
+                        <thead>
+                            <tr>
+                                <th><div className="sort-header" onClick={() => requestSort('compName')}>
+                                    회사명 {getSortIcon('compName')}
+                                </div></th>
+                                <th><div className="sort-header">유형</div></th>
+                                <th><div className="sort-header">대표자명</div></th>
+                                <th><div className="sort-header">연락처</div></th>
+                                <th><div className="sort-header" onClick={() => requestSort('tradeStatus')}>
+                                    거래상태 {getSortIcon('tradeStatus')}
+                                </div></th>
+                                <th><div className="sort-header" onClick={() => requestSort('regDate')}>
+                                    최초등록일 {getSortIcon('regDate')}
+                                </div></th>            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {companyList.map(function(company){                            
+                                return <Company key={company.compCd} company={company} serverUrl={serverUrl}/>
+                            })}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* 페이지네이션 */}            
             <div className="pagination">           
-            <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
+                <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
             </div>
         </div>
-        
     );
 };
 
@@ -124,15 +155,15 @@ function Company(props){
     return(
         <tr>
             <td>{company.compName}</td>
-            <td style={{ textAlign: 'center' }}>                
-                {company.compType == 'P' 
+            <td>                
+                {company.compType == 'C' 
                    ? <span className="type-badge type-corp">법인</span>
                    : <span className="type-badge type-indiv">개인</span>
                 }
             </td>
             <td>{company.ownerName}</td>
             <td>{company.compTel}</td>
-            <td style={{ textAlign: 'center' }}>                
+            <td>                
                 {company.tradeStatus == 1 
                    ? <span className="status-badge status-active">거래 중</span> 
                    : <span className="status-badge status-inactive">거래 중지</span>

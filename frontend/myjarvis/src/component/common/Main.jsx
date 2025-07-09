@@ -89,6 +89,7 @@ function Main() {
           <h1 className="text-[33px] font-extrabold tracking-tight text-[#1B254B] font-logo">
             MyJarvis
           </h1>
+
         </div>
       </div>
 
@@ -107,6 +108,7 @@ function Main() {
         <div className="flex-grow bg-[#f4f7fe] overflow-y-auto px-3 pt-6 pb-3">
           <Outlet />
         </div>
+
     </div>
   );
 }

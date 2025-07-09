@@ -1,0 +1,53 @@
+/* --- 페이지네이션 스타일 --- */
+.pagination {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px; /* 각 페이지 번호 사이의 간격 */
+}
+
+.page-item {
+    color: #b1b1b1; /* 기본 아이콘/숫자 색상 */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px; 
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 15px;
+}
+
+/* 숫자 버튼 기본 크기 */
+.page-number {
+    width: 20px; 
+    height: 20px; 
+    font-weight: 400;
+    
+}
+.page-number:hover {
+    color: #333;
+}
+
+/* 활성화된 페이지 스타일 */
+.active-page {
+    font-weight: 500;
+    color: #707070; /* 활성화 시 글자색 */
+
+}
+
+.active-page:hover {
+    color: #333;
+}
+
+
+/* 화살표 아이콘 스타일 */
+.page-arrow .material-symbols-outlined {
+    font-size: 5px;
+    
+}
+.page-arrow:hover {
+    color: #333;
+}
