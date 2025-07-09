@@ -186,7 +186,7 @@ export default function Join(){
   return (
       
       <section className="section join-wrap">
-        <div className="page-title">회원가입  </div>    
+        <div className="page-title"><img src="/Picture/MyJarvis.png" className="page-logo"/>  </div>    
         <form onSubmit={function(e){
             e.preventDefault();     //기본 submit 이벤트 
            
@@ -229,12 +229,12 @@ export default function Join(){
                  <p className={"input-msg" + (pwChk == 0 ? '' : pwChk == 1 ? ' valid' : ' invalid')}>
                         {
                         pwChk == 0 
-                        ? ''
-                        : pwChk == 1
-                        ? '비밀번호가 정상 입력되었습니다.'
-                        : pwChk == 2
-                        ? '비밀번호는 영어, 숫자, 특수문자로 6~30글자를 입력하세요.'
-                        : '비밀번호와 비밀번호 확인값이 일치하지 않습니다.'
+                            ? ''
+                                : pwChk == 1
+                                    ? '비밀번호가 정상 입력되었습니다.'
+                                        :  pwChk == 2
+                                            ? '비밀번호는 영어, 숫자, 특수문자로 6~30글자를 입력하세요.'
+                                                : '비밀번호와 비밀번호 확인값이 일치하지 않습니다.'
                         }
                     </p>
             </div>
@@ -260,8 +260,8 @@ export default function Join(){
                             : emailChk === 1
                                 ? '사용 가능한 이메일입니다.'
                                 : emailChk === 2
-                                ? '이메일 형식이 올바르지 않습니다.'
-                                : '이미 사용 중인 이메일입니다.'
+                                    ? '이메일 형식이 올바르지 않습니다.'
+                                        : '이미 사용 중인 이메일입니다.'
                         }
                      </p>
                                             
