@@ -1,3 +1,4 @@
+import "./PageNavi.css";
 
 //목록 하단 페이지네비게이션 제작 컴포넌트
 export default function PageNavi(props){
@@ -11,7 +12,7 @@ export default function PageNavi(props){
     // << 제일 앞 페이지로 이동
     pageArr.push (
         <li key="first-page">
-            <span className="material-symbols-outlined" onClick={function(){
+            <span className="page-item page-arrow material-symbols-outlined" onClick={function(){
                 setReqPage(1);
             }}>
                 keyboard_double_arrow_left
@@ -22,7 +23,7 @@ export default function PageNavi(props){
     // < 이전 페이지로 이동
     pageArr.push (
         <li key="prev-page">
-            <span className="material-symbols-outlined" onClick={function(){
+            <span className="page-item page-arrow material-symbols-outlined" onClick={function(){
                 
                 if(reqPage > 1){
                 setReqPage(reqPage-1);
@@ -39,7 +40,7 @@ export default function PageNavi(props){
     for(let i=0; i<pageInfo.pageNaviSize; i++){
         pageArr.push(
             <li key={"page"+i}>
-                <span className={"page-item" + (pageNo == reqPage ? " active-page" : "")} onClick={function(e){
+                <span className={"page-item page-number" + (pageNo == reqPage ? " active-page" : "")} onClick={function(e){
                     setReqPage(Number(e.target.innerText));
                 }}>
                     {pageNo}
@@ -58,7 +59,7 @@ export default function PageNavi(props){
     // > 다음 페이지로 이동
     pageArr.push(
         <li key="next-page">
-            <span className="material-symbols-outlined" onClick={function(){
+            <span className="page-item page-arrow material-symbols-outlined" onClick={function(){
                 if(reqPage < pageInfo.totalPage){
                     setReqPage(reqPage+1);
                 }
@@ -71,7 +72,7 @@ export default function PageNavi(props){
     // >> 제일 마지막 페이지로 이동
     pageArr.push(
         <li key="last-page">
-            <span className="material-symbols-outlined" onClick={function(){
+            <span className="page-item page-arrow material-symbols-outlined" onClick={function(){
                 setReqPage(pageInfo.totalPage);
             }}>
                 keyboard_double_arrow_right

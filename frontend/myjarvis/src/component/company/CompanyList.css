@@ -1,9 +1,16 @@
 /* --- 전체 레이아웃 --- */
 .content-wrap {
+    background-color: white; 
+    border-radius: 12px;    
+    border: 1px solid #e9eef5; /* 아주 연한 회색 테두리 box-shadow 대신 이 코드를 사용 */
+    margin: -12px; /* 부모의 패딩(p-3)을 모든 방향에서 -12px만큼 당기기 */
+    width: calc(100% + 24px); /* 좌우 마진값(12px*2)을 더해 너비 보정 */
+    height: calc(100% + 24px); /* 상하 마진값(12px*2)을 더해 높이 보정 */
+    padding: 32px;   
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 카드 사이의 간격 */
-    padding: 30px;
+    gap: 20px; /* 카드 사이의 간격 */   
 }
 
 .content-header {
@@ -11,79 +18,86 @@
     align-items: baseline;
     gap: 12px;
 }
-.content-title {
-    font-size: 26px;
-    font-weight: 700;
-}
-.content-subtitle {
-    font-size: 14px;
-    color: #888;
+
+.content-title { 
+    font-size: 26px; 
+    font-weight: 700; 
 }
 
-/* --- 1. 필터 및 액션 카드 --- */
+.content-subtitle { 
+    font-size: 14px; 
+    color: #888; 
+}
+
+/* --- 필터 및 액션 카드 --- */
 .filter-card {
-    background-color: white;
-    padding: 20px;
+    border: 1px solid #f0f0f0; /* 연한 회색 선 */
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 12px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.filter-groups {
+.filter-controls {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 24px; /* 각 필터 요소 사이의 간격 */
 }
-.search-box {
-    position: relative;
-}
+
+/* 검색창 스타일 */
+.search-box { position: relative; }
 .search-box > .material-symbols-outlined {
     position: absolute;
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: #aaa;
-    font-size: 20px;
+    font-size: 16px;
 }
-.search-box > input {
-    padding: 10px 15px 10px 40px;
+.search-box > input {    
+    padding-left: 40px; /* 왼쪽 아이콘 공간만 유지 */
+    height: 32px; /* 기준 높이로 설정 */
+    box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     width: 250px;
+    font-size: 14px;
 }
 
-/* [추가] 필터 버튼 스타일 */
-.filter-buttons {
+/* 셀렉트 박스 스타일 */
+.select-group {
     display: flex;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    padding: 4px;
+    align-items: center;
+    gap: 10px;
 }
-.filter-buttons button {
-    background-color: transparent;
-    border: none;
-    padding: 6px 16px;
-    border-radius: 6px;
+.select-group label {
     font-size: 14px;
     font-weight: 500;
-    cursor: pointer;
     color: #555;
-    transition: all 0.2s ease-in-out;
+    flex-shrink: 0; /* 라벨 글자가 줄어들지 않도록 설정 */
 }
-.filter-buttons button.active {
+.select-group select {    
+    padding: 0 12px; /* 세로 패딩 제거 */
+    height: 32px; /* 기준 높이로 설정 */
+    box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
     background-color: white;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 120px;
 }
+
 
 /* 신규 등록 버튼 */
 .header-btn {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 10px 20px;
-    background-color: #333;
+    gap: 4px;     
+    padding: 0 20px; /* 세로 패딩 제거 */
+    height: 32px; /* 기준 높이로 설정 */
+    box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
+    background-color: #3b48ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -91,52 +105,61 @@
     font-size: 14px;
     font-weight: 500;
 }
-.header-btn:hover {
-    background-color: #000;
+.header-btn > .material-symbols-outlined {  
+    font-size: 16px;
+}
+.header-btn:hover { background-color: #2C3AFF; }
+
+/* --- 테이블 카드 --- */
+.table-card {    
+    overflow: hidden;    
+    color: #4D4D4D;
+    
 }
 
-/* --- 2. 테이블 카드 --- */
-.table-card {
-    background-color: white;
+/* 테이블 틀 */
+.table-card-inner { 
+    overflow-y: auto;
+    border: 1px solid #f0f0f0;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    /* [핵심] 이 속성으로 내부 테이블의 각진 모서리를 숨겨 둥글게 보이게 합니다. */
-    overflow: hidden;
 }
 
 .styled-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
-    table-layout: fixed;
+    table-layout: fixed; /* 필터가 움직여도 테이블 너비 고정 */
 }
-/* 테이블 내부 스타일은 이전과 유사하게 유지 */
+
 .styled-table th, .styled-table td {
-    padding: 16px 15px;
+    padding: 14px 20px;
     text-align: left;
     border-bottom: 1px solid #f0f0f0;
-    vertical-align: middle;
+    vertical-align: middle;    
+    font-weight: 500;
+    color: #4D4D4D;
 }
-.styled-table thead tr {
-    background-color: #fafafa;
+
+/* 테이블 제목줄 */
+.styled-table thead tr th { 
+    /* background-color: #fafafa; */ 
+    font-weight: 400;
+    color: #b4bfca; 
 }
+
 /* 마지막 줄의 하단 보더 제거 */
 .styled-table tbody tr:last-child td {
-    border-bottom: none;
+    border-bottom: none;      
 }
 
-
-/* 각 셀 정렬 */
-.styled-table th:not(:first-child), .styled-table td:not(:first-child) {
-    text-align: center;
-}
-
-/* [추가] 정렬 헤더 컨테이너 */
+/* 정렬 헤더 컨테이너 */
 .sort-header {
-    display: flex;
-    justify-content: center;
+    display: flex;      
     align-items: center;
     gap: 4px; /* 텍스트와 아이콘 사이 간격 */
+    
+}
+.sort-header .material-symbols-outlined {
+    font-size: 17px; 
 }
 
 
@@ -147,7 +170,7 @@
     border-radius: 12px; /* 둥근 모서리 */
     font-size: 13px;
     font-weight: 500;
-    text-align: center;
+    text-align: left;
 }
 
 /* 유형 뱃지 색상 */
@@ -170,53 +193,3 @@
     color: #dc3545;
 }
 
-
-/* --- 페이지네이션 스타일 --- */
-.pagination {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    margin-top: 30px;
-    gap: 8px; /* 버튼 사이 간격 */
-    user-select: none; /* 텍스트 드래그 방지 */
-}
-
-.page-item {
-    color: #888; /* 기본 아이콘/숫자 색상 */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-/* 숫자 버튼 기본 크기 */
-.page-number {
-    width: 36px;
-    height: 36px;
-    font-weight: 500;
-}
-.page-number:hover {
-    background-color: #f0f0f0;
-}
-
-/* 활성화된 페이지 스타일 */
-.active-page {
-    font-weight: 700;
-    color: #fff; /* 활성화 시 글자색 */
-    background-color: #555; /* 활성화 시 배경색 */
-}
-.active-page:hover {
-    background-color: #333;
-}
-
-/* 화살표 아이콘 스타일 */
-.page-arrow .material-symbols-outlined {
-    font-size: 24px;
-}
-.page-arrow:hover {
-    color: #333;
-}

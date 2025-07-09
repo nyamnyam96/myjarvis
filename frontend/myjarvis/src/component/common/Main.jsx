@@ -77,8 +77,7 @@ function Main() {
     <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] text-[#2a3547] font-['Pretendard']">
       
       {/* 좌측 GNB */}
-      <nav className="w-[260px] bg-white rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
-        main
+      <nav className="w-[260px] bg-white rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">      
         
         {/* 로고 */}
         <div className="pb-5 mb-0 border-b border-[#e5eaef]">
@@ -101,7 +100,7 @@ function Main() {
       </nav>
 
       {/* 메인 콘텐츠 */}
-      <div className="flex-grow bg-[#f4f7fe] overflow-y-auto p-6">
+      <div className="flex-grow bg-[#f4f7fe] overflow-y-auto p-3">
         <Outlet />
       </div>
     </div>
