@@ -90,10 +90,8 @@ export default function Login() {
       {/* 섹션 스타일 (배경 등 전체 박스) */}
       <div className={styles.pageContainer}>
         {/* 로그인 박스 */}
-        <img className="logo" />
-
         {/* 제목 */}
-        <div className={styles.pageTitle}>MyJarvis</div>
+        <div className={styles.pageTitle}><img src="/Picture/Jarvis.logo.png"  />MyJarvis</div>
 
         {/* 로그인 폼 */}
         <form

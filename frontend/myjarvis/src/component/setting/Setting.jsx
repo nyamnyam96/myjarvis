@@ -3,6 +3,8 @@
 import React from 'react';
 import SwitchToggle from '../../components/control/SwitchToggle';
 import Button from '../../components/common/Button';
+import { useNavigate, Route, Routes } from 'react-router-dom';
+import MemberMain from '../member/MemberMain';
 
 const Setting = () => {
   // 스위치 상태는 각 항목별로 독립적으로 useState로 관리
@@ -12,7 +14,8 @@ const Setting = () => {
   const [sessionTime, setSessionTime] = React.useState(true);
   const [signatureSave, setSignatureSave] = React.useState(false);
 
-  
+  const navigate = useNavigate();
+
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* 환경 설정 카드 */}
@@ -51,9 +54,12 @@ const Setting = () => {
           <p className="text-sm text-gray-500 mb-4">개인정보, 로그인 정보 등 확인</p>
         </div>
         <div>
-          <Button size="sm" color="gray" onClick={() => window.location.href = '/mypage'}>
-            마이페이지 바로 가기 {/*마이페이지  */}
-          </Button>
+        {/*
+          <Button size="sm" color="gray" onClick={() => navigate('/member/*')}>
+            마이페이지 바로 가기 
+          </Button> 
+          */}
+           <MemberMain />
         </div>
       </div>
     </div>

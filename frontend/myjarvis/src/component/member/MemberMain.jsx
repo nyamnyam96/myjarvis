@@ -79,13 +79,18 @@ export default function MemberMain(){
                 });
             }
         });
+
+        
        
 }
 
 
 
     return (
-        <section className="mypage-container">
+        
+        
+        <section className="mypage-container" >
+            
             <div className="page-title">{member.memberId}님의 마이페이지</div>
             <form onSubmit={function(e){
                 e.preventDefault();
@@ -130,7 +135,7 @@ export default function MemberMain(){
                          </th>
                          <td className="input-group">
                             <div className="input-item">
-                                {member.memberStatus == 'y' ? '관리자' : '일반회원'}
+                                {member.memberStatus == 'y' ? '일반회원' : '관리자'}
                             </div>
                          </td>
                       </tr>
@@ -147,6 +152,16 @@ export default function MemberMain(){
                       <tr>
                          <th>
                             <label htmlFor="memberName">상호명</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="input-item">
+                                
+                            </div>
+                         </td>
+                      </tr>
+                       <tr>
+                         <th>
+                            <label htmlFor="memberName">사업자 번호</label>
                          </th>
                          <td className="input-group">
                             <div className="input-item">

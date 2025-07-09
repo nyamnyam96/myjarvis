@@ -5,7 +5,6 @@ import { useNavigate} from "react-router-dom";
 import createInstance from "../../axios/interceptor";
 import './Join.css';
 
-
 export default function Join(){
 
     //.env에 저장된 환경변수 값 가져오기
@@ -163,7 +162,7 @@ export default function Join(){
                 })
                 .then(function(result){
                     if(res.data.resData){ //회원가입 정상 처리
-                        navigate('/login');//로그인 컴포넌트로 전환
+                        navigate('/');//로그인 컴포넌트로 전환
                     }
                 });
             })
@@ -195,9 +194,9 @@ export default function Join(){
         }}>
             <div className="input-wrap">
                 <div className="input-title">
-                    <label htmlFor="memberId">아이디</label>
                 </div>
                 <div className="input-item3">
+                    <label htmlFor="memberId">아이디</label>
                     <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId}/>
                 </div>
                 <p className={"input-msg" + (idChk == 0 ? '' : idChk == 1 ? ' valid' : ' invalid')}>
@@ -214,17 +213,17 @@ export default function Join(){
             </div>
             <div className="input-wrap">
                 <div className="input-title">
-                    <label htmlFor="memberPw">비밀번호</label>
                 </div>
                 <div className="input-item3">
+                    <label htmlFor="memberPw">비밀번호</label>
                     <input type="password" id="memberPw" value={member.memberPw}  onChange={chgMember} onBlur={chkMemberPw}  /> {/** onChange={chgMember} onBlur={chkMemberPw} */}
                 </div>
             </div>
             <div className="input-wrap">
                     <div className="input-title">
-                        <label htmlFor="memberPwRe">비밀번호 확인</label>
                     </div>
                     <div className="input-item3">
+                        <label htmlFor="memberPwRe">비밀번호 확인</label>
                         <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={chkMemberPw}/>
                     </div>
                  <p className={"input-msg" + (pwChk == 0 ? '' : pwChk == 1 ? ' valid' : ' invalid')}>
@@ -241,17 +240,17 @@ export default function Join(){
             </div>
             <div className="input-wrap">
                 <div className="input-title">
-                    <label htmlFor="memberName">이름</label>
                 </div>
                 <div className="input-item3">
+                    <label htmlFor="memberName">이름</label>
                     <input type="text" id="memberName" value={member.memberName} onChange={chgMember} />
                  </div>
             </div>
             <div className="input-wrap">
                 <div className="input-title">
-                    <label htmlFor="memberEmail">이메일</label>
                 </div>
                  <div className="input-item3">
+                    <label htmlFor="memberEmail">이메일</label>
                     <input type="text" id="memberEmail" value={member.memberEmail} onChange={chgMember}  onBlur={checkMemberEmail}/>
                  </div>
                     <p className={"input-msg" + (emailChk == 0 ? '' : emailChk == 1 ? ' valid' : ' invalid')}>
@@ -269,9 +268,9 @@ export default function Join(){
             </div>
             <div className="input-wrap">
                 <div className="input-title">
-                    <label className="input-title">전화번호</label>
                 </div>
                 <div className="input-item3">
+                    <label htmlFor="input-title">전화번호</label>
                     <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
                 </div>
                 

@@ -1,17 +1,13 @@
 .section.join-wrap {
-  padding-top: 60px; /* 위쪽 패딩 추가 */
-  display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  align-items: center;    /* 가로 중앙 정렬 */
-  max-width: 600px;
-  margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-family: 'Noto Sans KR', sans-serif;
+  padding: 40px 30px;          /* 적당한 패딩 */
+  max-width: 800px;           /* 최대 가로 넓이 */
+  height: 900px;               /* 원하는 세로 높이 (직사각형) */
+  margin: 40px auto;           /* 화면 가운데 정렬 + 위아래 여백 */
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border-radius: 10px;
-  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow-y: auto;            /* 내용 많으면 세로 스크롤 */
 }
 
 .page-title {
@@ -21,30 +17,57 @@
   text-align: center;
   
 }
+/* 수요일날 수정할것 */
+.input-wrap {  
 
-.input-wrap {
-  margin-bottom: 20px;
-  
-  flex-direction: column;
+  align-items: center;
+  flex: 1; /* 균등 분배 */
+  min-width: 150px; /* 최소 크기 */
+  box-sizing: border-box;
 }
+
+.input-item3 label {
+  width: 100px;            /* 라벨 너비 고정 */
+  white-space: nowrap;     /* 줄바꿈 방지 */
+  text-align: right;       /* 라벨 오른쪽 정렬 */
+}
+.input-item3 input {
+  flex: 1;                 /* 남은 공간 모두 차지 */
+  padding: 8px;
+  font-size: 14px;
+}
+
+.input-item3 {
+    display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+ 
+
+  /* 추가 */
+  max-width: 400px;         /* 너무 넓지 않게 조정 */
+  margin-left: 150px;        /* 중앙 정렬 */
+  margin-right: auto;
+
+}
+
 
 .input-title label {
   font-weight: 600;
   margin-bottom: 6px;
   color: black;
   font-size: 18px;
+  
 }
 
+
 .input-item3 input{
- min-width: 350px; /* 최소 너비 설정 */
-  background-color: #f4f7fe;
-  padding: 10px 14px;
-  font-size: 16px;
-  border-radius: 6px;
- 
-  
-  outline: none;
-  transition: border-color 0.3s ease;
+ width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+
 
 }
 
@@ -75,7 +98,7 @@
   margin-top: 40px;
 }
 
-.btn-primary.lg {
+.btn-primary.l {
   background-color: #3b82f6;
   color: white;
   border: none;

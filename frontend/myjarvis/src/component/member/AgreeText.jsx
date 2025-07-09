@@ -17,7 +17,7 @@ export default function AgreeText() {
           <br />
           (여기에 전체 약관 내용을 입력)
         </p>
-            <Link to="/agree">확인</Link>
+            <Link to="/agree" className="agree-button">확인</Link>
           
       </div>
     </section>

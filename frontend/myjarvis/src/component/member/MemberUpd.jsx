@@ -98,7 +98,8 @@ export default function MemberUpd(){
 
         axiosInstance(options)
         .then(function(res){
-            navigate("/Member");
+            {/**navigate("/Member");*/}
+            navigate("/setting");
         })
         .catch(function(err){
             console.log(err);
@@ -118,8 +119,8 @@ export default function MemberUpd(){
         })
         .then(function(result){
             if (result.isConfirmed) {
-                navigate("/Member");
-
+               {/**navigate("/Member");*/}
+                navigate("/setting");
             }
         })
     }
@@ -136,6 +137,8 @@ export default function MemberUpd(){
                         updateMember();
                     }}>
                         <div className="input-wrap">
+                         <div className="text">회원 수정</div>
+                                <br/>
                             <div className="input-title">
                                 <label htmlFor="newName">이름</label>
                             </div>
@@ -145,7 +148,7 @@ export default function MemberUpd(){
                         </div> 
                         <div className="input-wrap">
                             <div className="input-title">
-                                <label htmlFor="newPw">새 비밀번호 입력</label>
+                                <label htmlFor="newPw">새(구) 비밀번호 입력</label>
                             </div>
                             <div className="input-item">
                                 <input type="password" id="newPw" name="memberPw" value={member.memberPw} onChange={chgMember}/>
@@ -154,7 +157,7 @@ export default function MemberUpd(){
                         </div>
                         <div className="input-wrap">
                             <div className="input-title">
-                                <label htmlFor="newPwRe">새 비밀번호 확인</label>
+                                <label htmlFor="newPwRe">새(구) 비밀번호 확인</label>
                             </div>
                             <div className="input-item">
                                 <input type="password" id="newPwRe" name="memberPw" value={memberPwRe} onChange={chgMemberPwRe}/>
@@ -189,12 +192,12 @@ export default function MemberUpd(){
                         <div className="input-title">
                             <label htmlFor="oldPw">기존 비밀번호 입력</label>
                         </div>
-                        <div className="input-item2">
+                        <div className="pw-check-input">
                             <input type="password" id="oldPw" name="memberPw"  value={member.memberPw} onChange={chgMemberPw}/>
                         </div>
                         <div className="button-zone">
-                            <button type="button" className="btn-primary lg" onClick={checkPw}>확인</button>
-                            <button type="button" className="btn-primary lg" onClick={cancel}>취소</button>
+                            <button type="button" className="btn-primary" onClick={checkPw}>확인</button>
+                            <button type="button" className="btn-primary" onClick={cancel}>취소</button>
                         </div>  
                     </div>
                 </>

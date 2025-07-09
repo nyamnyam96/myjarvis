@@ -16,7 +16,7 @@ export default function AgreeTextSelect() {
           <br />
           (I-class 배재현 강사 100퍼센트 전액 할인)
         </p>
-            <Link to="/agree">확인</Link>
+            <Link to="/agree" className="agree-button">확인</Link>
       </div>
     </section>
   );
