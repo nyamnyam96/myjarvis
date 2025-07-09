@@ -118,3 +118,11 @@
   white-space: nowrap; /* 줄바꿈 방지 */
   width: max-content;  /* 내용 길이에 맞춰 최소 너비 */
 }
+
+.page-logo {
+ 
+  margin: 0 auto;
+  
+  width: 200px;
+ 
+}
