@@ -13,5 +13,5 @@ import { customHistory } from './component/common/history.js';
 createRoot(document.getElementById('root')).render(
 <HistoryRouter history={customHistory}>
     <App />
-  </HistoryRouter>
+</HistoryRouter>
 )

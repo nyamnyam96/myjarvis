@@ -62,7 +62,7 @@ public class CompanyService {
 
 	@Transactional
 	public int join(Company company) {		
-		return companyDao.join(company);
+		return companyDao.insertCompany(company);
 	}
 	
 	

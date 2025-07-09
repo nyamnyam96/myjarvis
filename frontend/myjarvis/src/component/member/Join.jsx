@@ -270,7 +270,7 @@ export default function Join(){
                 <div className="input-title">
                 </div>
                 <div className="input-item3">
-                    <label htmlFor="input-title">전화번호</label>
+                    <label htmlFor="memberPhone">전화번호</label>
                     <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
                 </div>
                 
