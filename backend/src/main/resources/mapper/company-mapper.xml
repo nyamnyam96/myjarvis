@@ -55,8 +55,11 @@
   
   
   <!-- company 신규 가입 -->
-  <insert id="join" parameterType="kr.or.iei.company.model.dto.Company">
-  insert into tbl_company
+  <insert id="insertCompany" parameterType="kr.or.iei.company.model.dto.Company">
+  	<selectKey keyProperty="compCd" resultType="_int" order="AFTER">
+  		SELECT SEQ_TBL_COMPANY_CD.CURRVAL FROM DUAL
+    </selectKey>
+  	insert into tbl_company
   		(
   		COMP_CD, 
   		MEMBER_NO, 
@@ -68,7 +71,7 @@
   		COMP_NO,   
   		REG_DATE
   		)
-  values
+  	values
   		(
   		SEQ_TBL_COMPANY_CD.NEXTVAL,
   		#{memberNo},
@@ -81,5 +84,31 @@
   		sysdate
   		)  		
   </insert>
+  <!-- company 담당자 신규 등록 -->
+  <insert id="insertCompanyMember" parameterType="kr.or.iei.company.model.dto.CompanyMember">
+    INSERT INTO TBL_COMPANY_MEMBER (
+        CONTACT_IDX, 
+        COMP_CD, 
+        MEMBER_NO, 
+        CONTACT_NAME, 
+        CONTACT_EMAIL, 
+        CONTACT_PHONE, 
+        IS_MAIN_CONTACT, 
+        CONTACT_POSITION, 
+        CONTACT_DEPT, 
+        REG_DATE
+    ) VALUES (
+        'CM_' || LPAD(SEQ_TBL_COMPANY_MEMBER_IDX.NEXTVAL, 4, '0'), -- PK 형식 맞추기 (예: CM_0001)
+        #{compCd},
+        #{memberNo},
+        #{contactName},
+        #{contactEmail},
+        #{contactPhone}, 
+        'N',        
+        #{contactPosition},
+        #{contactDept},
+        SYSDATE
+    )
+</insert>
   
 </mapper>

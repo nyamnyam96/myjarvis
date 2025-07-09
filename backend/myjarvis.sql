@@ -430,6 +430,10 @@ CREATE SEQUENCE SEQ_TBL_TAG_MAP_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 -- 거래처 구성원(CONTACT_IDX) 시퀀스
 CREATE SEQUENCE SEQ_TBL_COMPANY_MEMBER_IDX START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
+-- 회원 가입 시 시퀀스
+CREATE SEQUENCE seq_tbl_member_no START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+commit;
 
 -----------------------------------------------------------------------------------------
 
@@ -453,6 +457,7 @@ VALUES ('MEM_005', 'user04', '1234', '임지헌', 'Y', 'jihun@example.com', '010-77
 -- 데이터가 잘 들어갔는지 확인
 COMMIT;
 
+select * from tbl_company;
 
 -- 임시 거래처 데이터 삽입
 INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
@@ -666,5 +671,5 @@ SELECT TRADE_STATUS, COUNT(*)
 FROM TBL_COMPANY
 GROUP BY TRADE_STATUS;
 
-
+select * from tbl_member;
 

@@ -166,6 +166,7 @@ public class MemberController {
 	
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
 	@GetMapping("/{memberEmail}/chkEmail")
 	public ResponseEntity<ResponseDTO> chkMemberEmail(@PathVariable String memberEmail){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 체크 실패", false, "error");
