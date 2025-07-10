@@ -2,7 +2,6 @@ package kr.or.iei.company.controller;
 
 import java.util.HashMap;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.company.model.dto.Company;
 import kr.or.iei.company.model.service.CompanyService;
+import kr.or.iei.member.model.dto.Member;
+
 
 @RestController
 @CrossOrigin("*")
@@ -23,8 +23,7 @@ import kr.or.iei.company.model.service.CompanyService;
 public class CompanyController {
 	
 	@Autowired
-	private CompanyService companyService;
-	
+	private CompanyService companyService;	
 
 	@NoTokenCheck
 	@GetMapping("/list")
@@ -38,15 +37,14 @@ public class CompanyController {
 	) {		
 		HashMap<String, Object> companyMap = companyService.selectCompanyList(reqPage, sortKey, sortDirection, type, status, search);		
 		return companyMap;
-	}
+	}	
 	
-	@NoTokenCheck
 	@PostMapping("/join")
-	public int join(@RequestBody Company company) {
+	public int join(@RequestBody Company company) { 	
+		
+		//memberNo가 채워진 company 객체로 서비스 로직 호출
 		int result = companyService.join(company);
 		return result;
-	}
-	
-	
+	}	
 
 }

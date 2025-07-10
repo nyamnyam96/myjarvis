@@ -158,9 +158,16 @@
     color: #b4bfca; 
 }
 
+
 /* 마지막 줄의 하단 보더 제거 */
 .styled-table tbody tr:last-child td {
     border-bottom: none;      
+}
+
+/* 원하는 행 선택 시 컬러변경 */
+.styled-table tbody tr:hover td {
+    background-color: #f4f7fe;
+    font-weight: 400;
 }
 
 /* 정렬 헤더 컨테이너 */
@@ -203,5 +210,26 @@
 .status-inactive { /* 거래 중지 */
     background-color: #fdeeee;
     color: #dc3545;
+}
+
+
+/* 호버시, 유형 뱃지 색상 */
+.styled-table tbody tr:hover td .type-corp { /* 법인 */ 
+    background-color: #b2d9f7;
+    color: #0368d3; 
+}
+.styled-table tbody tr:hover td .type-indiv { /* 개인 */
+    background-color: #abebcb;
+    color: #1f8035;
+}
+
+/* 호버시, 거래상태 뱃지 색상 */
+.styled-table tbody tr:hover td .status-active { /* 거래 중 */
+    background-color: #abebcb;
+    color: #1f8035;
+}
+.styled-table tbody tr:hover td .status-inactive { /* 거래 중지 */
+    background-color: #facfcf;
+    color: #b32d3a;
 }
 

@@ -52,7 +52,7 @@ function setInterceptors(instance) {
                     && !originalRequest._retry
                 ){  //조건 : 이 요청이 리프레시 토큰 요청이 아님
                     //아직 재시도 한 적이 없음 retry플래그가 false
-
+                    
                     //상태 저장소에서 로그인 정보와 리프레시 토큰을 꺼냄
                     const loginMember = useUserStore.getState().loginMember;
                     const refreshToken = useUserStore.getState().refreshToken;
@@ -88,6 +88,7 @@ function setInterceptors(instance) {
                             return Promise.reject(error);
                         })
                     }else {
+                        console.log('test2');
                     //실패하거나 재시도 조건이 맞지않으면
                     Swal.fire({
                         title : '알림',

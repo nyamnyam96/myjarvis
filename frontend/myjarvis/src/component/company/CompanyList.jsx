@@ -3,11 +3,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import PageNavi from "./companyCommon/PageNavi";
 import CompanyInsertModal from "./CompanyInsertModal";
+import createInstance from "../../axios/interceptor";
 
 
 export default function CompanyList(){    
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;     //API 서버 주소 serverUrl에 저장    
+    const axiosInstance = createInstance();                 //중요!! interceptor에서 만들어놓은 axios
     const [companyList, setCompanyList] = useState([]);     //백엔드에서 받아온 데이터를 저장할   
     const [reqPage, setReqPage] = useState(1);              //요청 페이지    
     const [pageInfo, setPageInfo] = useState({});           //페이지 네비게이션    
@@ -16,6 +18,8 @@ export default function CompanyList(){
     const [filterStatus, setFilterStatus] = useState(0);    //거래상태 (전체, 거래 중, 거래 중지)
     const [searchTerm, setSearchTerm] = useState("");       //검색어
     const [isModalOpen, setIsModalOpen] = useState(false);  //신규 고객사 모달창 관리
+    const [refetchKey, setRefetchKey] = useState(0);        //목록을 다시 불러오는 역할만 하는 "새로고침 키" 상태    
+    
 
     
     useEffect(function(){
@@ -27,7 +31,7 @@ export default function CompanyList(){
         options.method = 'get';
         
         //axios를 이용하여 백엔드 API 호출
-        axios(options)
+        axiosInstance(options)
         .then(function(res){
             //성공 시, 불러온 데이터 state에 저장
             setCompanyList(res.data.companyList);          
@@ -37,7 +41,7 @@ export default function CompanyList(){
             console.log(err)
         });      
 
-    }, [reqPage, sortConfig, filterType, filterStatus, searchTerm]); // 의존성 배열에 새 필터 추가
+    }, [reqPage, sortConfig, filterType, filterStatus, searchTerm,refetchKey]); // 의존성 배열
 
 
     // 정렬 요청 함수
@@ -75,7 +79,12 @@ export default function CompanyList(){
     }
     function reloadCompanyList(){
         setReqPage(1); // 1페이지로 이동시키면 useEffect가 자동으로 목록을 다시 불러옴.
-    }   
+    }
+    
+    //reloadCompanyList 함수가 'refetchKey' 값을 1씩 증가시키도록 수정(고객사 등록 후 새로고침)
+    function reloadCompanyList(){
+        setRefetchKey(prevKey => prevKey + 1);
+    }
 
     return (        
         <div className="content-wrap">

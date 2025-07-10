@@ -12,6 +12,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.company.model.dao.CompanyDao;
 import kr.or.iei.company.model.dto.Company;
+import kr.or.iei.company.model.dto.CompanyMember;
 
 @Service
 public class CompanyService {
@@ -61,8 +62,28 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public int join(Company company) {		
-		return companyDao.insertCompany(company);
+	public int join(Company company) {
+		
+		//1. 신규 고객사 정보 저장
+		int result = companyDao.insertCompany(company);		
+		
+		//2. 담당자 목록 추가 여부 확인
+		List<CompanyMember> members = company.getCompanyMembers();
+		if(members != null && !members.isEmpty()) {
+			
+			//3. 담당자 목록을 하나씩 꺼내어 반복문으로 처리
+			for(CompanyMember member : members) {								
+				member.setCompCd(company.getCompCd()); // 방금 생성된 회사 코드(compCd)를 담당자 객체에 넣어줌.
+			
+			//4. 등록한 회원 정보도 담당자 객체에 전달
+		    member.setMemberNo(company.getMemberNo());
+		    
+		    //5. 모든 정보가 채워진 담당자 정보를 TBL_COMPANY_MEMBER에 저장
+		    result += companyDao.insertCompanyMember(member); //회사 정보는 1개이고, 담당자 정보는 1개 이상일 수 있어 += 연산자 삽입.			
+				
+			}
+		}		
+		return result;
 	}
 	
 	
