@@ -56,8 +56,8 @@
   
   <!-- company 신규 가입 -->
   <insert id="insertCompany" parameterType="kr.or.iei.company.model.dto.Company">
-  	<selectKey keyProperty="compCd" resultType="_int" order="AFTER">
-  		SELECT SEQ_TBL_COMPANY_CD.CURRVAL FROM DUAL
+    <selectKey keyProperty="compCd" resultType="string" order="BEFORE">
+     SELECT 'COMP' || LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0') FROM DUAL
     </selectKey>
   	insert into tbl_company
   		(
@@ -73,7 +73,7 @@
   		)
   	values
   		(
-  		SEQ_TBL_COMPANY_CD.NEXTVAL,
+  		#{compCd},
   		#{memberNo},
   		#{compName},
   		#{compTel},

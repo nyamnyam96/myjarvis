@@ -1,11 +1,12 @@
 import { useState } from "react";
 import useUserStore from "../../store/useUserStore"
-import axios from "axios";
 import Swal from "sweetalert2";
 import './CompanyInsertModal.css';
+import createInstance from "../../axios/interceptor";
 
 export default function CompanyInsertModal({closeModal, reloadCompanyList}) {
     const serverUrl = import.meta.env.VITE_BACK_SERVER;    
+    const axiosInstance = createInstance();
     const [company, setCompany] = useState({        //고객사 기본 정보 state
         compName : '',
         ownerName : '',
@@ -61,9 +62,12 @@ export default function CompanyInsertModal({closeModal, reloadCompanyList}) {
         // 3. 서버에 보낼 최종 데이터 조립하기
         const finalData = {...company,memberNo: loginMember.memberNo,companyMembers: members};
 
+        console.log("로그인 정보 (loginMember):", loginMember);
+        console.log("서버로 보낼 데이터 (finalData):", finalData);
+
         // 4. axios로 서버에 전송하기
-        axios.post(serverUrl + "/company/join", finalData)
-            .then(res => {
+        axiosInstance.post(serverUrl + "/company/join", finalData)
+            .then(function(res){
                 if (res.data > 0) {
                     Swal.fire({ title: '등록 성공', text: '신규 고객사가 등록되었습니다.', icon: 'success' });
                     closeModal(); // 부모가 물려준 닫기 함수 실행
@@ -72,7 +76,7 @@ export default function CompanyInsertModal({closeModal, reloadCompanyList}) {
                     Swal.fire({ title: '등록 실패', text: '등록 중 문제가 발생했습니다.', icon: 'error' });
                 }
             })
-            .catch(err => {
+            .catch(function(err){
                 console.error(err);
                 Swal.fire({ title: '오류 발생', text: '서버 통신 중 오류가 발생했습니다.', icon: 'error' });
             });
