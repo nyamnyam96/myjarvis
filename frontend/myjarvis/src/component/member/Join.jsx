@@ -269,11 +269,8 @@ export default function Join(){
             <div className="join-wrap">
                 <div className="input-title">
                 </div>
-
                 <div className="join-item3">
                     <label htmlFor="input-title">전화번호</label>
-
-
                     <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
                 </div>
                 
