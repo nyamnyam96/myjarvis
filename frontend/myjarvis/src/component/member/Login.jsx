@@ -76,7 +76,11 @@ export default function Login() {
             setAccessToken(loginMember.accessToken);
             setRefreshToken(loginMember.refreshToken);
 
+<<<<<<< HEAD
             navigate('/main');
+=======
+            navigate('/Main');
+>>>>>>> 813984287273fa112b8115baea34da9e206352a8
           }
         })
         .catch(function (err) {

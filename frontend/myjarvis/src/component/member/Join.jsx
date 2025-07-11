@@ -269,8 +269,13 @@ export default function Join(){
             <div className="join-wrap">
                 <div className="input-title">
                 </div>
+<<<<<<< HEAD
                 <div className="join-item3">
                     <label htmlFor="input-title">전화번호</label>
+=======
+                <div className="input-item3">
+                    <label htmlFor="memberPhone">전화번호</label>
+>>>>>>> 813984287273fa112b8115baea34da9e206352a8
                     <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
                 </div>
                 

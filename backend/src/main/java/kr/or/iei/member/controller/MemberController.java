@@ -166,6 +166,7 @@ public class MemberController {
 	
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
 	@GetMapping("/{memberEmail}/chkEmail")
 	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> chkMemberEmail(@PathVariable String memberEmail){

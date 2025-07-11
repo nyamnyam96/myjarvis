@@ -3,9 +3,21 @@
     background-color: white; 
     border-radius: 12px;    
     border: 1px solid #e9eef5; /* 아주 연한 회색 테두리 box-shadow 대신 이 코드를 사용 */
-    margin: -12px; /* 부모의 패딩(p-3)을 모든 방향에서 -12px만큼 당기기 */
-    width: calc(100% + 24px); /* 좌우 마진값(12px*2)을 더해 너비 보정 */
-    height: calc(100% + 24px); /* 상하 마진값(12px*2)을 더해 높이 보정 */
+    /* margin: -12px; /* 부모의 패딩(p-3)을 모든 방향에서 -12px만큼 당기기 */
+    /*width: calc(100% + 24px); /* 좌우 마진값(12px*2)을 더해 너비 보정 */
+    /*height: calc(100% + 24px); /* 상하 마진값(12px*2)을 더해 높이 보정 */
+    /* [수정] 각 방향의 margin을 부모의 padding에 맞게 개별 설정 */
+    margin-top: -24px;    /* 부모의 pt-6 (24px) 만큼 당기기 */
+    margin-bottom: -12px; /* 부모의 pb-3 (12px) 만큼 당기기 */
+      /* 부모의 px-3 (12px) 만큼 당기기 */
+      /* 부모의 px-3 (12px) 만큼 당기기 */
+
+    /* [수정] 너비는 좌우 12+12=24px로 동일 */
+    width: calc(100%); 
+ 
+    /* [수정] 높이는 상단 24px + 하단 12px = 36px 만큼 보정 */
+    height: calc(100% + 36px);
+
     padding: 32px;   
     box-sizing: border-box;
     display: flex;
@@ -146,9 +158,16 @@
     color: #b4bfca; 
 }
 
+
 /* 마지막 줄의 하단 보더 제거 */
 .styled-table tbody tr:last-child td {
     border-bottom: none;      
+}
+
+/* 원하는 행 선택 시 컬러변경 */
+.styled-table tbody tr:hover td {
+    background-color: #f4f7fe;
+    font-weight: 400;
 }
 
 /* 정렬 헤더 컨테이너 */
@@ -191,5 +210,26 @@
 .status-inactive { /* 거래 중지 */
     background-color: #fdeeee;
     color: #dc3545;
+}
+
+
+/* 호버시, 유형 뱃지 색상 */
+.styled-table tbody tr:hover td .type-corp { /* 법인 */ 
+    background-color: #b2d9f7;
+    color: #0368d3; 
+}
+.styled-table tbody tr:hover td .type-indiv { /* 개인 */
+    background-color: #abebcb;
+    color: #1f8035;
+}
+
+/* 호버시, 거래상태 뱃지 색상 */
+.styled-table tbody tr:hover td .status-active { /* 거래 중 */
+    background-color: #abebcb;
+    color: #1f8035;
+}
+.styled-table tbody tr:hover td .status-inactive { /* 거래 중지 */
+    background-color: #facfcf;
+    color: #b32d3a;
 }
 

@@ -21,3 +21,7 @@ npm install react-router-dom
 2025-07-03 임동주
 npm install zustand
 npm install -D tailwindcss postcss autoprefixer
+
+2025-07-09 임동주
+npm install framer-motion
+npm install sweetalert2 --force   
