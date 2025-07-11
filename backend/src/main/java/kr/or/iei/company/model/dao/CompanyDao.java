@@ -15,8 +15,10 @@ public interface CompanyDao {
 	
 	//List<Company> selectCompanyList();
 
-	int selectCompanyCount();
+	int selectCompanyCount(HashMap<String, Object> params);
 
 	ArrayList<Company> selectCompanyList(HashMap<String, Object> params);
+
+	int join(Company company);
 
 }

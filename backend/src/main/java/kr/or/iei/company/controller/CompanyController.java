@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +27,25 @@ public class CompanyController {
 
 	@NoTokenCheck
 	@GetMapping("/list")
-	public HashMap<String, Object> companyMap(@RequestParam int reqPage, @RequestParam String sortKey, @RequestParam String sortDirection) {
-		HashMap<String, Object> companyMap = companyService.selectCompanyList(reqPage, sortKey, sortDirection);
+	public HashMap<String, Object> companyMap(												
+											  @RequestParam int reqPage, 
+											  @RequestParam String sortKey, 
+											  @RequestParam String sortDirection,
+											  @RequestParam(defaultValue = "All") String type,
+											  @RequestParam(defaultValue = "0") int status,
+											  @RequestParam(defaultValue = "") String search											  
+	) {		
+		HashMap<String, Object> companyMap = companyService.selectCompanyList(reqPage, sortKey, sortDirection, type, status, search);		
 		return companyMap;
-	}	
+	}
+	
+	@NoTokenCheck
+	@PostMapping("/join")
+	public int join(Company company) {
+		int result = companyService.join(company);
+		return result;
+	}
+	
+	
 
 }
