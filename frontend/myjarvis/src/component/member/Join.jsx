@@ -276,8 +276,6 @@ export default function Join(){
                 </div>
                     <p>전화번호는 000-0000-0000 형식으로 적어주세요</p>
 
-
-                
             </div>
             <div className="join-button-box">
                 <button type="submit" className="join-button">
