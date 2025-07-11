@@ -76,7 +76,11 @@ export default function Login() {
             setAccessToken(loginMember.accessToken);
             setRefreshToken(loginMember.refreshToken);
 
+
             navigate('/main');
+
+            
+
           }
         })
         .catch(function (err) {

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.company.model.dto.Company;
+import kr.or.iei.company.model.dto.CompanyMember;
 
 @Mapper
 public interface CompanyDao {
@@ -19,6 +20,8 @@ public interface CompanyDao {
 
 	ArrayList<Company> selectCompanyList(HashMap<String, Object> params);
 
-	int join(Company company);
+	int insertCompany(Company company);
+	
+	int insertCompanyMember(CompanyMember member);
 
 }

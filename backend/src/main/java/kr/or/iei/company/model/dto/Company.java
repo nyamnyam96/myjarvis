@@ -1,5 +1,7 @@
 package kr.or.iei.company.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,4 +21,6 @@ public class Company {
     private char compType;
     private String compNo;
     private String regDate;
+    
+    private List<CompanyMember> companyMembers;
 }
