@@ -1,2 +1,0 @@
-SELECT *
-    FROM TBL_MEMBER;

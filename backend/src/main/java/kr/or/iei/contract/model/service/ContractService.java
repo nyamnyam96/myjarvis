@@ -1,10 +1,13 @@
 package kr.or.iei.contract.model.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.contract.model.dao.ContractDao;
 import kr.or.iei.contract.model.dto.Contract;
@@ -16,11 +19,27 @@ public class ContractService {
 	private ContractDao contractDao;
 	
 	@Autowired
-	private PageUtil pageUtil;
-
-	public List<Contract> selectContractList() {
+	private PageUtil pageUtil;	
+	
+	public HashMap<String, Object> selectContractList(int reqPage) {
 		
-		return contractDao.selectContractList();
+		int viewCnt = 10; //한페이지당 게시글 수
+		int pageNaviSize = 5; //페이지 네비 길이
+		int totalCount = contractDao.selectContractCount(); //전체 게시글 수
+		
+		//페이징 정보
+		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
+		
+		//계약 목록
+		ArrayList<Contract> contractList = contractDao.selectContractList(pageInfo);
+		
+		HashMap<String, Object> contractMap = new HashMap<String, Object>();
+		contractMap.put("contractList", contractList);
+		contractMap.put("pageInfo", pageInfo);		
+		 
+		return contractMap;
 	}
+	
+	
 
 }

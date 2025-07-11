@@ -54,7 +54,7 @@ export default function CompanyList(){
         setReqPage(1); // 정렬 시 1페이지로 이동
     };
 
-    //구글 아이콘을 반환 함수
+    //(정렬 기능) 구글 아이콘을 반환 함수
     function getSortIcon(key){
         const iconName = sortConfig.key !== key ? 'unfold_more' // 기본 양방향 화살표
             : sortConfig.direction === 'asc' ? 'expand_less' // 위쪽 화살표
