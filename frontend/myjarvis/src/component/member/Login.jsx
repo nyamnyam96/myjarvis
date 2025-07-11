@@ -76,7 +76,9 @@ export default function Login() {
             setAccessToken(loginMember.accessToken);
             setRefreshToken(loginMember.refreshToken);
 
-            navigate('/Main');
+            navigate('/main');    
+
+
           }
         })
         .catch(function (err) {
@@ -103,7 +105,7 @@ export default function Login() {
         >
           {/* 아이디 입력 */}
           <div className={styles.inputWrap}>
-            <div className="input-title">
+            <div className="login-title">
               <label htmlFor="memberId">아이디</label>
             </div>
             <div className={styles.inputItem2}>
@@ -113,7 +115,7 @@ export default function Login() {
 
           {/* 비밀번호 입력 */}
           <div className={styles.inputWrap}>
-            <div className="input-title">
+            <div className="login-title">
               <label htmlFor="memberPw">비밀번호</label>
             </div>
             <div className={styles.inputItem2}>
@@ -123,11 +125,11 @@ export default function Login() {
 
           {/* 로그인 버튼 박스 */}
           <div className={styles.loginButtonBox}>
-            <button type="submit" className="btn-primary lg">
+            <button type="submit" className="login-button-primary">
               로그인
             </button>
-            <p className={styles.loginButtonBoxP}>아직 회원이 아니신가요?</p>
           </div>
+            <div className={styles.loginButtonBoxP}>아직 회원이 아니신가요?</div>
         </form>
 
         {/* 회원가입 링크 */}

@@ -3,6 +3,7 @@ import createInstance from "../../axios/interceptor";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import './MemberUpd.css';
+
 //마이페이지 - 회원 정보 수정
 export default function MemberUpd(){
     //MemberMain 수정하기 Link 클릭 시, URL Path에 포함시켜 전달한 회원 아이디 추출
@@ -99,7 +100,7 @@ export default function MemberUpd(){
         axiosInstance(options)
         .then(function(res){
             {/**navigate("/Member");*/}
-            navigate("/setting");
+            navigate("/Main");
         })
         .catch(function(err){
             console.log(err);
@@ -120,7 +121,7 @@ export default function MemberUpd(){
         .then(function(result){
             if (result.isConfirmed) {
                {/**navigate("/Member");*/}
-                navigate("/setting");
+                navigate("/Main");
             }
         })
     }
@@ -142,24 +143,24 @@ export default function MemberUpd(){
                             <div className="input-title">
                                 <label htmlFor="newName">이름</label>
                             </div>
-                            <div className="input-item">
+                            <div className="memberUpd-item">
                                 <input type="text" id="newName" name="memberName" value={member.memberName} onChange={chgMember}></input>
                             </div> 
                         </div> 
                         <div className="input-wrap">
                             <div className="input-title">
-                                <label htmlFor="newPw">새(구) 비밀번호 입력</label>
+                                <label htmlFor="newPw">새 비밀번호 입력</label>
                             </div>
-                            <div className="input-item">
+                            <div className="memberUpd-item">
                                 <input type="password" id="newPw" name="memberPw" value={member.memberPw} onChange={chgMember}/>
                             </div>
                               <p> 기존 비밀번호 다시 입력, 새로운 비밀번호 입력 가능합니다.</p>
                         </div>
                         <div className="input-wrap">
                             <div className="input-title">
-                                <label htmlFor="newPwRe">새(구) 비밀번호 확인</label>
+                                <label htmlFor="newPwRe">새 비밀번호 확인</label>
                             </div>
-                            <div className="input-item">
+                            <div className="memberUpd-item">
                                 <input type="password" id="newPwRe" name="memberPw" value={memberPwRe} onChange={chgMemberPwRe}/>
                             </div>
                                <p> 기존 비밀번호 입력, 새로운 비밀번호 입력 가능합니다.</p>
@@ -168,7 +169,7 @@ export default function MemberUpd(){
                             <div className="input-title">
                                 <label htmlFor="newEmail">이메일</label>
                             </div>
-                            <div className="input-item">
+                            <div className="memberUpd-item">
                                 <input type="text" id="newEmail" name="memberEmail" value={member.memberEmail} onChange={chgMember}></input>
                             </div> 
                         </div>
@@ -176,19 +177,19 @@ export default function MemberUpd(){
                             <div className="input-title">
                                 <label htmlFor="newPhone">핸드폰</label>
                             </div>
-                            <div className="input-item">
+                            <div className="memberUpd-item">
                                 <input type="text" id="newPhone" name="memberPhone" value={member.memberPhone} onChange={chgMember}></input>
                             </div> 
                         </div>
                         <div className="button-zone">
-                            <button type="button" className="btn-primary lg" onClick={updateMember}>수정하기</button>
-                            <button type="button" className="btn-primary lg" onClick={cancel}>취소</button>
+                            <button type="button" className="memberUpd-second" onClick={updateMember}>수정하기</button>
+                            <button type="button" className="memberUpd-second" onClick={cancel}>취소</button>
                         </div>
                     </form>
                 </>
                 :
                 <>
-                    <div className="sub-container">
+                    <div className="memberUpd-container">
                         <div className="input-title">
                             <label htmlFor="oldPw">기존 비밀번호 입력</label>
                         </div>
@@ -196,8 +197,8 @@ export default function MemberUpd(){
                             <input type="password" id="oldPw" name="memberPw"  value={member.memberPw} onChange={chgMemberPw}/>
                         </div>
                         <div className="button-zone">
-                            <button type="button" className="btn-primary" onClick={checkPw}>확인</button>
-                            <button type="button" className="btn-primary" onClick={cancel}>취소</button>
+                            <button type="button" className="memberUpd-primary" onClick={checkPw}>확인</button>
+                            <button type="button" className="memberUpd-primary" onClick={cancel}>취소</button>
                         </div>  
                     </div>
                 </>

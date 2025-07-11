@@ -5,8 +5,8 @@ import './AgreeText.css';
 export default function AgreeText() {
 
   return (
-    <section className="agree-text">
-      <div className="main-container">
+    <section className="agreeText-text">
+      <div className="agreeText-container">
         <div style={{ height: 50, fontWeight: 800 }}>이용약관 전문</div>
       
         <p>

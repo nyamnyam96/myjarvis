@@ -66,15 +66,29 @@
 
 /* 로그인 버튼 박스 */
 .loginButtonBox {
-  margin-top: 30px;
   text-align: center;
-  
+  border-radius: 6px;
+  padding: 12px 20px;
+  transition: background-color 0.3s;
+  min-width: 10px; 
+  max-width: 300px;
+  padding: 14px;
+  font-size: 16px;
+  color: white;
+  background-color: #2b3674 ;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(90, 80, 240, 0.3);
 }
 
 .loginButtonBoxP {
   margin-top: 20px;
   font-size: 14px;
-  color: #333;
+  text-align: center;          /* 가운데 정렬 */
+  
+ 
 }
 
 .btnPrimaryLg:hover {
@@ -102,3 +116,4 @@
   font-size: 80px;
   padding: 20px;
 }
+

@@ -44,28 +44,27 @@ export default function Join(){
     function checkMemberEmail(){
         const regExp= /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        if(!regExp.test(member.memberEmail)){
-            setEmailChk(2);
-        } else{
-            let options = {};
-            options.url = serverUrl + "/member/" + member.memberEmail + "/chkEmail";
-            options.method ='get';
+       if(!regExp.test(member.memberEmail)){
+        setEmailChk(2); // 이메일 형식 오류
+    } else {
+        // 중복 체크 API 호출
+        let options = {};
+        options.url = serverUrl + "/member/" + encodeURIComponent(member.memberEmail) + "/chkEmail";
+        options.method = 'get';
 
-            axiosInstance(options)
-            .then(function(res){
-                if(res.data.resData == 1){
-                    setEmailChk(3);
-                } else if(res.data.resData == 0){
-                    setEmailChk(1);
-                }
-
-            })
-            .catch(function(err){
-                console.log(err);
-            });
+        axiosInstance(options)
+        .then(function(res){
+            if(res.data.resData == 1){
+                setEmailChk(3); // 중복 있음
+            } else if(res.data.resData == 0){
+                setEmailChk(1); // 중복 없음
             }
+        })
+        .catch(function(err){
+            console.log(err);
+        });
     }
-
+}
     function checkMemberId(e){
         //아이디 표현식
         const regExp= /^[a-zA-Z0-9]{8,20}$/;
@@ -140,7 +139,7 @@ export default function Join(){
 
      //회원가입 처리 함수
      function join(){
-        if( idChk == 1 && pwChk == 1){ //아이디와 비밀번호 입력했을때
+        if( idChk == 1 && pwChk == 1 && emailChk === 1){ //아이디와 비밀번호 입력했을때
 
             let options = {};
             options.url = serverUrl + '/member';
@@ -162,7 +161,7 @@ export default function Join(){
                 })
                 .then(function(result){
                     if(res.data.resData){ //회원가입 정상 처리
-                        navigate('/');//로그인 컴포넌트로 전환
+                        navigate('/login');//로그인 컴포넌트로 전환
                     }
                 });
             })
@@ -181,21 +180,22 @@ export default function Join(){
 
  
 
-  
-  
-  return (
-      
-      <section className="section join-wrap">
-        <div className="page-title">회원가입  </div>    
+
+   return (
+  <section className="join-container">
+   
+    {/* 왼쪽: 회원가입 폼 */}
+    <div className="join-left">
+          <div className="join-title">회원 가입</div>    
         <form onSubmit={function(e){
             e.preventDefault();     //기본 submit 이벤트 
            
             join();                 //회원가입 처리 함수
         }}>
-            <div className="input-wrap">
+            <div className="join-wrap">
                 <div className="input-title">
                 </div>
-                <div className="input-item3">
+                <div className="join-item3">
                     <label htmlFor="memberId">아이디</label>
                     <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId}/>
                 </div>
@@ -211,83 +211,99 @@ export default function Join(){
                         }
                     </p>
             </div>
-            <div className="input-wrap">
+            <div className="join-wrap">
                 <div className="input-title">
                 </div>
-                <div className="input-item3">
+                <div className="join-item3">
                     <label htmlFor="memberPw">비밀번호</label>
                     <input type="password" id="memberPw" value={member.memberPw}  onChange={chgMember} onBlur={chkMemberPw}  /> {/** onChange={chgMember} onBlur={chkMemberPw} */}
                 </div>
             </div>
-            <div className="input-wrap">
+            <div className="join-wrap">
                     <div className="input-title">
                     </div>
-                    <div className="input-item3">
+                    <div className="join-item3">
                         <label htmlFor="memberPwRe">비밀번호 확인</label>
                         <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={chkMemberPw}/>
                     </div>
                  <p className={"input-msg" + (pwChk == 0 ? '' : pwChk == 1 ? ' valid' : ' invalid')}>
                         {
                         pwChk == 0 
-                        ? ''
-                        : pwChk == 1
-                        ? '비밀번호가 정상 입력되었습니다.'
-                        : pwChk == 2
-                        ? '비밀번호는 영어, 숫자, 특수문자로 6~30글자를 입력하세요.'
-                        : '비밀번호와 비밀번호 확인값이 일치하지 않습니다.'
+                            ? ''
+                                : pwChk == 1
+                                    ? '비밀번호가 정상 입력되었습니다.'
+                                        :  pwChk == 2
+                                            ? '비밀번호는 영어, 숫자, 특수문자로 6~30글자를 입력하세요.'
+                                                : '비밀번호와 비밀번호 확인값이 일치하지 않습니다.'
                         }
                     </p>
             </div>
-            <div className="input-wrap">
+            <div className="join-wrap">
                 <div className="input-title">
                 </div>
-                <div className="input-item3">
+                <div className="join-item3">
                     <label htmlFor="memberName">이름</label>
                     <input type="text" id="memberName" value={member.memberName} onChange={chgMember} />
                  </div>
             </div>
-            <div className="input-wrap">
+            <div className="join-wrap">
                 <div className="input-title">
                 </div>
-                 <div className="input-item3">
+                 <div className="join-item3">
                     <label htmlFor="memberEmail">이메일</label>
                     <input type="text" id="memberEmail" value={member.memberEmail} onChange={chgMember}  onBlur={checkMemberEmail}/>
                  </div>
                     <p className={"input-msg" + (emailChk == 0 ? '' : emailChk == 1 ? ' valid' : ' invalid')}>
                         {
-                            emailChk === 0
+                          emailChk === 0
                             ? ''
                             : emailChk === 1
                                 ? '사용 가능한 이메일입니다.'
                                 : emailChk === 2
-                                ? '이메일 형식이 올바르지 않습니다.'
-                                : '이미 사용 중인 이메일입니다.'
+                                    ? '이메일 형식이 올바르지 않습니다.'
+                                        : '이미 사용 중인 이메일입니다.'
                         }
                      </p>
                                             
             </div>
-            <div className="input-wrap">
+            <div className="join-wrap">
                 <div className="input-title">
                 </div>
-                <div className="input-item3">
-                    <label htmlFor="memberPhone">전화번호</label>
+                <div className="join-item3">
+                    <label htmlFor="input-title">전화번호</label>
                     <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
                 </div>
                 
             </div>
             <div className="join-button-box">
-                <button type="submit" className="btn-primary lg">
+                <button type="submit" className="join-primary">
                         회원가입
                 </button> 
                 </div>
             <div>
             </div>
-        </form>
-    </section> 
+        
+        {/* ...기존 폼 요소들 유지 */}
+        {/* 생략된 부분은 기존 Join.jsx 코드 그대로 */}
+      </form>
+    </div>
 
-    
+    {/* 오른쪽: 배경 및 로고 */}
+    <div  className="join-right" >
+      
+      <div className="brand-wrapper">
+        <div className="brand-logo">
+          <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
+        </div>
+        <div className="brand-text">
+        
+          <a href="http://localhost:5173/" target="_blank" rel="noopener noreferrer">
+            MyJarvis.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-           
-    
-    )
+  );
 }
