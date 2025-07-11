@@ -16,7 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import CompanyList from "./component/company/CompanyList";
 
 //  5. 계약관리
-import Contract from "./component/contract/Contract";
+import ContractList from "./component/contract/ContractList";
 
 //  6. 일정관리
 import MySchedule from "./component/schedule/MySchedule";
@@ -88,7 +88,7 @@ function App() {
         <Route path="company/list" element={<CompanyList />} />
 
         {/* ▶ 계약관리 */}
-        <Route path="contract" element={<Contract />} />
+        <Route path="contract/list" element={<ContractList />} />
 
         {/* ▶ 일정관리 */}
         <Route path="schedule" element={<MySchedule />} />
