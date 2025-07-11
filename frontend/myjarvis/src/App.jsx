@@ -54,6 +54,7 @@ import MemberMain from "./component/member/MemberMain";
 import MemberUpd from "./component/member/MemberUpd";
 
 
+
 function App() {
   return (
     <Routes>
@@ -104,6 +105,7 @@ function App() {
         {/* ▶ 시스템 설정 */}
         <Route path="setting" element={<Setting />} />
 
+        
         {/* ▶ 개발자용 스타일 가이드 */}
         <Route path="style-guide" element={<StyleGuide />} />
       </Route>

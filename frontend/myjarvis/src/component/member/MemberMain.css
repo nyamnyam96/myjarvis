@@ -3,7 +3,7 @@ body {
   background-color: #f4f7fe;
 }
 
-.mypage-container {
+.member-container {
   max-width: 700px;
   margin: 0 auto;
   padding: 30px 20px;
@@ -14,7 +14,19 @@ body {
  
 }
 
-.page-title {
+.memberMain-item {
+  width: 200%;
+  max-width: 380px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background-color: #f4f7fe;
+  
+  box-sizing: border-box;
+  
+  
+}
+
+.member-title {
   font-weight: 600;
   text-align: center;
   margin-bottom: 30px;
@@ -67,22 +79,18 @@ body {
 }
 
 .btn-first {
-  background-color: blue;
+  background-color: #2b3674;
   color: white;
 }
 
-.btn-first:hover {
-  background-color: #2563eb;
-}
+
 
 .btn-second {
   background-color: red;
   color: white;
 }
 
-.btn-second:hover {
-  background-color: #dc2626;
-}
+
 
 /* 버튼 정렬*/
 .button {

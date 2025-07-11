@@ -1,4 +1,4 @@
-.main-container{
+.agreeTextSelect-container{
    width: 450px;         /* 가로 길이 */
   height: 300px;        /* 세로 길이 */
   background-color: white; /* 배경색 */
@@ -12,7 +12,7 @@
       text-align: center;
 }
 
-.agree-button{
+.agreeTextSelect-button{
    margin-top: 40px;               /* ⬅ 위에 글자와 간격 */
     display: inline-block;
  padding: 12px 24px;
@@ -26,7 +26,7 @@
   
 }
 
-.agree-text {
+.agreeTextSelect-text {
   display: flex;
   flex-direction: column;
   align-items: center;

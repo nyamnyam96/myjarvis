@@ -5,3 +5,8 @@ START WITH 1
 INCREMENT BY 1
 NOCACHE
 NOCYCLE;
+
+select *
+    from tbl_member;
+    
+  commit;

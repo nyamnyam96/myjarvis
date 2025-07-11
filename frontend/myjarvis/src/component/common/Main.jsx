@@ -1,15 +1,37 @@
 import { useEffect } from "react";
 import { NavLink, Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
-
+import axios from "axios";
 function Main() {
   const { isLogined } = useUserStore();
   const navigate = useNavigate();
   const location = useLocation();
+  
+  const { setIsLogined, setLoginMember, setAccessToken, setRefreshToken } = useUserStore();
+  //세션 파기 요청
+  const handleLogout = async () => {
+    try {
+      // 서버에서 세션 파기 요청
+      await axios.get("/logout", { withCredentials: true });
+  
+      // 로그인 페이지로 이동
+      // 클라이언트 상태 초기화
+      setIsLogined(false);
+      setLoginMember(null);
+      setAccessToken(null);
+      setRefreshToken(null);
+      
+      
+      
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    }
+      
+  }
 
   useEffect(() => {
-    if (!isLogined) {
-      navigate("/login");
+    if (!isLogined ) {
+      navigate("/home"); //navigate("/login") 수정
     }
   }, [isLogined, navigate]);
 
@@ -28,18 +50,35 @@ function Main() {
     const bottomMenus = [
       { to: "/main/stats", icon: "analytics", label: "통계확인" },
       { to: "/main/setting", icon: "settings", label: "환경설정" },
-      { to: "/logout", icon: "logout", label: "로그아웃" }, // 로그아웃은 별도 처리
+      { to: null, icon: "logout", label: "로그아웃" , onClick : handleLogout}, // 로그아웃은 별도 처리
+      //로그아웃 세션파기 다시 못들어감
     ];
 
 
-  const renderMenuItem = (item) => {
-    const isActive =
-      item.to === "/main"
-        ? location.pathname === "/main"
-        : location.pathname.startsWith(item.to);
 
-    return (
-      <li key={item.to} className="relative">
+const renderMenuItem = (item) => {
+  const isActive =
+    item.to === "/main"
+      ? location.pathname === "/main"
+      : location.pathname.startsWith(item.to || "");
+
+  return (
+    <li key={item.label} className="relative">
+      {item.onClick ? (
+        <div
+          onClick={item.onClick}
+          className={`
+            group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+            transition-all duration-200 ease-in-out cursor-pointer
+            text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]
+          `}
+        >
+          <span className="material-symbols-outlined text-[20px] group-hover:text-[#4318ff]">
+            {item.icon}
+          </span>
+          <span>{item.label}</span>
+        </div>
+      ) : (
         <NavLink
           to={item.to}
           className={`
@@ -52,7 +91,6 @@ function Main() {
             }
           `}
         >
-          {/* 아이콘: 활성 시 강조 색상, 비활성 시 hover 효과 추가 */}
           <span
             className={`material-symbols-outlined text-[20px] transition-all duration-200 ${
               isActive
@@ -64,14 +102,15 @@ function Main() {
           </span>
           <span>{item.label}</span>
         </NavLink>
+      )}
 
-        {/* 선택된 메뉴에만 우측 강조선 표시 */}
-        {isActive && (
-          <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] rounded-full" />
-        )}
-      </li>
-    );
-  };
+      {/* 우측 강조선: NavLink인 경우만 표시 */}
+      {isActive && !item.onClick && (
+        <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] rounded-full" />
+      )}
+    </li>
+  );
+};
 
   return (
 

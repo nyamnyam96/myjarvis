@@ -71,7 +71,7 @@ export default function MemberMain(){
                         delete axiosInstance.defaults.headers.common['Authorization'];
                     
 
-                        navigate('/login');
+                        navigate("/Home");
                     }
                 })
                 .catch(function(err){
@@ -89,9 +89,9 @@ export default function MemberMain(){
     return (
         
         
-        <section className="mypage-container" >
+        <section className="member-container" >
             
-            <div className="page-title">{member.memberId}님의 마이페이지</div>
+            <div className="member-title">{member.memberId}님의 마이페이지</div>
             <form onSubmit={function(e){
                 e.preventDefault();
                 updateMember();
@@ -103,7 +103,7 @@ export default function MemberMain(){
                             아이디
                         </th>
                             <td className="input-group">
-                                <div className="input-item">
+                                <div className="memberMain-item">
                                     {member.memberId}
                                 </div>
                             </td>
@@ -113,7 +113,7 @@ export default function MemberMain(){
                             <label htmlFor="memberName">이름</label>
                          </th>
                          <td className="input-group">
-                            <div className="input-item">
+                            <div className="memberMain-item">
                                 {member.memberName}
                             </div>
                          </td>
@@ -123,7 +123,7 @@ export default function MemberMain(){
                             <label htmlFor="memberEmail">이메일</label>
                          </th>
                          <td className="input-group">
-                            <div className="input-item">
+                            <div className="memberMain-item">
                                 {member.memberEmail}
                             </div>
                          </td>
@@ -134,7 +134,7 @@ export default function MemberMain(){
                             <label htmlFor="memberStatus">회원등급</label>
                          </th>
                          <td className="input-group">
-                            <div className="input-item">
+                            <div className="memberMain-item">
                                 {member.memberStatus == 'y' ? '일반회원' : '관리자'}
                             </div>
                          </td>
@@ -144,7 +144,7 @@ export default function MemberMain(){
                             <label htmlFor="memberPhone">핸드폰</label>
                          </th>
                          <td className="input-group">
-                            <div className="input-item">
+                            <div className="memberMain-item">
                                 {member.memberPhone}
                             </div>
                          </td>
@@ -154,7 +154,7 @@ export default function MemberMain(){
                             <label htmlFor="memberName">상호명</label>
                          </th>
                          <td className="input-group">
-                            <div className="input-item">
+                            <div className="memberMain-item">
                                 
                             </div>
                          </td>
@@ -164,7 +164,7 @@ export default function MemberMain(){
                             <label htmlFor="memberName">사업자 번호</label>
                          </th>
                          <td className="input-group">
-                            <div className="input-item">
+                            <div className="memberMain-item">
                                 
                             </div>
                          </td>

@@ -5,8 +5,8 @@ import './AgreeTextSelect.css';
 export default function AgreeTextSelect() {
 
   return (
-    <section className="agree-text">
-      <div className="main-container">
+    <section className="agreeTextSelect-text">
+      <div className="agreeTextSelect-container">
       <div style={{ height: 50, fontWeight: 1000 }}>이용약관 전문</div>
         <p>
           본 약관은 귀하가 서비스를 이용함에 있어 광고, 의무 및 책임사항을 규정함을 목적으로 합니다.
@@ -16,7 +16,7 @@ export default function AgreeTextSelect() {
           <br />
           (I-class 배재현 강사 100퍼센트 전액 할인)
         </p>
-            <Link to="/agree" className="agree-button">확인</Link>
+            <Link to="/agree" className="agreeTextSelect-button">확인</Link>
       </div>
     </section>
   );
