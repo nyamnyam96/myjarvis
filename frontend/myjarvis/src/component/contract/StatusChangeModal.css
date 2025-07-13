@@ -1,0 +1,38 @@
+/* 고객사 등록 모달과 유사한 스타일을 사용 */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background-color: white;
+    width: 800px;
+    max-width: 90%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; 
+}
+
+/* 상태 변경 모달 전용 스타일 */
+.contract-title-label { font-size: 14px; color: #888; margin-bottom: 4px; }
+.contract-title-text { font-size: 16px; font-weight: 600; margin-bottom: 24px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.form-group label { font-weight: 500; }
+.form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+}
+.form-group textarea { min-height: 100px; resize: vertical; }

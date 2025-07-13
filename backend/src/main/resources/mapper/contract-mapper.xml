@@ -35,5 +35,33 @@
            )
     	   where rnum between #{start} and #{end}     
 	</select>
+	
+	<!-- 계약 상태 업데이트 -->
+	<update id="updateContractStatus">
+    UPDATE TBL_CONTRACT
+       SET
+           STATUS_CODE = #{statusCode}
+     WHERE
+           CONTRACT_NO = #{contractNo}
+	</update>
+	
+	<!-- 계약 상태 변경 히스토리 추가 -->
+	<insert id="insertContractHistory">
+    INSERT INTO TBL_CONTRACT_HISTORY (
+           CONTRACT_HISTORY_NO,
+           CONTRACT_NO,
+           CONTRACT_HISTORY_CONTENT,
+           CONTRACT_HISTORY_DATE,
+           MEMBER_NO -- 담당자 기록을 위한 컬럼 추가 권장
+    ) VALUES (
+	       SEQ_CONTRACT_HISTORY_NO.NEXTVAL,
+	       #{contractNo},
+	       #{contractHistoryContent},
+	       SYSDATE,
+	       #{memberNo}
+    )
+	</insert>
+    
+    
   
 </mapper>

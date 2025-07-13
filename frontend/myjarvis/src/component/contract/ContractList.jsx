@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import createInstance from "../../axios/interceptor";
 import "./ContractList.css";
 import PageNavi from "../company/companyCommon/PageNavi";
+import BoardView from "./BoardView";
 
 export default function ContractList() {
 
@@ -10,6 +11,14 @@ export default function ContractList() {
   const [contractList, setContractList] = useState([]);  
   const [reqPage, setReqPage] = useState(1);              //요청 페이지
   const [pageInfo, setPageInfo] = useState({});           //페이지 네비게이션
+  const [viewMode, setViewMode] = useState('board');      //현재 뷰모드를 저장하는 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedContract, setSelectedContract] = useState(null);
+  
+
+
+
+
   
   useEffect(function(){
 
@@ -45,16 +54,22 @@ export default function ContractList() {
 
         {/* 필터 및 액션 카드 */}
         <div className="filter-card">
-
+            
             <div className="filter-controls">
                 {/* 칸반/테이블 뷰 전환 버튼 */}
                 <div className="view-switcher">
-                    <button className="view-btn active">
-                        <span className="material-symbols-outlined">grid_view</span>
-                    </button>
-                    <button className="view-btn">
-                        <span className="material-symbols-outlined">table_rows</span>
-                    </button>
+                        <button 
+                            className={`view-btn ${viewMode === 'board' ? 'active' : ''}`}
+                            onClick={() => setViewMode('board')}>
+                        
+                            <span className="material-symbols-outlined">view_week</span>
+                        </button>
+                        <button 
+                            className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
+                            onClick={() => setViewMode('table')}>
+                        
+                            <span className="material-symbols-outlined">table_rows</span>
+                        </button>
                 </div>
 
                 {/* 검색창 */}
@@ -89,32 +104,42 @@ export default function ContractList() {
         </div>
 
         {/* 테이블 카드 */}
-        <div className="table-card">
-            <div className="table-card-inner">
-                <table className="styled-table">
-                    <thead>
-                        <tr>
-                            <th>계약명</th>
-                            <th>고객사</th>
-                            <th>담당자</th>
-                            <th>계약금액</th>
-                            <th>계약기간</th>
-                            <th>상태</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {contractList.map(function(contract){
-                            return <ContractRow key={contract.contractNo} contract={contract} serverUrl={serverUrl} />
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        {viewMode === 'board' 
+        ? 
+            (
+                <BoardView contractList={contractList} />
+            ) 
+        : 
+            (
+                <div className="table-card">
+                    <div className="table-card-inner">
+                        <table className="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>계약명</th>
+                                    <th>고객사</th>
+                                    <th>담당자</th>
+                                    <th>계약금액</th>
+                                    <th>계약기간</th>
+                                    <th>상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {contractList.map(function(contract){
+                                    return <ContractRow key={contract.contractNo} contract={contract} serverUrl={serverUrl} />
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
 
         {/* 페이지네이션 */}
+        {viewMode === 'table' && (
         <div className="pagination">
            <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />                        
         </div>
+        )}
 
     </div>
 

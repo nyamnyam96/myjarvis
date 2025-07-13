@@ -98,6 +98,7 @@ public class JwtUtils {
 			//int memberLevel = (int) claims.get("memberLevel");
 			
 			m.setMemberId(memberId);
+			//m.setMemberId(memberId);
 			//m.setMemberLevel(memberLevel);
 			
 		}catch(SignatureException e) { // 발급 토큰과 요청 토큰 불일치

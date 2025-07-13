@@ -11,6 +11,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.contract.model.dao.ContractDao;
 import kr.or.iei.contract.model.dto.Contract;
+import kr.or.iei.contract.model.dto.ContractStatusUpdateDTO;
 
 @Service
 public class ContractService {
@@ -38,6 +39,19 @@ public class ContractService {
 		contractMap.put("pageInfo", pageInfo);		
 		 
 		return contractMap;
+	}
+
+	public int updateContractStatus(String contractNo, ContractStatusUpdateDTO dto) {
+		
+		//계약 상태 업데이트
+		int result = contractDao.updateContractStatus(contractNo, dto.getStatusCode());
+		
+		//상태 변경 시, 히스토리 업데이트
+		if (result > 0) {
+			result += contractDao.insertContractHistory(contractNo, dto.getContractHistoryContent(), dto.getMemberNo());
+		}		
+		
+		return result;
 	}
 	
 	

@@ -15,4 +15,8 @@ public interface ContractDao {
 
 	ArrayList<Contract> selectContractList(PageInfo pageInfo);
 
+	int updateContractStatus(String contractNo, String statusCode);
+
+	int insertContractHistory(String contractNo, String contractHistoryContent, String memberNo);
+
 }
