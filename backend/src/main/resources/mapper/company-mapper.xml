@@ -84,6 +84,7 @@
   		sysdate
   		)  		
   </insert>
+  
   <!-- company 담당자 신규 등록 -->
   <insert id="insertCompanyMember" parameterType="kr.or.iei.company.model.dto.CompanyMember">
     INSERT INTO TBL_COMPANY_MEMBER (
@@ -109,6 +110,18 @@
         #{contactDept},
         SYSDATE
     )
-</insert>
+	</insert>
+	
+	<!-- 고객사 조회 -->
+	<select id="searchCompanyByName" parameterType="string" resultType="Company">
+    SELECT 
+        COMP_CD AS compCd,
+        COMP_NAME AS compName,
+        OWNER_NAME AS ownerName,
+        COMP_TEL AS compTel,
+        COMP_NO AS compNo
+    FROM TBL_COMPANY
+    WHERE COMP_NAME LIKE '%' || #{searchName} || '%'
+	</select>
   
 </mapper>

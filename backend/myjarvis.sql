@@ -184,6 +184,9 @@ CREATE TABLE TBL_CONTRACT (
     CONSTRAINT FK_CONTRACT_STATUS FOREIGN KEY (STATUS_CODE) REFERENCES TBL_CONTRACT_STATUS(STATUS_CODE)
 );
 
+ALTER TABLE TBL_CONTRACT MODIFY (CONTRACT_TITLE VARCHAR2(200));
+commit;
+
 -- 계약 정보를 저장하는 핵심 테이블입니다.
 -- CONTRACT_NO는 단일 기본키로 사용되며, 각 계약을 고유하게 식별합니다.
 -- 계약은 반드시 회원(MEMBER_NO)에 의해 등록되며, 계약 상대는 계약 대상 테이블과 연결되어 있습니다.
@@ -454,6 +457,9 @@ CREATE SEQUENCE SEQ_TBL_COMPANY_MEMBER_IDX START WITH 1 INCREMENT BY 1 NOCACHE N
 
 -- 회원 가입 시 시퀀스
 CREATE SEQUENCE seq_tbl_member_no START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 파일 번호 시퀀스
+CREATE SEQUENCE SEQ_TBL_FILE_NO START WITH 1 INCREMENT BY 1;
 
 commit;
 
@@ -1008,9 +1014,13 @@ GROUP BY TRADE_STATUS;
 select * from tbl_member;
 select * from tbl_company;
 select * from tbl_company_member;
-select * from tbl_contract;
 select * from TBL_CONTRACT_PARTY;   
 select * from TBL_CONTRACT_HISTORY;
+select * from tbl_contract order by contract_no desc;
 commit;
 
 
+-- 파일 번호 시퀀스
+CREATE SEQUENCE SEQ_TBL_FILE_NO START WITH 1 INCREMENT BY 1;
+
+commit;

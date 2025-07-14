@@ -45,6 +45,12 @@ public class CompanyController {
 		//memberNo가 채워진 company 객체로 서비스 로직 호출
 		int result = companyService.join(company);
 		return result;
-	}	
+	}
+	
+	@GetMapping("/search")
+    @NoTokenCheck 
+    public List<Company> searchCompany(@RequestParam String searchName) {
+        return companyService.searchCompanyByName(searchName);
+    }
 
 }

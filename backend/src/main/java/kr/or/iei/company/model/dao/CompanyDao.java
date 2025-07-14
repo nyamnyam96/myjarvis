@@ -24,4 +24,6 @@ public interface CompanyDao {
 	
 	int insertCompanyMember(CompanyMember member);
 
+	List<Company> searchCompanyByName(String searchName);
+
 }
