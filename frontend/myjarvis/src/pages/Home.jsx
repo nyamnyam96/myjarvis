@@ -12,10 +12,10 @@ import MyJarvisLogo from "../assets/logo-myJarvis.png";
 
 function Home() {
   return (
-    <div className="relative" style={{ overflow: 'visible' }}>
+    <div className="relative">
       {/* GNB/Header 영역 */}
       <Header />
-    <div style={{ minHeight: 'auto' }}>
+
       {/*  Hero Section: 배경 이미지와 메인 카피 */}
       <motion.section
         initial={{ opacity: 0 }}
@@ -53,7 +53,16 @@ function Home() {
       </motion.section>
 
         {/*  기능 소개 Section: 문구 + 일러스트 */}
-      <section> {/*  간격 여유 확보 */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8 }}
+        variants={{
+          hidden: { opacity: 0, y: 40 },
+          visible: { opacity: 1, y: 0 }
+        }}
+        className="w full min-h-screen bg-white py-24 px-6"> {/*  간격 여유 확보 */}
         {/* 중앙 정렬된 문구 */}
         <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
@@ -98,7 +107,7 @@ function Home() {
             />
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
         <motion.section
         initial="hidden"
@@ -472,11 +481,7 @@ function Home() {
             © 2025 MyJarvis. All rights reserved.
         </div>
         </footer>
-
-        <div style={{ height: '3000px', backgroundColor: 'red' }}></div>
     </div>
-</div>
-    
 
   );
 }

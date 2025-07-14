@@ -23,9 +23,11 @@ function Main() {
       setAccessToken(null);
       setRefreshToken(null);
       
+      
     } catch (error) {
       console.error("로그아웃 실패:", error);
-    }      
+    }
+      
   }
 
 // 임시 로그인 권한 부여
