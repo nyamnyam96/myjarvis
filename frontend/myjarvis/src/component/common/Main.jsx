@@ -42,22 +42,21 @@ function Main() {
       <li key={item.to} className="relative">
         <NavLink
           to={item.to}
-          className={`
-            group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
-            transition-all duration-200 ease-in-out cursor-pointer
-            ${
-              isActive
-                ? "text-[#2b3674] font-bold"
-                : "text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]"
-            }
-          `}
+            className={`group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+              transition-all duration-200 ease-in-out cursor-pointer
+              ${
+                isActive
+                  ? "text-[#2b3674] dark:text-white font-bold"
+                  : "text-[#a3aed0] dark:text-[#9ca3af] hover:text-[#2b3674] dark:hover:text-white hover:bg-[#f4f7fe] dark:hover:bg-[#2c2e45]"
+              }
+            `}
         >
           {/* 아이콘: 활성 시 강조 색상, 비활성 시 hover 효과 추가 */}
           <span
             className={`material-symbols-outlined text-[20px] transition-all duration-200 ${
               isActive
                 ? "text-[#4318ff]"
-                : "text-[#a3aed0] group-hover:text-[#4318ff]"
+                : "text-[#a3aed0] dark:text-[#9ca3af] group-hover:text-[#4318ff]"
             }`}
           >
             {item.icon}
@@ -75,23 +74,22 @@ function Main() {
 
   return (
 
-    <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] text-[#2a3547] font-['Pretendard']">
-      
+    <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] dark:bg-[#1a1a2e] text-[#2a3547] dark:text-[#e0e6ed] font-['Pretendard']">
+
       {/* 좌측 GNB */}
-      <nav className="w-[260px] bg-white rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
+      <nav className="w-[260px] bg-white dark:bg-[#21243a] rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
 
-      {/* 로고 */}
-      <div className="pb-5 mb-0 border-b border-[#e5eaef]">
-        <div
-          className="flex items-center justify-center h-16 cursor-default select-none"
-          aria-hidden="true"
-        >
-          <h1 className="text-[33px] font-extrabold tracking-tight text-[#1B254B] font-logo">
-            MyJarvis
-          </h1>
-
+        {/* 로고 */}
+        <div className="pb-5 mb-0 border-b border-[#e5eaef] dark:border-[#3b3e52]">
+          <div
+            className="flex items-center justify-center h-16 cursor-default select-none"
+            aria-hidden="true"
+          >
+            <h1 className="text-[33px] font-extrabold tracking-tight text-[#1B254B] dark:text-white font-logo">
+              MyJarvis
+            </h1>
+          </div>
         </div>
-      </div>
 
         {/* 기본 메뉴 */}
         <ul className="flex-grow py-4 space-y-1">
@@ -99,16 +97,15 @@ function Main() {
         </ul>
 
         {/* 하단 고정 메뉴 */}
-        <ul className="pt-3 border-t border-[#e5eaef] space-y-1">
+        <ul className="pt-3 border-t border-[#e5eaef] dark:border-[#3b3e52] space-y-1">
           {bottomMenus.map(renderMenuItem)}
         </ul>
       </nav>
 
-        {/* 메인 콘텐츠 */}
-        <div className="flex-grow bg-[#f4f7fe] overflow-y-auto px-3 pt-6 pb-3">
-          <Outlet />
-        </div>
-
+      {/* 메인 콘텐츠 */}
+      <div className="flex-grow bg-[#f4f7fe] dark:bg-[#1a1a2e] overflow-y-auto px-3 pt-6 pb-3">
+        <Outlet />
+      </div>
     </div>
   );
 }

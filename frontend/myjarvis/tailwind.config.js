@@ -6,6 +6,8 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode : 'class', // 다크모드 구현
+
   theme: {
     extend: {
       //  공통 색상 정의 (default.css와 통일되도록 설정)

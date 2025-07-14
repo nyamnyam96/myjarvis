@@ -1,3 +1,5 @@
+// Dashboard.jsx – 다크모드 적용 버전
+
 import React from "react";
 import Card from "../components/common/Card";
 import Checklist from "../components/control/Checklist";
@@ -22,7 +24,7 @@ export default function Dashboard() {
     <>
       {/* 사용자 배경 커스터마이징 카드: 12열 전체 사용 */}
       <div className="xl:col-span-12 mb-6 -mt-[23px]">
-        <Card className="relative p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white min-h-[220px] overflow-hidden">
+        <Card className="relative p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d] min-h-[220px] overflow-hidden">
           <div className="w-full h-full flex items-center justify-center">
             {backgroundImage ? (
               <img
@@ -31,57 +33,58 @@ export default function Dashboard() {
                 className="object-contain max-h-full max-w-full"
               />
             ) : (
-              <span className="text-gray-400 text-center">
+              <span className="text-gray-400 dark:text-gray-300 text-center">
                 사용자 배경 커스터마이징 영역<br />(파일 업로드 예정)
               </span>
             )}
           </div>
         </Card>
       </div>
-        {/* 카드 컨테이너: 12열 그리드 */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-          {/* TO-DO 리스트 카드 (좌측 8열) */}
-          <div className="xl:col-span-6">
-            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
-              <h2 className="section-title">TO-DO LIST</h2>
-              <Checklist items={todoItems} />
-            </Card>
-          </div>
 
-          {/* 최근 활동 내역 카드 (우측 4열) */}
-          <div className="xl:col-span-6">
-            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
-              <h2 className="section-title">최근 활동 내역</h2>
-              <TimelineList items={timelineItems} />
-            </Card>
-          </div>
-
-          {/* 업무 리마인더 카드 (좌측 6열) */}
-          <div className="xl:col-span-6">
-            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white">
-              <h2 className="section-title">업무 리마인더</h2>
-              <div className="mt-3 space-y-4">
-                <Notification
-                  icon="⏰"
-                  title="오늘 18시까지 회의록 업로드"
-                  time="2시간 남음"
-                />
-                <Notification
-                  icon="📝"
-                  title="계약 검토 마감 D-1"
-                  time="내일 오전 10시"
-                />
-              </div>
-            </Card>
-          </div>
-
-          {/* 통계/일정 추가 카드 (우측 6열) */}
-          <div className="xl:col-span-6">
-            <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white flex items-center justify-center text-gray-400">
-              통계 차트 또는 최근 일정 등 추가 영역
-            </Card>
-          </div>
+      {/* 카드 컨테이너: 12열 그리드 */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        {/* TO-DO 리스트 카드 (좌측 6열) */}
+        <div className="xl:col-span-6">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d]">
+            <h2 className="section-title text-gray-800 dark:text-gray-200">TO-DO LIST</h2>
+            <Checklist items={todoItems} />
+          </Card>
         </div>
-</>
+
+        {/* 최근 활동 내역 카드 (우측 6열) */}
+        <div className="xl:col-span-6">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d]">
+            <h2 className="section-title text-gray-800 dark:text-gray-200">최근 활동 내역</h2>
+            <TimelineList items={timelineItems} />
+          </Card>
+        </div>
+
+        {/* 업무 리마인더 카드 (좌측 6열) */}
+        <div className="xl:col-span-6">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d]">
+            <h2 className="section-title text-gray-800 dark:text-gray-200">업무 리마인더</h2>
+            <div className="mt-3 space-y-4">
+              <Notification
+                icon="⏰"
+                title="오늘 18시까지 회의록 업로드"
+                time="2시간 남음"
+              />
+              <Notification
+                icon="📝"
+                title="계약 검토 마감 D-1"
+                time="내일 오전 10시"
+              />
+            </div>
+          </Card>
+        </div>
+
+        {/* 통계/일정 추가 카드 (우측 6열) */}
+        <div className="xl:col-span-6">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d] flex items-center justify-center text-gray-400 dark:text-gray-300">
+            통계 차트 또는 최근 일정 등 추가 영역
+          </Card>
+        </div>
+      </div>
+    </>
   );
 }
