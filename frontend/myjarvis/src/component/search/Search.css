@@ -1,0 +1,5 @@
+/* Search 페이지 전용 스타일 */
+
+.search-header-card {
+  @apply bg-white rounded-xl shadow-md p-4 w-full max-w-4xl;
+}

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import SearchBar from '../../components/common/SearchBar';
 import DropdownMenu from '../../components/user/DropdownMenu';
 import SearchResultItem from '../../component/search/SearchResultItem';
+import './Search.css';
 
 const Search = () => {
   const [inputValue, setInputValue] = useState('');
@@ -79,7 +80,7 @@ const Search = () => {
 
   return (
     <div className="flex flex-col items-center px-4">
-      <div className="card p-4 w-full max-w-4xl relative" ref={wrapperRef}>
+      <div className="search-header-card relative" ref={wrapperRef}>
         <h2 className="section-title mb-2">검색</h2>
         <SearchBar
           value={inputValue}
