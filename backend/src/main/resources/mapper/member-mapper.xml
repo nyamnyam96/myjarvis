@@ -59,7 +59,9 @@
   		 member_status as memberStatus,
   		 member_email as memberEmail,
   		 member_phone as memberPhone,
-  		 join_date as joinDate
+  		 join_date as joinDate,
+  		 member_comp_name as memberCompName,
+  		 member_comp_no as memberCompNo
   	from tbl_member
   where member_id = #{_parameter}
   </select>
@@ -77,7 +79,9 @@
   	set member_pw = #{memberPw},
   		member_name = #{memberName},
   		member_email = #{memberEmail},
-  		member_phone = #{memberPhone}
+  		member_phone = #{memberPhone},
+  		member_comp_name = #{memberCompName},
+  		member_comp_no = #{memberCompNo}
   	where member_id = #{memberId}
   </update>
   

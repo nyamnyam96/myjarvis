@@ -76,8 +76,7 @@ export default function Login() {
             setAccessToken(loginMember.accessToken);
             setRefreshToken(loginMember.refreshToken);
 
-            navigate('/main');    
-
+            navigate('/main'); 
 
           }
         })
@@ -93,10 +92,10 @@ export default function Login() {
       <div className={styles.pageContainer}>
         {/* 로그인 박스 */}
         {/* 제목 */}
-        <div className={styles.pageTitle}><img src="/Picture/Jarvis.logo.png"  />MyJarvis</div>
+        <div className={styles.pageTitle}>MyJarvis</div>
 
         {/* 로그인 폼 */}
-        <form
+        <form className={styles.formWrapper}
           autoComplete="off"
           onSubmit={(e) => {
             e.preventDefault(); // 폼 기본 제출 방지
@@ -124,8 +123,8 @@ export default function Login() {
           </div>
 
           {/* 로그인 버튼 박스 */}
-          <div className={styles.loginButtonBox}>
-            <button type="submit" className="login-button-primary">
+          <div className="login-Button">
+            <button type="submit" className={styles.loginbutton}>
               로그인
             </button>
           </div>
@@ -133,9 +132,27 @@ export default function Login() {
         </form>
 
         {/* 회원가입 링크 */}
-        <Link to="/Agree" className={styles.link}>
+        <Link to="/Agree" className={styles.linkCenter}>
           회원가입 하러가기
         </Link>
+      </div>
+       <div className={styles.rightPanel}>
+        <div className={styles.logoBox}>
+          <div className={styles.brandWrapper}>
+           <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
+          </div>
+            <div className={styles.brandText}>
+            <a href="http://localhost:5173/" target="_blank" rel="noopener noreferrer">
+              MyJarvis.com
+            </a>
+          </div>
+        </div>
+        <div className={styles.footerLinks}>
+          <a href="#">Support</a>
+          <a href="#">License</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Blog</a>
+        </div>
       </div>
     </section>
   );
