@@ -1009,5 +1009,8 @@ select * from tbl_member;
 select * from tbl_company;
 select * from tbl_company_member;
 select * from tbl_contract;
-select * from TBL_CONTRACT_PARTY;      
+select * from TBL_CONTRACT_PARTY;   
+select * from TBL_CONTRACT_HISTORY;
 commit;
+
+
