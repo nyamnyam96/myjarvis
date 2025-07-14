@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,17 +29,21 @@ public class ContractController {
 	
 	@NoTokenCheck
 	@GetMapping("/list")
-	public HashMap<String, Object> contractMap(@RequestParam int reqPage) {
-		
-		HashMap<String, Object> contractMap = contractService.selectContractList(reqPage);		
-		return contractMap; 
+	public HashMap<String, Object> contractMap(@RequestParam(required = false) Integer reqPage) {		
+		int page = (reqPage == null) ? 0 : reqPage;
+        return contractService.selectContractList(page);
 	}
 	
 	@PatchMapping("/{contractNo}/status")
-	public int updateContractStatus(@PathVariable String contractNo, @RequestBody ContractStatusUpdateDTO dto) {
-		
+	public int updateContractStatus(@PathVariable String contractNo, @RequestBody ContractStatusUpdateDTO dto) {		
 		return contractService.updateContractStatus(contractNo, dto);
 	}
+	
+	//신규 계약 추가
+    @PostMapping
+    public int insertContract(@RequestBody Contract contract) {        
+        return contractService.insertContract(contract);
+    }
 	
 	
 }

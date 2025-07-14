@@ -1,5 +1,7 @@
 package kr.or.iei.contract.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +24,6 @@ public class Contract {
     // JOIN을 통해 가져올 추가 정보
     private String memberName;      // 담당자 이름
     private String companyName;     // 고객사 이름	
+    
+    private List<ContractParty> partyList; //신규 계약 시 partyList에 추가
 }
