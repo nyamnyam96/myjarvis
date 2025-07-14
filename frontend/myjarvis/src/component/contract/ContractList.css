@@ -323,9 +323,9 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.card-title {
+h4.card-title {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 500;
     color: #333;
     margin-bottom: 16px;
 }

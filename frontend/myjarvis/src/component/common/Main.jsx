@@ -145,7 +145,7 @@ const renderMenuItem = (item) => {
       </nav>
 
         {/* 메인 콘텐츠 */}
-        <div className="flex-grow bg-[#f4f7fe] overflow-y-auto px-3 pt-6 pb-3">
+        <div className="flex flex-col flex-grow bg-[#f4f7fe] overflow-y-auto px-3 pt-6 pb-3">
           <Outlet />
         </div>
 
