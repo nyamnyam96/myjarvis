@@ -1,34 +1,33 @@
 import "./ContractList.css";
 
-// 칸반 보드의 각 계약 카드를 담당하는 컴포넌트
-function ContractCard({contract}){
 
+function ContractCard({ contract, onCardClick }) {
     return (
-
-    <div className="contract-card">
-        <h4 className="card-title">{contract.contractTitle}</h4>
-        <div className="card-info-row">
-            <span className="info-label">고객사</span>
-            <span className="info-value">{contract.companyName}</span>
+        // 카드를 클릭하면, 부모에게서 받은 onCardClick 함수를 호출합니다.
+        <div className="contract-card" onClick={() => onCardClick(contract)}>
+            <h4 className="card-title">{contract.contractTitle}</h4>
+            <div className="card-info-row">
+                <span className="info-label">고객사</span>
+                <span className="info-value">{contract.companyName}</span>
+            </div>
+            <div className="card-info-row">
+                <span className="info-label">계약금액</span>
+                <span className="info-value">
+                    {contract.contractDeposit != null 
+                        ? contract.contractDeposit.toLocaleString() + '원' 
+                        : '금액 미지정'}
+                </span>
+            </div>
+            <div className="card-info-row">
+                <span className="info-label">계약기간</span>
+                <span className="info-value date">{contract.contractStart} ~ {contract.contractEnd}</span>
+            </div>
         </div>
-        <div className="card-info-row">
-            <span className="info-label">계약금액</span>
-            <span className="info-value">
-                {contract.contractDeposit != null 
-                    ? contract.contractDeposit.toLocaleString() + '원' 
-                    : '금액 미지정'}
-            </span>
-        </div>
-        <div className="card-info-row">
-            <span className="info-label">계약기간</span>
-            <span className="info-value date">{contract.contractStart} ~ {contract.contractEnd}</span>
-        </div>
-    </div>
     );
-
 }
 
-export default function BoardView({contractList}) {
+
+export default function BoardView({contractList, onCardClick }) {
     
     // 계약 상태별로 컬럼을 정의
     const statuses = [
@@ -54,7 +53,7 @@ export default function BoardView({contractList}) {
                     </div>
                     <div className="column-body">
                         {getContractsByStatus(status.code).map((contract) => (
-                            <ContractCard key={contract.contractNo} contract={contract} />
+                            <ContractCard key={contract.contractNo} contract={contract} onCardClick={onCardClick} />
                         ))}
                     </div>
                 </div>

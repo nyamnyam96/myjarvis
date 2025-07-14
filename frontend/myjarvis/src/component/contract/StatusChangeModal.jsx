@@ -23,7 +23,7 @@ export default function StatusChangeModal({ contract, closeModal, reloadList }) 
         // 2. 서버에 보낼 최종 데이터 조립 (memberNo 포함)
         const finalData = {
             statusCode: newStatusCode,
-            historyContent: historyContent,
+            contractHistoryContent: historyContent,
             memberNo: loginMember.memberNo // 로그인한 사용자의 memberNo 추가
         };
 
