@@ -15,8 +15,8 @@
 
 /* 마이페이지 카드 내부 컨테이너 */
 .member-container {
-  @apply max-w-[700px] mx-auto p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl min-h-[60vh];
-  font-family: 'Noto Sans KR', sans-serif;
+  @apply max-w-[700px] mx-auto p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl min-h-[60vh] shadow-md;
+  font-family: 'Pretendard', sans-serif;
 }
 
 /* 사용자 정보 표시 박스 */

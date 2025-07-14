@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { NavLink, Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, Link, Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import useThemeStore from "../../store/useThemeStore";
 import axios from "axios";
@@ -23,12 +23,9 @@ function Main() {
       setAccessToken(null);
       setRefreshToken(null);
       
-      
-      
     } catch (error) {
       console.error("로그아웃 실패:", error);
-    }
-      
+    }      
   }
 
 // 임시 로그인 권한 부여

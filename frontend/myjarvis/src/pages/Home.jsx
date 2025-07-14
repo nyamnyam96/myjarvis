@@ -12,10 +12,10 @@ import MyJarvisLogo from "../assets/logo-myJarvis.png";
 
 function Home() {
   return (
-    <div className="relative">
+    <div className="relative" style={{ overflow: 'visible' }}>
       {/* GNB/Header 영역 */}
       <Header />
-
+    <div style={{ minHeight: 'auto' }}>
       {/*  Hero Section: 배경 이미지와 메인 카피 */}
       <motion.section
         initial={{ opacity: 0 }}
@@ -32,7 +32,7 @@ function Home() {
          <motion.h1
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }} h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            transition={{ delay: 0.3, duration: 0.8 }} className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             당신의 비즈니스, Jarvis가 책임집니다.
           </motion.h1>
           <motion.p 
@@ -53,16 +53,7 @@ function Home() {
       </motion.section>
 
         {/*  기능 소개 Section: 문구 + 일러스트 */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8 }}
-        variants={{
-          hidden: { opacity: 0, y: 40 },
-          visible: { opacity: 1, y: 0 }
-        }}
-        className="w full min-h-screen bg-white py-24 px-6"> {/*  간격 여유 확보 */}
+      <section> {/*  간격 여유 확보 */}
         {/* 중앙 정렬된 문구 */}
         <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
@@ -107,7 +98,7 @@ function Home() {
             />
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
         <motion.section
         initial="hidden"
@@ -481,7 +472,11 @@ function Home() {
             © 2025 MyJarvis. All rights reserved.
         </div>
         </footer>
+
+        <div style={{ height: '3000px', backgroundColor: 'red' }}></div>
     </div>
+</div>
+    
 
   );
 }

@@ -102,8 +102,8 @@ export default function MemberMain() {
     return (
         
         
-        <section className="member-container" >
-            
+        <section className="member-container bg-gray-50 dark:bg-gray-900 px-6 py-8 rounded-xl shadow-sm">
+                   
             <div className="member-title">{member.memberId}님의 마이페이지</div>
             <form onSubmit={function(e){
                 e.preventDefault();
