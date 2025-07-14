@@ -209,13 +209,13 @@
 }
 .styled-table tbody tr:hover td .type-indiv { /* 개인 */
     background-color: #abebcb;
-    color: #1f8035;
+    color: #258d3e;
 }
 
 /* 호버시, 거래상태 뱃지 색상 */
 .styled-table tbody tr:hover td .status-active { /* 거래 중 */
     background-color: #abebcb;
-    color: #1f8035;
+    color: #258d3e;
 }
 .styled-table tbody tr:hover td .status-inactive { /* 거래 중지 */
     background-color: #facfcf;
