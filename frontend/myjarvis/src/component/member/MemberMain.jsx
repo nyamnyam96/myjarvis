@@ -168,7 +168,7 @@ export default function MemberMain() {
                          </th>
                          <td className="input-group">
                             <div className="memberMain-item">
-                                
+                                {member.memberCompName}
                             </div>
                          </td>
                       </tr>
@@ -178,7 +178,7 @@ export default function MemberMain() {
                          </th>
                          <td className="input-group">
                             <div className="memberMain-item">
-                                
+                                {member.memberCompNo}
                             </div>
                          </td>
                       </tr>

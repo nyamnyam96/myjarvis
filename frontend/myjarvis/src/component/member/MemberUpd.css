@@ -127,7 +127,7 @@
 
 /* 회원 수정 정렬*/
 .input-wrap {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
 }
@@ -168,5 +168,6 @@
 .text{
   font-size: 40px;
   color: black;
+  text-align: center;
 }
 

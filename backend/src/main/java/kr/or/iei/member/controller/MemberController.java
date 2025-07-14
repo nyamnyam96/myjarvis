@@ -58,7 +58,7 @@ public class MemberController {
 			int result = service.insertMember(member);
 			
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "회원 가입이 성공적으로 완료되었습니다. 로그인 화면으로 이동합니다. ", true, "success");
+				res = new ResponseDTO(HttpStatus.OK, "회원 가입 성공, 로그인 페이지로 이동합니다.", true, "success");
 			}else {
 				res = new ResponseDTO(HttpStatus.OK, "회원 가입 중 오류가 발생하였습니다.", false, "warning");
 			}
@@ -83,7 +83,7 @@ public class MemberController {
 			if(loginMember == null) {
 				res = new ResponseDTO(HttpStatus.OK, "아이디 및 비밀번호를 확인하세요", null, "warning");
 			}else {
-				res = new ResponseDTO(HttpStatus.OK, "로그인 성공 메인페이지로 이동합니다.", loginMember, "");
+				res = new ResponseDTO(HttpStatus.OK, "", loginMember, "");
 			}
 			
 		}catch (Exception e) {
@@ -96,7 +96,7 @@ public class MemberController {
 	@GetMapping("/{memberId}")
 	public ResponseEntity<ResponseDTO> selectOneMember(@PathVariable String memberId){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 정보 조회 중, 오류가 발생하였습니다. ", null, "error");
-		
+			
 		try {
 			
 			Member member = service.selectOneMember(memberId);

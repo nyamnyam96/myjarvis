@@ -16,7 +16,7 @@ export default function MemberUpd(){
     
     //회원 정보 수정 요청 시, 전달할 State
     const [member, setMember] = useState({
-        memberId : memberId, memberPw :"", memberName : "", memberEmail : "", memberPhone : ""
+        memberId : memberId, memberPw :"", memberName : "", memberEmail : "", memberPhone : "",memberCompName : "", memberCompNo : "" 
     });
 
     //기존 비밀번호 일치 여부 체크
@@ -55,8 +55,8 @@ export default function MemberUpd(){
                 axiosInstance(options)
                 .then(function(res){
                     if(res.data.resData != null){
-                        
                         setMember(res.data.resData);
+                        setIsAuth(true);
                     }
                 })
                 .catch(function(err){
@@ -86,7 +86,6 @@ export default function MemberUpd(){
 
     const [memberPwRe, setMemberPwRe] = useState('');
     function chgMemberPwRe(e){
-        
         setMemberPwRe(e.target.value);
     }
 
@@ -96,6 +95,8 @@ export default function MemberUpd(){
         options.url = serverUrl + "/member";
         options.method = "patch";
         options.data = member;
+
+        console.log(member);
 
         axiosInstance(options)
         .then(function(res){
@@ -107,6 +108,8 @@ export default function MemberUpd(){
         })
 
     }
+
+   
 
     function cancel(){
 
@@ -181,6 +184,23 @@ export default function MemberUpd(){
                                 <input type="text" id="newPhone" name="memberPhone" value={member.memberPhone} onChange={chgMember}></input>
                             </div> 
                         </div>
+                         <div className="input-wrap">
+                            <div className="input-title">
+                                <label htmlFor="newCompName">상호명</label>
+                            </div>
+                            <div className="memberUpd-item">
+                                <input type="text" id="newCompName" name="memberCompName" value={member.memberCompName} onChange={chgMember}></input>
+                            </div> 
+                        </div>
+                         <div className="input-wrap">
+                            <div className="input-title">
+                                <label htmlFor="newCompNo">사업자번호</label>
+                            </div>
+                            <div className="memberUpd-item">
+                                <input type="text" id="newCompNo" name="memberCompNo" value={member.memberCompNo} onChange={chgMember}></input>
+                            </div> 
+                        </div>
+                        
                         <div className="button-zone">
                             <button type="button" className="memberUpd-second" onClick={updateMember}>수정하기</button>
                             <button type="button" className="memberUpd-second" onClick={cancel}>취소</button>

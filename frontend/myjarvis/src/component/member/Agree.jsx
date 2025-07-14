@@ -66,7 +66,7 @@ export default function Agree(){
   return (
     
       <section className="agree-container1">
-        <h1 className="page-title">약관 동의</h1>
+        <h1 className="join-title">약관 동의</h1>
           <form onSubmit={function(e){
             e.preventDefault();
             goToJoin();

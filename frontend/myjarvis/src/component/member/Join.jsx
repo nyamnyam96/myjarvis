@@ -186,8 +186,9 @@ export default function Join(){
    
     {/* 왼쪽: 회원가입 폼 */}
     <div className="join-left">
-          <div className="join-title">회원 가입</div>    
-        <form onSubmit={function(e){
+          <div className="join-title">회원 가입</div> 
+
+        <form className="join-form" onSubmit={function(e){
             e.preventDefault();     //기본 submit 이벤트 
            
             join();                 //회원가입 처리 함수
@@ -197,7 +198,7 @@ export default function Join(){
                 </div>
                 <div className="join-item3">
                     <label htmlFor="memberId">아이디</label>
-                    <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId}/>
+                    <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId} placeholder="8~20글자를 입력하세요." required/>
                 </div>
                 <p className={"input-msg" + (idChk == 0 ? '' : idChk == 1 ? ' valid' : ' invalid')}>
                         {
@@ -216,7 +217,7 @@ export default function Join(){
                 </div>
                 <div className="join-item3">
                     <label htmlFor="memberPw">비밀번호</label>
-                    <input type="password" id="memberPw" value={member.memberPw}  onChange={chgMember} onBlur={chkMemberPw}  /> {/** onChange={chgMember} onBlur={chkMemberPw} */}
+                    <input type="password" id="memberPw" value={member.memberPw}  onChange={chgMember} onBlur={chkMemberPw} placeholder="6~30글자를 입력하세요." required /> {/** onChange={chgMember} onBlur={chkMemberPw} */}
                 </div>
             </div>
             <div className="join-wrap">
@@ -224,7 +225,7 @@ export default function Join(){
                     </div>
                     <div className="join-item3">
                         <label htmlFor="memberPwRe">비밀번호 확인</label>
-                        <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={chkMemberPw}/>
+                        <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={chkMemberPw} placeholder="비밀번호와 동일하게 입력하세요" required/>
                     </div>
                  <p className={"input-msg" + (pwChk == 0 ? '' : pwChk == 1 ? ' valid' : ' invalid')}>
                         {
@@ -243,7 +244,7 @@ export default function Join(){
                 </div>
                 <div className="join-item3">
                     <label htmlFor="memberName">이름</label>
-                    <input type="text" id="memberName" value={member.memberName} onChange={chgMember} />
+                    <input type="text" id="memberName" value={member.memberName} onChange={chgMember} placeholder="OOOO" required/>
                  </div>
             </div>
             <div className="join-wrap">
@@ -251,7 +252,7 @@ export default function Join(){
                 </div>
                  <div className="join-item3">
                     <label htmlFor="memberEmail">이메일</label>
-                    <input type="text" id="memberEmail" value={member.memberEmail} onChange={chgMember}  onBlur={checkMemberEmail}/>
+                    <input type="text" id="memberEmail" value={member.memberEmail} onChange={chgMember}  onBlur={checkMemberEmail} placeholder="mail@example.com" required/>
                  </div>
                     <p className={"input-msg" + (emailChk == 0 ? '' : emailChk == 1 ? ' valid' : ' invalid')}>
                         {
@@ -270,13 +271,14 @@ export default function Join(){
                 <div className="input-title">
                 </div>
                 <div className="join-item3">
-                    <label htmlFor="input-title">전화번호</label>
-                    <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} />
+                    <label htmlFor="memberPhone">전화번호</label>
+                    <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} placeholder="010-0000-0000" required />
                 </div>
-                
+                    <p>전화번호는 000-0000-0000 형식으로 적어주세요</p>
+
             </div>
             <div className="join-button-box">
-                <button type="submit" className="join-primary">
+                <button type="submit" className="join-button">
                         회원가입
                 </button> 
                 </div>
@@ -287,23 +289,31 @@ export default function Join(){
         {/* 생략된 부분은 기존 Join.jsx 코드 그대로 */}
       </form>
     </div>
-
-    {/* 오른쪽: 배경 및 로고 */}
-    <div  className="join-right" >
       
-      <div className="brand-wrapper">
-        <div className="brand-logo">
-          <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
+        {/* 오른쪽: 배경 및 로고 */}
+        <div className="join-right">
+            <div className="brand-wrapper">
+                <div className="brand-logo">
+                <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
+            </div>
+            <div className="brand-text">
+          
+            </div>
         </div>
-        <div className="brand-text">
-        
-          <a href="http://localhost:5173/" target="_blank" rel="noopener noreferrer">
-            MyJarvis.com
-          </a>
+
+        {/* 오른쪽 하단 */}
+        <div style={{ textAlign: 'center' }}>
+            <div className="footer-links">
+            <a href="#">Support</a>
+            <a href="#">License</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Blog</a>
+            </div>
+            
         </div>
-      </div>
     </div>
-  </section>
+      
+    </section>
 
   );
 }
