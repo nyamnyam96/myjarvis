@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.iei.contract.model.dao.ContractDao">	
+	
+	<!-- 전체 계약 수 조회 -->
+	<select id="selectContractCount" resultType="_int">
+	select count(*)
+	  from tbl_contract	    
+	</select>
+	
+	<!-- 전체 계약 목록 조회 -->
+	<select id="selectContractList" parameterType="PageInfo" resultType="Contract">
+    SELECT * 
+      FROM (
+      	   SELECT ROWNUM AS RNUM, A.* 
+      	     FROM (
+      	     	  SELECT C.CONTRACT_NO AS contractNo,
+				    	 C.STATUS_CODE AS statusCode,
+				    	 C.CONTRACT_TITLE AS contractTitle,
+				    	 C.CONTRACT_CONTENT AS contractContent,
+				    	 TO_CHAR(C.CONTRACT_START, 'YYYY-MM-DD') AS contractStart,
+				    	 TO_CHAR(C.CONTRACT_END, 'YYYY-MM-DD') AS contractEnd,
+				    	 C.CONTRACT_DEPOSIT AS contractDeposit,
+				    	 TO_CHAR(C.CONTRACT_CONFIRM, 'YYYY-MM-DD') AS contractConfirm,
+				    	 C.MEMBER_NO AS memberNo,
+				    	 M.MEMBER_NAME AS memberName,
+				    	 CO.COMP_NAME AS companyName
+		    	    from TBL_CONTRACT C
+			             LEFT JOIN TBL_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
+					     LEFT JOIN TBL_CONTRACT_PARTY CP ON C.CONTRACT_NO = CP.CONTRACT_NO
+					     LEFT JOIN TBL_COMPANY CO ON CP.COMP_CD = CO.COMP_CD
+				   ORDER BY
+				         C.CONTRACT_START DESC				    	 
+      	          ) A 
+           )
+    	   where rnum between #{start} and #{end}     
+	</select>
+	
+	<!-- 계약 상태 업데이트 -->
+	<update id="updateContractStatus">
+    UPDATE TBL_CONTRACT
+       SET
+           STATUS_CODE = #{statusCode}
+     WHERE
+           CONTRACT_NO = #{contractNo}
+	</update>
+	
+	<!-- 계약 상태 변경 히스토리 추가 -->
+	<insert id="insertContractHistory">
+    INSERT INTO TBL_CONTRACT_HISTORY (
+           CONTRACT_HISTORY_NO,
+           CONTRACT_NO,
+           CONTRACT_HISTORY_CONTENT,
+           CONTRACT_HISTORY_DATE,
+           MEMBER_NO -- 담당자 기록을 위한 컬럼 추가 권장
+    ) VALUES (
+	       SEQ_CONTRACT_HISTORY_NO.NEXTVAL,
+	       #{contractNo},
+	       #{contractHistoryContent},
+	       SYSDATE,
+	       #{memberNo}
+    )
+	</insert>
+    
+    
+  
+</mapper>

@@ -166,13 +166,14 @@ public class MemberController {
 	
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
 	@GetMapping("/{memberEmail}/chkEmail")
+	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> chkMemberEmail(@PathVariable String memberEmail){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 체크 실패", false, "error");
-		
+		 
 		try {
 			int count = service.chkMemberEmail(memberEmail);
-			
 			res = new ResponseDTO(HttpStatus.OK, "", count, "success");
 			
 		}catch (Exception e) {
@@ -180,6 +181,8 @@ public class MemberController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<ResponseDTO> refreshToken(@RequestBody Member member){

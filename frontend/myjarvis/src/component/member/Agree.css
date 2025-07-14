@@ -1,16 +1,17 @@
-.main-container1{
+.agree-container1{
+ 
    width: 450px;         /* 가로 길이 */
-  height: 900px;        /* 세로 길이 */
+  height: 700px;        /* 세로 길이 */
   background-color: white; /* 배경색 */
   
   border-radius: 8px;         /* 둥근 정도 (0이면 완전 네모) */
   padding: 20px;        /* 안쪽 여백 */
   box-shadow: 2px 2px 8px rgba(0,0,0,0.1); /* 그림자 효과 */
-  margin: 20px auto;    /* 가운데 정렬용 */
+  margin: 100px auto;    /* 가운데 정렬용 */
     
 }
 
-.button-move {
+.button-move1 {
   display: block;                /* block으로 만들어야 margin auto 적용됨 */
   margin: 20px auto;             /* 수직 여백 + 수평 가운데 정렬 */
   padding: 12px 24px;            /* 안쪽 여백 (세로, 가로) */
@@ -23,7 +24,7 @@
   transition: background-color 0.3s ease; /* 부드러운 호버 효과 */
 }
 
-.input-label{
+.agree-label{
     display: block;                /* block으로 만들어야 margin auto 적용됨 */
   margin: 20px auto;             /* 수직 여백 + 수평 가운데 정렬 */
   padding: 12px 24px;            /* 안쪽 여백 (세로, 가로) */
@@ -52,14 +53,14 @@
 margin: 10px;
 }
 
-.main-title {
+.agree-title {
   text-align: center;   /* 텍스트 중앙 정렬 */
   margin-bottom: 20px;  /* 제목 아래 공간 */
     font-size: 36px; /* 원하는 크기로 조절 */
   font-weight: bold; /* 글씨를 굵게 하고 싶을 때 */
 }
 
-.sub-title {
+.agree-title {
   background-color: #f3f4f6;
   display: block;                /* block으로 만들어야 margin auto 적용됨 */
   margin: 20px auto;             /* 수직 여백 + 수평 가운데 정렬 */

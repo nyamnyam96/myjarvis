@@ -6,7 +6,9 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -96,6 +98,7 @@ public class JwtUtils {
 			//int memberLevel = (int) claims.get("memberLevel");
 			
 			m.setMemberId(memberId);
+			//m.setMemberId(memberId);
 			//m.setMemberLevel(memberLevel);
 			
 		}catch(SignatureException e) { // 발급 토큰과 요청 토큰 불일치
@@ -106,4 +109,5 @@ public class JwtUtils {
 		
 		return m;
 	}
+	
 }

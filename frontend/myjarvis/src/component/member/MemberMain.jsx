@@ -10,7 +10,8 @@ export default function MemberMain() {
     memberId: "",
     memberName: "",
     memberEmail: "",
-    memberStatus: ""
+    memberStatus: "",
+    memberPhone: ""
   });
 
   const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -54,134 +55,141 @@ export default function MemberMain() {
       });
   }, []);
 
-  function deleteMember() {
-    if (!loginMember || !loginMember.memberId) {
-      Swal.fire("개발모드", "임시 로그인 상태에서는 회원 탈퇴 기능을 사용할 수 없습니다.", "info");
-      return;
+    function updateMember() {
+      console.log("회원정보 수정 기능은 준비 중입니다.");
     }
 
-    Swal.fire({
-      title: "알림",
-      text: "회원 탈퇴를 하시겠습니까 ?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "삭제하기",
-      cancelButtonText: "취소"
-    }).then(function (res) {
-      if (res.isConfirmed) {
-        const options = {
-          url: serverUrl + "/member/" + loginMember.memberId,
-          method: "delete"
-        };
+    function deleteMember(){
 
-        axiosInstance(options)
-          .then(function (res) {
-            if (res.data.resData) {
-              setIsLogined(false);
-              setLoginMember(null);
-              setAccessToken(null);
-              setRefreshToken(null);
-              delete axiosInstance.defaults.headers.common["Authorization"];
-              navigate("/login");
+        Swal.fire({
+            title : '알림',
+            text : '회원 탈퇴를 하시겠습니까 ?',
+            icon : 'warning',
+            showCancelButton : true,
+            confirmButtonText : '삭제하기',
+            cancelButtonText : '취소'
+        })
+        .then(function(res){
+          if(res.isConfirmed){
+            let options = {};
+            options.url = serverUrl + "/member/" + loginMember.memberId;
+            options.method = 'delete';
+           
+
+            axiosInstance(options)
+            .then(function(res){
+
+                    if(res.data.resData){
+
+                        setIsLogined(false);
+                        setLoginMember(null);
+                        setAccessToken(null);
+                        setRefreshToken(null);
+                        delete axiosInstance.defaults.headers.common['Authorization'];
+                    
+
+                        navigate("/Home");
+                    }
+                })
+                .catch(function(err){
+                    console.log(err);
+                });
             }
-          })
-          .catch(function (err) {
-            console.log(err);
-          });
-      }
-    });
-  }
-
-  return (
-    <section className="mypage-container">
-      <div className="page-title text-gray-800 dark:text-white">
-        {member.memberId}님의 마이페이지
-      </div>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          updateMember();
-        }}
-      >
-        <div className="px-4">
-          <table
-            className="tbl my-info"
-            style={{ width: "80%", margin: "0 auto" }}
-          >
-            <tbody>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">아이디</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white">
-                    {member.memberId}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">이름</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white">
-                    {member.memberName}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">이메일</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white">
-                    {member.memberEmail}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">회원등급</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white">
-                    {member.memberStatus === "y" ? "일반회원" : "관리자"}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">핸드폰</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white">
-                    {member.memberPhone}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">상호명</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white"></div>
-                </td>
-              </tr>
-              <tr>
-                <th className="dark:bg-gray-800 dark:text-white">사업자 번호</th>
-                <td className="input-group">
-                  <div className="input-item dark:text-white"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="button">
-          <Link
-            to={"/memberUpd/" + member.memberId}
-            className="btn-first"
-          >
-            수정하기
-          </Link>
-          <button
-            type="button"
-            className="btn-second"
-            onClick={deleteMember}
-          >
-            회원탈퇴
-          </button>
-        </div>
-      </form>
-    </section>
-  );
+        });
+       
 }
+
+    return (
+        
+        
+        <section className="member-container" >
+            
+            <div className="member-title">{member.memberId}님의 마이페이지</div>
+            <form onSubmit={function(e){
+                e.preventDefault();
+                updateMember();
+            }}>
+                <table className="tbl my-info" style={{width : "80%", margin : " 0 auto"}}>
+                    <tbody>
+                      <tr>
+                        <th>
+                            아이디
+                        </th>
+                            <td className="input-group">
+                                <div className="memberMain-item">
+                                    {member.memberId}
+                                </div>
+                            </td>
+                      </tr>
+                      <tr>
+                         <th>
+                            <label htmlFor="memberName">이름</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="memberMain-item">
+                                {member.memberName}
+                            </div>
+                         </td>
+                      </tr>
+                      <tr>
+                         <th>
+                            <label htmlFor="memberEmail">이메일</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="memberMain-item">
+                                {member.memberEmail}
+                            </div>
+                         </td>
+                      </tr>
+                      
+                      <tr>
+                         <th>
+                            <label htmlFor="memberStatus">회원등급</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="memberMain-item">
+                                {member.memberStatus == 'y' ? '일반회원' : '관리자'}
+                            </div>
+                         </td>
+                      </tr>
+                      <tr>
+                         <th>
+                            <label htmlFor="memberPhone">핸드폰</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="memberMain-item">
+                                {member.memberPhone}
+                            </div>
+                         </td>
+                      </tr>
+                      <tr>
+                         <th>
+                            <label htmlFor="memberName">상호명</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="memberMain-item">
+                                
+                            </div>
+                         </td>
+                      </tr>
+                       <tr>
+                         <th>
+                            <label htmlFor="memberName">사업자 번호</label>
+                         </th>
+                         <td className="input-group">
+                            <div className="memberMain-item">
+                                
+                            </div>
+                         </td>
+                      </tr>
+                    </tbody>
+                </table>
+                <div className="button">
+                    <Link to={"/memberUpd/"+member.memberId}  className="btn-first">수정하기</Link>
+                    <button type="button" className="btn-second" onClick={deleteMember}>회원탈퇴</button>
+                </div>
+            </form>
+        </section>
+    )
+}
+
