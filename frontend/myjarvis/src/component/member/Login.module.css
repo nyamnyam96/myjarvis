@@ -1,119 +1,192 @@
-/* 섹션 스타일 (배경 등 전체 박스) */
 .mypageContainer {
- 
-  padding: 40px 20px;
-  box-sizing: border-box;
   display: flex;
+  min-height: 100vh;
   
-}
-.mypageContainer{
-  background-color: #f4f7fe; /* 연한 파란 배경 */
-  min-height: 100vh;         /* 화면 전체 채우기 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-
-.pageContainer {
-  margin-top: 60px; /* 원하는 만큼 내려줌 */
-  max-width: 600px;  /* 기존 300px에서 600px로 확대 */
-  min-width: 650px; /* 최소 너비 설정 */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 50px 20px;
-  background-color: white;
-  border-radius: 12px;
-  box-sizing: border-box;display: flex;
-  justify-content: center;  /* 가로 중앙 */
-  align-items: center;      /* 세로 중앙 */
-  flex-direction: column;   /* 아이템 세로 정렬 */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-/* 제목 */
-.pageTitle {
-  font-size: 80px;
-  font-weight: bold;
-  color: black;
-  margin-bottom: 30px;
-}
-
-/* 라벨 + input 묶음 */
-.inputWrap {
-  align-items: center;
-  margin-bottom: 40px;
-}
-
-.inputItem2 input {
- width: 300px; /* 부모가 줄면 따라 줄어듦 */
-  padding: 8px 12px;
-  font-size: 1rem;
-  border-radius: 4px;
-  box-sizing: border-box;
-  background-color:  #f4f7fe;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-/* 오른쪽 input 필드 */
-.inputItem {
-  flex: 1;
-}
-
-.inputItem input:focus {
-  box-shadow: none;
-}
-
-/* 로그인 버튼 박스 */
-.loginButtonBox {
-  text-align: center;
-  border-radius: 6px;
-  padding: 12px 20px;
-  transition: background-color 0.3s;
-  min-width: 10px; 
-  max-width: 300px;
-  padding: 14px;
-  font-size: 16px;
   color: white;
-  background-color: #2b3674 ;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 12px rgba(90, 80, 240, 0.3);
-}
-
-.loginButtonBoxP {
-  margin-top: 20px;
-  font-size: 14px;
-  text-align: center;          /* 가운데 정렬 */
   
- 
 }
-
-.btnPrimaryLg:hover {
-  background-color: #2563eb;
+.rightPanel {
+  flex: 1;
+  background: linear-gradient(135deg, #2b3674, #8f70f9); /* Join과 동일한 색 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+  padding: 20px;
 }
-
-/* 회원가입 링크 */
-.link {
-  display: block;
+/* Join과 동일한 구조 */
+.brandWrapper {
   text-align: center;
-  margin-top: 10px;
-  color: purple;
-  text-decoration: none;
-  font-weight: bold;
 }
 
-.link:hover {
+.brandLogo img {
+  width: 500px;
+  margin-bottom: 20px;
+}
+
+.brandText a {
+  font-size: 18px;
+  color: white;
   text-decoration: underline;
 }
 
+.footerLinks {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+}
+
+.footerLinks a {
+  margin: 0 15px;
+  font-size: 14px;
+  color: #ccc;
+  text-decoration: none;
+}
+/* 왼쪽 로그인 박스 */
+
+.pageContainer {
+    flex: 6;           /* flex 비율 키워서 좀 더 넓게 */
+  max-width: 900px;    /* 최대 너비 확대 */
+  background: white;
+  color: black;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+   align-items: center;      /* 가로 중앙 */
+  justify-content: center;
+  box-shadow: 0 0 60px rgb(52 52 52 / 0.1);
+ 
+}
+.loginButtonBoxP {
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 14px;
+  text-align: center;  /* 이 부분 추가 */
+}
+/* 로고 + 타이틀 */
 .pageTitle {
   display: flex;
   align-items: center;
-  gap: 15px;
+  font-weight: 700;
   font-size: 80px;
-  padding: 20px;
+  margin-bottom: 40px;
+  gap: 12px;
 }
 
+.pageTitle img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+
+/* input 레이블 */
+.login-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+/* input 박스 */
+.inputItem2 input {
+  width: 325px;
+  padding: 14px 20px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1.5px solid #ddd;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  outline: none;
+  text-align: left;
+}
+
+
+
+.login-Button {
+  width: 325px;
+  margin: 24px 0 12px 0;
+}
+
+.loginbutton {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(90deg, #5a50f0, #9c78f6);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(90, 80, 240, 0.35);
+  transition: background-color 0.3s ease;
+  text-align: center;
+  margin: 24px 0 20px 0;
+}
+
+.links{
+display: flex;
+  gap: 24px;
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+.logoBox{
+  margin-top: 100px ;
+  margin-bottom: 30px;
+}
+
+
+.logoBox img{
+  width: 700px;
+  height: 500px;
+  margin-top : auto;
+  margin-bottom: 20px;
+  
+}
+
+.logoBox a {
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  border: 1px solid white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  transition: background 0.3s;
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center;     /* 수직 중앙 정렬 (필요 시) */
+  width: 100%;
+}
+
+.links{
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  
+}
+.links a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.dark-toggle {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+}

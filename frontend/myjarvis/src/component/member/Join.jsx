@@ -291,33 +291,29 @@ export default function Join(){
     </div>
       
         {/* 오른쪽: 배경 및 로고 */}
-<div className="join-right">
-  <div className="brand-wrapper">
-    <div className="brand-logo">
-      <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
-    </div>
-    <div className="brand-text">
-      <a href="http://localhost:5173/" target="_blank" rel="noopener noreferrer">
-        MyJarvis.com
-      </a>
-    </div>
-  </div>
+        <div className="join-right">
+            <div className="brand-wrapper">
+                <div className="brand-logo">
+                <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
+            </div>
+            <div className="brand-text">
+          
+            </div>
+        </div>
 
-  {/* 오른쪽 하단 */}
-  <div style={{ textAlign: 'center' }}>
-    <div className="footer-links">
-      <a href="#">Support</a>
-      <a href="#">License</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Blog</a>
+        {/* 오른쪽 하단 */}
+        <div style={{ textAlign: 'center' }}>
+            <div className="footer-links">
+            <a href="#">Support</a>
+            <a href="#">License</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Blog</a>
+            </div>
+            
+        </div>
     </div>
-    
-  </div>
-</div>
       
-      
-    
-  </section>
+    </section>
 
   );
 }

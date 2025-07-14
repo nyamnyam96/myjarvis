@@ -1,136 +1,62 @@
-
-.join-form{
-   max-width: 400px;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-
-
-.join-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-}
-
-/* 왼쪽: 입력 폼 */
-.join-left {
-  flex: 1;
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: #ffffff;
+.html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 스크롤 제거 */
+  height: 100%;
 }
 
 .join-title {
-  font-size: 32px;
-  font-weight: 800;
-  margin-bottom: 10px;
- text-align: center; /* ✅ 가운데 정렬 */
+  font-size: 36px; /* 원하는 크기로 조절하세요 */
+  font-weight: bold; /* 좀 더 강조하고 싶으면 */
 }
-
-.join-subtitle {
-  font-size: 16px;
-  color: #888;
-  margin-bottom: 30px;
+.join-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* 불필요한 스크롤 제거 */
 }
-
-form {
+.join-left {
+  flex: 1;
+  padding: 60px;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  overflow: hidden; /* ← 또는 auto 대신 hidden */
+}
+.footer {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+  text-align: right;
 }
 
-.join-wrap {
-  margin-bottom: 18px;
-}
-
-.join-item3 {
-  display: flex;
-  flex-direction: column;
-}
-
-.join-item3 label {
-  margin-bottom: 6px;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.join-item3 input {
-  padding: 12px;
-  font-size: 15px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  transition: 0.2s;
-}
-
-.join-item3 input:focus {
-  border-color: #5a50f0;
-}
-
-.input-msg {
-  font-size: 12px;
-  margin-top: 5px;
-  margin-left: 2px;
-}
-
-.input-msg.valid {
-  color: #13c113;
-}
-
-.input-msg.invalid {
-  color: #f44336;
-}
-
-.join-button-box {
-  margin-top: 20px;
-}
-
-.join-button {
-  width: 400px;
-  padding: 14px;
-  font-size: 16px;
-  background-color: #5a50f0;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-
-
-/* 오른쪽: 로고 + 그라디언트 */
 .join-right {
   flex: 1;
-  background: linear-gradient(135deg, #6f49fd, #b985fc);
+  background: linear-gradient(135deg, #2b3674, #8f70f9);
   display: flex;
-  justify-content: center;
   align-items: center;
-  border-top-left-radius: 120px;
-  border-bottom-left-radius: 120px;
+  justify-content: center;
   color: white;
   position: relative;
+  
 }
 
-.brand-wrapper {
-  text-align: center;
-    margin-top: 60px; /* ✅ 로고 위에 공간 줘서 아래로 이동 */
+.logoBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand-logo img {
+.logoBox img {
   width: 500px;
   height: 500px;
   margin-bottom: 20px;
 }
 
-.brand-text a {
+/* 버튼 링크 스타일 */
+.logoBox a {
   text-decoration: none;
   font-size: 20px;
   color: white;
@@ -139,44 +65,13 @@ form {
   padding: 10px 20px;
   border-radius: 12px;
   transition: background 0.3s;
-}
-
-.brand-text a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-.join-primary {
-  width: 100%;
-  max-width: 400px;
-  padding: 14px;
-  font-size: 16px;
-  background-color: #5a50f0;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.join-primary:hover {
-  background-color: #3f3ae0;
-}
-
-/* 오른쪽 영역 하단 메뉴 추가 */
-.join-right {
-  flex: 1;
-  background: linear-gradient(135deg, #6f49fd, #b985fc);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 60px 20px;
-  border-top-left-radius: 120px;
-  border-bottom-left-radius: 120px;
-  color: white;
-  position: relative;
 }
 
-.footer-links {
+/* 하단 링크 */
+.links {
   display: flex;
   gap: 24px;
   font-size: 14px;
@@ -184,19 +79,130 @@ form {
   margin-bottom: 10px;
 }
 
-.footer-links a {
+.links a {
   color: white;
   text-decoration: none;
 }
 
-.footer-links a:hover {
+.links a:hover {
   text-decoration: underline;
 }
+
+.brand-wrapper {
+  text-align: center;
+}
+
+.brand-logo img {
+  width: 600px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.brand-text {
+text-align: center;
+}
+
+.brand-text h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  
+}
+
+.brand-text a {
+  font-size: 18px;
+  color: white;
+  text-decoration: underline;
+  
+}
+
+/* 기존 입력 폼 스타일 유지 */
+.join-wrap {
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.join-item3 input {
+  
+  display: flex;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  max-width: 300px;     /* 원하는 고정 최대값 */
+}
+
+.input-msg {
+  font-size: 0.9rem;
+  margin-top: 3px;
+}
+
+.input-msg.valid {
+  color: green;
+}
+.input-msg.invalid {
+  color: red;
+}
+
+.join-button-box {
+  display: flex;
+  justify-content: center;     /* 버튼을 수평 가운데 정렬 */
+  margin-top: 30px;
+
+}
+
+.join-button-box button {
+  width: 230px;
+  padding: 12px;
+  font-size: 16px;
+ background: linear-gradient(90deg, #5a50f0, #9c78f6);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+
+form {
+  max-width: 700px;      /* input 너비 제한 */
+  margin: 0 auto;         /* 좌우 중앙 정렬 */
+}
+
+.join-title {
+  width: 100%;
+  font-size: 40px;
+  text-align: center;
+  padding: 20px;
+}
+
+.footer-links{
+  position: absolute;
+  right: 30px;
+  left: 40px;
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  
+}
+
+.footer-links a {
+    margin: 0 15px;
+  font-size: 14px;
+  color: #ccc;
+  text-decoration: none;
+   
+}
+
+
+
 
 .dark-toggle {
   width: 36px;
   height: 36px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255 ,255, 0.1);
   border-radius: 50%;
   display: flex;
   justify-content: center;
