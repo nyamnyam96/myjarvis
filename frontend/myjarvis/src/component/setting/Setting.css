@@ -2,32 +2,67 @@
 
 .setting-wrapper {
   @apply p-6 grid grid-cols-1 md:grid-cols-2 gap-6;
-  min-height: calc(100vh - 120px); /* 헤더/풋터 여백 고려한 최소 높이 */
+  min-height: calc(100vh - 120px);
 }
 
-/* 다크모드 대응 + 내부 스크롤만 허용 */
+/* 카드 스타일 */
 .setting-card {
-  @apply bg-white rounded-2xl p-6 shadow-md flex flex-col gap-4 dark:bg-gray-900 dark:text-white;
+  @apply bg-white rounded-2xl p-6 shadow-md flex flex-col gap-4;
   overflow-y: auto;
   max-height: 100%;
 }
 
+/*  다크모드 전용 카드 배경/텍스트/그림자 조정 */
+.dark .setting-card {
+  background-color: #1f2233;  /* 기존 gray-900보다 부드러운 톤 */
+  color: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* 항목 정렬 */
 .setting-item {
   @apply flex items-center justify-between;
 }
 
 .setting-label {
-  @apply text-base font-medium text-gray-800 dark:text-white;
+  @apply text-base font-medium text-gray-800;
+}
+
+.dark .setting-label {
+  color: #e0e0e0;
 }
 
 .setting-link {
-  @apply text-base text-gray-500 hover:text-gray-700 underline underline-offset-4 dark:text-gray-300 dark:hover:text-white;
+  @apply text-base text-gray-500 hover:text-gray-700 underline underline-offset-4;
 }
 
+.dark .setting-link {
+  color: #cbd5e1; /* gray-300 계열 */
+}
+
+.dark .setting-link:hover {
+  color: #ffffff;
+}
+
+/*  배경 설정 구간 */
 .setting-background {
-  @apply pt-4 mt-2 border-t border-gray-200 dark:border-gray-700;
+  @apply pt-4 mt-2 border-t border-gray-200;
 }
 
+.dark .setting-background {
+  border-color: #374151; /* dark:border-gray-700 */
+}
+
+/* 버튼은 여전히 gradient 유지 (공통 스타일 사용) */
 .setting-background .gradient-btn {
   @apply px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] hover:brightness-110;
+}
+
+/* 텍스트 tone 조정 */
+.setting-background p {
+  @apply text-xs text-gray-500;
+}
+
+.dark .setting-background p {
+  color: #b0b4c0;
 }

@@ -1,46 +1,32 @@
 /* MemberMain.css */
 
-/* 컨테이너: 카드 안에 들어가기 적합한 사이즈와 구조로 정리 */
+/* 전체 마이페이지 카드 컨테이너 */
 .mypage-container {
   @apply p-0 bg-white text-gray-800 rounded-xl flex flex-col gap-5 dark:bg-gray-900 dark:text-white;
   font-family: 'Pretendard', sans-serif;
-  flex: 1;                  /* 내부 카드 영역에서 유연하게 확장 */
-  min-height: 400px;        /* 충분한 초기 높이 설정 */
+  flex: 1;
+  min-height: 400px;
 }
 
-/* 상단 제목 */
+/* 제목 텍스트 */
 .page-title {
   @apply text-base font-semibold text-gray-800 mb-2 px-4 dark:text-white;
 }
 
+/* 마이페이지 카드 내부 컨테이너 */
 .member-container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 30px 20px;
-  background-color: white;
-  border-radius: 12px;
+  @apply max-w-[700px] mx-auto p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl min-h-[60vh];
   font-family: 'Noto Sans KR', sans-serif;
-  min-height: 60vh;
- 
 }
 
+/* 사용자 정보 표시 박스 */
 .memberMain-item {
-  width: 200%;
-  max-width: 380px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background-color: #f4f7fe;
-  
-  box-sizing: border-box;
-  
-  
+  @apply w-full max-w-[380px] px-4 py-2 rounded-md bg-[#f4f7fe] dark:bg-gray-800 text-gray-800 dark:text-white box-border min-h-[40px];
 }
 
+/* 마이페이지 상단 제목 */
 .member-title {
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 30px;
-  color: black;
+  @apply text-2xl font-bold text-center mb-9 text-black dark:text-white;
 }
 
 /* 표 스타일 */

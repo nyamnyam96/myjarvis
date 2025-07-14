@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { NavLink, Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
+import useThemeStore from "../../store/useThemeStore";
 import axios from "axios";
 function Main() {
   const { isLogined } = useUserStore();
   const navigate = useNavigate();
   const location = useLocation();
+
   
   const { setIsLogined, setLoginMember, setAccessToken, setRefreshToken } = useUserStore();
   //세션 파기 요청
@@ -29,13 +31,22 @@ function Main() {
       
   }
 
-  useEffect(() => {
-    if (!isLogined ) {
-      navigate("/home"); //navigate("/login") 수정
-    }
-  }, [isLogined, navigate]);
+// 임시 로그인 권한 부여
+const isDev = import.meta.env.DEV; // Vite 사용 시
+const initializeTheme = useThemeStore((state) => state.initializeTheme);
 
-  if (!isLogined) return null;
+useEffect(() => {
+    initializeTheme(); // 다크모드 상태 반영
+}, []);
+
+useEffect(() => {
+  if (!isLogined && !isDev) {
+    navigate("/home");
+  }
+}, [isLogined, navigate]);
+
+if (!isLogined && !isDev) return null;
+
 
     const mainMenus = [
       { to: "/main/search", icon: "search", label: "검색" },
@@ -63,51 +74,62 @@ const renderMenuItem = (item) => {
       ? location.pathname === "/main"
       : location.pathname.startsWith(item.to || "");
 
-  return (
-    <li key={item.label} className="relative">
-      {item.onClick ? (
-        <div
-          onClick={item.onClick}
-          className={`
-            group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
-            transition-all duration-200 ease-in-out cursor-pointer
-            text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]
-          `}
-        >
-          <span className="material-symbols-outlined text-[20px] group-hover:text-[#4318ff]">
-            {item.icon}
-          </span>
-          <span>{item.label}</span>
-        </div>
-      ) : (
-        <NavLink
-          to={item.to}
-            className={`group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+    return (
+      <li key={item.label} className="relative">
+        {item.onClick ? (
+          <div
+            onClick={item.onClick}
+            className={`
+              group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+              transition-all duration-200 ease-in-out cursor-pointer
+              text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]
+              dark:text-[#b0b3c9] dark:hover:text-[#e4e7f5] dark:hover:bg-[#2c2e45]
+            `}
+          >
+            <span
+              className={`
+                material-symbols-outlined text-[20px] transition-colors duration-200
+                text-[#a3aed0] group-hover:text-[#4318ff]
+                dark:text-[#b0b3c9] dark:group-hover:text-[#7551ff]
+              `}
+            >
+              {item.icon}
+            </span>
+            <span>{item.label}</span>
+          </div>
+        ) : (
+          <NavLink
+            to={item.to}
+            className={`
+              group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
               transition-all duration-200 ease-in-out cursor-pointer
               ${
                 isActive
-                  ? "text-[#2b3674] dark:text-white font-bold"
-                  : "text-[#a3aed0] dark:text-[#9ca3af] hover:text-[#2b3674] dark:hover:text-white hover:bg-[#f4f7fe] dark:hover:bg-[#2c2e45]"
+                  ? "text-[#2b3674] dark:text-[#e4e7f5] font-bold"
+                  : "text-[#a3aed0] dark:text-[#b0b3c9] hover:text-[#2b3674] dark:hover:text-[#e4e7f5] hover:bg-[#f4f7fe] dark:hover:bg-[#2c2e45]"
               }
             `}
-        >
-          <span
-            className={`material-symbols-outlined text-[20px] transition-all duration-200 ${
-              isActive
-                ? "text-[#4318ff]"
-                : "text-[#a3aed0] dark:text-[#9ca3af] group-hover:text-[#4318ff]"
-            }`}
           >
-            {item.icon}
-          </span>
-          <span>{item.label}</span>
-        </NavLink>
-      )}
+            <span
+              className={`
+                material-symbols-outlined text-[20px] transition-colors duration-200
+                ${
+                  isActive
+                    ? "text-[#4318ff] dark:text-[#7551ff]"
+                    : "text-[#a3aed0] dark:text-[#b0b3c9] group-hover:text-[#4318ff] dark:group-hover:text-[#7551ff]"
+                }
+              `}
+            >
+              {item.icon}
+            </span>
+            <span>{item.label}</span>
+          </NavLink>
+        )}
 
       {/* 우측 강조선: NavLink인 경우만 표시 */}
-      {isActive && !item.onClick && (
-        <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] rounded-full" />
-      )}
+        {isActive && !item.onClick && (
+          <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] dark:bg-[#7551ff] rounded-full" />
+        )}
     </li>
   );
 };

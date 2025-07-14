@@ -24,7 +24,7 @@ export default function Dashboard() {
     <>
       {/* 사용자 배경 커스터마이징 카드: 12열 전체 사용 */}
       <div className="xl:col-span-12 mb-6 -mt-[23px]">
-        <Card className="relative p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d] min-h-[220px] overflow-hidden">
+        <Card className="relative p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#21243a] min-h-[220px] overflow-hidden">
           <div className="w-full h-full flex items-center justify-center">
             {backgroundImage ? (
               <img
@@ -45,7 +45,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         {/* TO-DO 리스트 카드 (좌측 6열) */}
         <div className="xl:col-span-6">
-          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d]">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#21243a]">
             <h2 className="section-title text-gray-800 dark:text-gray-200">TO-DO LIST</h2>
             <Checklist items={todoItems} />
           </Card>
@@ -53,7 +53,7 @@ export default function Dashboard() {
 
         {/* 최근 활동 내역 카드 (우측 6열) */}
         <div className="xl:col-span-6">
-          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d]">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#21243a]">
             <h2 className="section-title text-gray-800 dark:text-gray-200">최근 활동 내역</h2>
             <TimelineList items={timelineItems} />
           </Card>
@@ -61,7 +61,7 @@ export default function Dashboard() {
 
         {/* 업무 리마인더 카드 (좌측 6열) */}
         <div className="xl:col-span-6">
-          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d]">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#21243a]">
             <h2 className="section-title text-gray-800 dark:text-gray-200">업무 리마인더</h2>
             <div className="mt-3 space-y-4">
               <Notification
@@ -80,7 +80,7 @@ export default function Dashboard() {
 
         {/* 통계/일정 추가 카드 (우측 6열) */}
         <div className="xl:col-span-6">
-          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#1e1e2d] flex items-center justify-center text-gray-400 dark:text-gray-300">
+          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#21243a] flex items-center justify-center text-gray-400 dark:text-gray-300">
             통계 차트 또는 최근 일정 등 추가 영역
           </Card>
         </div>

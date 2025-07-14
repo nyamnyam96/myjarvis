@@ -9,22 +9,23 @@ const useThemeStore = create((set) => ({
       const newMode = !state.isDarkMode;
       const root = document.documentElement;
 
-      // html 태그에 dark 클래스 넣기/빼기
+      // 다크 클래스 토글
       if (newMode) {
         root.classList.add("dark");
       } else {
         root.classList.remove("dark");
       }
 
-      // 로컬스토리지에 저장 (브라우저 껐다 켜도 유지됨)
-      localStorage.setItem("darkMode", newMode ? "on" : "off");
+      //  localStorage: boolean 값을 문자열로 저장
+      localStorage.setItem("darkMode", JSON.stringify(newMode));
 
       return { isDarkMode: newMode };
     }),
 
   initializeTheme: () => {
+    //  문자열을 boolean으로 파싱
     const saved = localStorage.getItem("darkMode");
-    const shouldBeDark = saved === "on";
+    const shouldBeDark = saved === "true"; // 반드시 "true"로 비교해야 함
 
     const root = document.documentElement;
     if (shouldBeDark) {

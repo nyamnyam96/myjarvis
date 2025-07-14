@@ -103,13 +103,13 @@ const Search = () => {
         </div>
       )}
 
-      {/*  검색 결과 있을 때 */}
+      {/* 검색 결과 있을 때 */}
       {inputValue.trim() && matchedResults.length > 0 && (
-        <div className="card mt-4 p-4 w-full max-w-4xl">
-          <h3 className="text-base font-semibold mb-2">
+        <div className="bg-white dark:bg-[#21243a] rounded-xl shadow-md mt-4 p-4 w-full max-w-4xl">
+          <h3 className="text-base font-semibold mb-4 text-gray-800 dark:text-white">
             🔍 '{inputValue}' 검색 결과
           </h3>
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {matchedResults.map((result) => (
               <SearchResultItem
                 key={result.id}
@@ -125,9 +125,9 @@ const Search = () => {
         </div>
       )}
 
-      {/*  검색 결과 없을 때 메시지 표시 */}
+      {/* 검색 결과 없을 때 메시지 표시 */}
       {inputValue.trim() && matchedResults.length === 0 && (
-        <div className="card mt-4 p-4 w-full max-w-4xl text-sm text-gray-500">
+        <div className="bg-white dark:bg-[#21243a] rounded-xl shadow-md mt-4 p-4 w-full max-w-4xl text-sm text-gray-500 dark:text-gray-300">
           '{inputValue}'에 대한 검색 결과가 없습니다.
         </div>
       )}
