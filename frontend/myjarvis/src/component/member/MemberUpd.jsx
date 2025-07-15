@@ -130,18 +130,19 @@ export default function MemberUpd(){
     }
 
     return (
-        <section className="section updChg-section">
-            <div className="page-title"></div> 
-            {
-                isAuth
-                ?
-                <>
-                    <form onSubmit={function(e){
-                        e.preventDefault();
-                        updateMember();
-                    }}>
-                        <div className="input-wrap">
-                         <div className="text">회원 수정</div>
+       <section className="memberUpd-container">
+  <div className="left-panel">
+    {/* 기존 회원 수정 폼 */}
+    {isAuth ? (
+      <>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateMember();
+          }}
+        >
+          <div className="input-wrap">
+                         <div className="memberUpd-text">회원 수정</div>
                                 <br/>
                             <div className="input-title">
                                 <label htmlFor="newName">이름</label>
@@ -155,25 +156,25 @@ export default function MemberUpd(){
                                 <label htmlFor="newPw">새 비밀번호 입력</label>
                             </div>
                             <div className="memberUpd-item">
-                                <input type="password" id="newPw" name="memberPw" value={member.memberPw} onChange={chgMember}/>
+                                <input type="password" id="newPw" name="memberPw" value={member.memberPw} onChange={chgMember} placeholder="6~30글자를 입력하세요"/>
                             </div>
-                              <p> 기존 비밀번호 다시 입력, 새로운 비밀번호 입력 가능합니다.</p>
+                              <p className="memberUpd-p"> 기존 비밀번호 다시 입력, 새로운 비밀번호 입력 가능합니다.</p>
                         </div>
                         <div className="input-wrap">
                             <div className="input-title">
                                 <label htmlFor="newPwRe">새 비밀번호 확인</label>
                             </div>
                             <div className="memberUpd-item">
-                                <input type="password" id="newPwRe" name="memberPw" value={memberPwRe} onChange={chgMemberPwRe}/>
+                                <input type="password" id="newPwRe" name="memberPw" value={memberPwRe} onChange={chgMemberPwRe} placeholder="비밀번호와 동일하게 입력하세요"/>
                             </div>
-                               <p> 기존 비밀번호 입력, 새로운 비밀번호 입력 가능합니다.</p>
+                               <p className="memberUpd-p"> 기존 비밀번호 입력, 새로운 비밀번호 입력 가능합니다.</p>
                         </div>
                         <div className="input-wrap">
                             <div className="input-title">
                                 <label htmlFor="newEmail">이메일</label>
                             </div>
                             <div className="memberUpd-item">
-                                <input type="text" id="newEmail" name="memberEmail" value={member.memberEmail} onChange={chgMember}></input>
+                                <input type="text" id="newEmail" name="memberEmail" value={member.memberEmail} onChange={chgMember} placeholder="만들어져 있는 이메일을 입력하세요"></input>
                             </div> 
                         </div>
                         <div className="input-wrap">
@@ -181,7 +182,7 @@ export default function MemberUpd(){
                                 <label htmlFor="newPhone">핸드폰</label>
                             </div>
                             <div className="memberUpd-item">
-                                <input type="text" id="newPhone" name="memberPhone" value={member.memberPhone} onChange={chgMember}></input>
+                                <input type="text" id="newPhone" name="memberPhone" value={member.memberPhone} onChange={chgMember} placeholder="010-0000-0000"></input>
                             </div> 
                         </div>
                          <div className="input-wrap">
@@ -189,7 +190,7 @@ export default function MemberUpd(){
                                 <label htmlFor="newCompName">상호명</label>
                             </div>
                             <div className="memberUpd-item">
-                                <input type="text" id="newCompName" name="memberCompName" value={member.memberCompName} onChange={chgMember}></input>
+                                <input type="text" id="newCompName" name="memberCompName" value={member.memberCompName} onChange={chgMember} placeholder="회사 이름(상호명)"></input>
                             </div> 
                         </div>
                          <div className="input-wrap">
@@ -197,7 +198,7 @@ export default function MemberUpd(){
                                 <label htmlFor="newCompNo">사업자번호</label>
                             </div>
                             <div className="memberUpd-item">
-                                <input type="text" id="newCompNo" name="memberCompNo" value={member.memberCompNo} onChange={chgMember}></input>
+                                <input type="text" id="newCompNo" name="memberCompNo" value={member.memberCompNo} onChange={chgMember} placeholder="000-00-000000"></input>
                             </div> 
                         </div>
                         
@@ -206,23 +207,66 @@ export default function MemberUpd(){
                             <button type="button" className="memberUpd-second" onClick={cancel}>취소</button>
                         </div>
                     </form>
-                </>
-                :
-                <>
-                    <div className="memberUpd-container">
-                        <div className="input-title">
-                            <label htmlFor="oldPw">기존 비밀번호 입력</label>
-                        </div>
-                        <div className="pw-check-input">
-                            <input type="password" id="oldPw" name="memberPw"  value={member.memberPw} onChange={chgMemberPw}/>
-                        </div>
-                        <div className="button-zone">
-                            <button type="button" className="memberUpd-primary" onClick={checkPw}>확인</button>
-                            <button type="button" className="memberUpd-primary" onClick={cancel}>취소</button>
-                        </div>  
-                    </div>
-                </>
-            }
-        </section>
+      </>
+    ) : (
+      <>
+       <div className="memberUpd-container2">
+          <div className="form-box2">
+            <h2 className="form-title2">비밀번호 수정</h2>
+            <p className="form-subtitle2">본인 인증을 위해 비밀번호를 입력해주세요.</p>
+
+            <div className="input-title2">
+              <label htmlFor="oldPw">기존 비밀번호 입력</label>
+            </div>
+            <div className="pw-check-input">
+              <input
+                type="password"
+                id="oldPw"
+                name="memberPw"
+                value={member.memberPw}
+                onChange={chgMemberPw}
+                placeholder="비밀번호를 입력하세요"
+              />
+            </div>
+
+            <div className="button-zone1">
+              <button
+                type="button"
+                className="memberUpd-primary"
+                onClick={checkPw}
+              >
+                확인
+              </button>
+              <button
+                type="button"
+                className="memberUpd-primary cancel-btn"
+                onClick={cancel}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    )}
+  </div>
+
+  <div className="right-panel">
+    <div className="right-content">
+      <img
+        src="/Picture/MyJarvis.png" // 혹은 Horizon UI 로고 이미지 경로
+        alt="Horizon UI Logo"
+        className="logo"
+      />
+
+      <div className="footer-links">
+        <a href="#">Support</a>
+        <a href="#">License</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Blog</a>
+      </div>
+    </div>
+  </div>
+</section>
     )
 }
