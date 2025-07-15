@@ -6,12 +6,13 @@
     margin-top: -24px;    /* 부모의 pt-6 (24px) 만큼 당기기 */
     margin-bottom: -12px; /* 부모의 pb-3 (12px) 만큼 당기기 */    
     width: calc(100%);  
-    height: calc(100% + 36px);
+    /* height: calc(100% + 36px); */
     padding: 32px;   
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 카드 사이의 간격 */   
+    gap: 20px; /* 카드 사이의 간격 */  
+    flex-grow: 1; 
 }
 
 .content-header {
@@ -118,6 +119,9 @@
 .table-card {    
     overflow: hidden;    
     color: #4D4D4D;
+    flex-grow: 1; /* [추가] 이 카드가 남은 세로 공간을 모두 채우도록 설정 */
+    display: flex; /* [추가] 내부 요소 정렬을 위해 flex 컨테이너로 설정 */
+    flex-direction: column; /* [추가] 내부 요소를 세로로 정렬 */
     
 }
 
@@ -126,6 +130,7 @@
     overflow-y: auto;
     border: 1px solid #f0f0f0;
     border-radius: 12px;
+    flex-grow: 1; /* [추가] 부모(table-card) 안에서 남은 공간을 모두 채우도록 설정 */
 }
 
 .styled-table {

@@ -7,8 +7,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.or.iei.common.model.dao.FileDao;
+import kr.or.iei.common.model.dto.FileDTO;
 import kr.or.iei.common.model.dto.PageInfo;
+import kr.or.iei.common.util.FileUtils;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.contract.model.dao.ContractDao;
 import kr.or.iei.contract.model.dto.Contract;
@@ -23,6 +27,12 @@ public class ContractService {
 	
 	@Autowired
 	private PageUtil pageUtil;	
+	
+	@Autowired
+	private FileUtils fileUtils;
+	
+	@Autowired
+	private FileDao fileDao;
 	
 	public HashMap<String, Object> selectContractList(int reqPage) {
 		
@@ -83,7 +93,7 @@ public class ContractService {
 	}
 
 	@Transactional
-    public int insertContract(Contract contract) {
+    public int insertContract(Contract contract, List<MultipartFile> files) {
         // 1. TBL_CONTRACT에 먼저 계약 데이터를 저장        
         int result = contractDao.insertContract(contract);
 
@@ -95,6 +105,24 @@ public class ContractService {
                     // 3. 방금 생성된 contractNo를 각 party 객체에 설정합니다.
                     party.setContractNo(contract.getContractNo());
                     result += contractDao.insertContractParty(party);
+                }
+            }
+            
+            // 3. 파일 업로드 로직           
+            if (files != null) {
+                for (MultipartFile file : files) {
+                	if(file.isEmpty()) continue; // 파일이 비어있으면 건너뛰기
+                	
+                	// 3. 파일을 서버에 저장하고, 저장된 파일 정보 DTO를 받음
+                    FileDTO fileDto = fileUtils.upload(file);
+                    
+                    // 4. DTO에 추가 정보 설정
+                    fileDto.setFileTable("contract"); // 이 파일이 어느 테이블과 연관되었는지
+                    fileDto.setFileId(contract.getContractNo()); // 그 테이블의 어떤 데이터와 연관되었는지 (PK)
+                    fileDto.setMemberNo(contract.getMemberNo()); // 누가 올렸는지
+                    
+                    // 5. 파일 정보를 TBL_FILE에 최종 INSERT
+                    result += fileDao.insertFile(fileDto);
                 }
             }
         }

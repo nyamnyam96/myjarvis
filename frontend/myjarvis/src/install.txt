@@ -25,3 +25,10 @@ npm install -D tailwindcss postcss autoprefixer
 2025-07-09 임동주
 npm install framer-motion
 npm install sweetalert2 --force   
+
+2025-07-14 임동주
+npm install react-quill // 해당 파일 오류로 인하여 다른 것으로 바꿈
+npm uninstall react-quill
+
+TipTap 관련 라이브러리 설치
+npm install @tiptap/react @tiptap/starter-kit

@@ -92,7 +92,7 @@ export default function Login() {
       <div className={styles.pageContainer}>
         {/* 로그인 박스 */}
         {/* 제목 */}
-        <div className={styles.pageTitle}>MyJarvis</div>
+        <div className={styles.pageTitle}>로그인</div>
 
         {/* 로그인 폼 */}
         <form className={styles.formWrapper}
@@ -111,7 +111,7 @@ export default function Login() {
               <input type="text" id="memberId" value={member.memberId} onChange={chgMember} />
             </div>
           </div>
-
+          <br/>
           {/* 비밀번호 입력 */}
           <div className={styles.inputWrap}>
             <div className="login-title">
@@ -139,7 +139,7 @@ export default function Login() {
        <div className={styles.rightPanel}>
         <div className={styles.logoBox}>
           <div className={styles.brandWrapper}>
-           <img src="/Picture/MyJarvis.png" alt="Brand Logo" />
+           <img src="/Picture/MyJarvis.png" alt="Brand Logo"/>
           </div>
             <div className={styles.brandText}>
             <a href="http://localhost:5173/" target="_blank" rel="noopener noreferrer">

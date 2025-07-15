@@ -85,6 +85,10 @@ public class CompanyService {
 		}		
 		return result;
 	}
+
+	public List<Company> searchCompanyByName(String searchName) {
+		return companyDao.searchCompanyByName(searchName);
+	}
 	
 	
 
