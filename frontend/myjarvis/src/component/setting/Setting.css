@@ -1,8 +1,12 @@
-/* Setting.css */
+/* ================================
+📌 Setting.css (높이 조정 포함)
+=============================== */
 
+/* 페이지 전체 컨텐츠 영역 */
 .setting-wrapper {
   @apply p-6 grid grid-cols-1 md:grid-cols-2 gap-6;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 45px); /*  스크롤 방지 */
+  margin-top: -45px;
 }
 
 /* 카드 스타일 */
@@ -12,9 +16,9 @@
   max-height: 100%;
 }
 
-/*  다크모드 전용 카드 배경/텍스트/그림자 조정 */
+/* 다크모드 카드 스타일 조정 */
 .dark .setting-card {
-  background-color: #1f2233;  /* 기존 gray-900보다 부드러운 톤 */
+  background-color: #2a2e47;    /* 톤업된 다크 배경 */
   color: #e0e0e0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -37,32 +41,30 @@
 }
 
 .dark .setting-link {
-  color: #cbd5e1; /* gray-300 계열 */
+  color: #cbd5e1;
 }
-
 .dark .setting-link:hover {
   color: #ffffff;
 }
 
-/*  배경 설정 구간 */
+/* 배경 설정 블럭 */
 .setting-background {
   @apply pt-4 mt-2 border-t border-gray-200;
 }
 
 .dark .setting-background {
-  border-color: #374151; /* dark:border-gray-700 */
+  border-color: #374151;
 }
 
-/* 버튼은 여전히 gradient 유지 (공통 스타일 사용) */
+/* 공통 버튼 스타일 유지 */
 .setting-background .gradient-btn {
   @apply px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] hover:brightness-110;
 }
 
-/* 텍스트 tone 조정 */
+/* 보조 텍스트 */
 .setting-background p {
   @apply text-xs text-gray-500;
 }
-
 .dark .setting-background p {
   color: #b0b4c0;
 }

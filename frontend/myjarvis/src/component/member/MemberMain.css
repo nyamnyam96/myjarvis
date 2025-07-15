@@ -1,11 +1,9 @@
-/* MemberMain.css */
-
 /* 전체 마이페이지 카드 컨테이너 */
 .mypage-container {
   @apply p-0 bg-white text-gray-800 rounded-xl flex flex-col gap-5 dark:bg-gray-900 dark:text-white;
   font-family: 'Pretendard', sans-serif;
   flex: 1;
-  min-height: 400px;
+  min-height: 480px; /* 기존보다 살짝 키움 */
 }
 
 /* 제목 텍스트 */
@@ -15,7 +13,7 @@
 
 /* 마이페이지 카드 내부 컨테이너 */
 .member-container {
-  @apply max-w-[700px] mx-auto p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl min-h-[60vh] shadow-md;
+  @apply max-w-[700px] mx-auto px-10 pt-10 pb-10 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl shadow-md;
   font-family: 'Pretendard', sans-serif;
 }
 

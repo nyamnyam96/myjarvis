@@ -6,6 +6,10 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
+    safelist: [
+    'content-wrap', // purge 대상에서 보호
+  ],
+  
   darkMode : 'class', // 다크모드 구현
 
   theme: {

@@ -6,7 +6,7 @@ function Stats() {
   const [activeTab, setActiveTab] = useState("all");
 
   return (
-    <div className="stats-wrapper">
+    <div className="stats-content-wrap stats-wrapper">
       {/* 상단 탭 버튼 */}
       <div className="stats-tabs">
         <button
@@ -27,17 +27,17 @@ function Stats() {
       <div className="stats-container">
         {activeTab === "all" && (
           <div className="stats-grid">
-            <Card className="stats-card">이번 달 계약</Card>
-            <Card className="stats-card">고객사 수</Card>
-            <Card className="stats-card">진행 중 프로젝트</Card>
-            <Card className="stats-card">총 청구 금액</Card>
+            <Card className="stats-card-box">이번 달 계약</Card>
+            <Card className="stats-card-box">고객사 수</Card>
+            <Card className="stats-card-box">진행 중 프로젝트</Card>
+            <Card className="stats-card-box">총 청구 금액</Card>
           </div>
         )}
 
         {activeTab === "ai" && (
           <div className="stats-grid">
-            <Card className="stats-card">업무 인사이트</Card>
-            <Card className="stats-card">재무 인사이트</Card>
+            <Card className="stats-card-box">업무 인사이트</Card>
+            <Card className="stats-card-box">재무 인사이트</Card>
           </div>
         )}
       </div>

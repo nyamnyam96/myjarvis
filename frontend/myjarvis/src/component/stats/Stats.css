@@ -1,9 +1,37 @@
-/* 전체 래퍼 */
+/* ============================
+📌 Stats.css (리팩토링 완료)
+- Stats 전용 클래스명으로 분리
+- 다크모드 카드 톤업
+============================ */
+
+/* --- Stats 전용 콘텐츠 배경 --- */
+.stats-content-wrap {
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e9eef5;
+  margin-top: -24px;
+  margin-bottom: -12px;
+  width: 100%;
+  height: calc(100% + 36px);
+  padding: 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: calc(100vh - 40px); /* GNB가 64px이라면 */
+}
+
+.dark .stats-content-wrap {
+  background-color: #21243a;
+  border: 1px solid transparent;
+}
+
+/* --- 전체 래퍼 --- */
 .stats-wrapper {
   @apply flex flex-col w-full h-full;
 }
 
-/* 버튼 영역 */
+/* --- 버튼 영역 --- */
 .stats-tabs {
   @apply flex gap-3 mb-5;
 }
@@ -14,49 +42,56 @@
   @apply bg-white text-gray-800 border border-[var(--gray-200)] shadow-[0_4px_12px_rgba(17,17,26,0.05)];
 }
 
-/*  다크모드 버튼 기본값 톤다운 + 테두리 제거 */
 .dark .stats-tab-btn {
-  background-color: #2b2e44;      /* 톤다운된 다크 배경 */
-  color: #e0e0e0;                 /* 밝은 회색 텍스트 */
-  border: none;                  /* 흰 테두리 제거 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 다크 전용 그림자 */
+  background-color: #2b2e44;
+  color: #e0e0e0;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .stats-tab-btn:hover {
   @apply shadow-md brightness-105;
 }
 
-/*  액티브 버튼: 라이트/다크모드 동일하게 처리 */
 .stats-tab-btn.active {
   @apply text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] shadow-md;
 }
 
-/* 카드 전체 영역 */
+/* --- 카드 전체 영역 --- */
 .stats-container {
   @apply w-full flex justify-center flex-grow overflow-hidden;
 }
 
-/* 카드 그리드 */
+/* --- 카드 그리드 --- */
 .stats-grid {
   @apply w-full max-w-[1440px] grid grid-cols-2 gap-4;
-  height: 100%;
   padding-bottom: 1rem;
 }
 
-/* 카드 박스 (Card 컴포넌트로 대체되어 현재는 미사용) */
+/* --- 카드 박스 (Card 컴포넌트에 클래스 전달용) --- */
 .stats-card-box {
-  @apply bg-white rounded-2xl flex flex-col box-border overflow-hidden;
-  @apply border border-[var(--gray-200)] shadow-[0_4px_12px_rgba(17,17,26,0.05)];
+  background-color: white;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 4px 12px rgba(17, 17, 26, 0.05);
   min-height: 200px;
 }
 
 .dark .stats-card-box {
-  background-color: #21243a;
-  border: none;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  background-color: #2a2e47;
+  border: 1px solid #343951;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* 내부 타이틀 */
+/* --- 내부 타이틀 --- */
 .stats-card-title {
   @apply p-6 text-base text-gray-800 font-semibold;
+}
+
+.dark .stats-card-title {
+  color: #d4d9e3;
 }

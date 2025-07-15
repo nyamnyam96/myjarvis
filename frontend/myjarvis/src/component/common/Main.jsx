@@ -8,7 +8,6 @@ function Main() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  
   const { setIsLogined, setLoginMember, setAccessToken, setRefreshToken } = useUserStore();
   //세션 파기 요청
   const handleLogout = async () => {
@@ -23,11 +22,9 @@ function Main() {
       setAccessToken(null);
       setRefreshToken(null);
       
-      
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }
-      
   }
 
 // 임시 로그인 권한 부여
@@ -46,7 +43,6 @@ useEffect(() => {
 
 if (!isLogined && !isDev) return null;
 
-
     const mainMenus = [
       { to: "/main/search", icon: "search", label: "검색" },
       { to: "/main", icon: "home", label: "대시보드" },
@@ -55,7 +51,7 @@ if (!isLogined && !isDev) return null;
       { to: "/main/schedule", icon: "calendar_today", label: "일정관리" },
       { to: "/main/meeting", icon: "groups", label: "회의관리" },
       { to: "/main/invoice", icon: "receipt_long", label: "결제관리" },
-      
+
     ];
 
     const bottomMenus = [
@@ -64,7 +60,6 @@ if (!isLogined && !isDev) return null;
       { to: null, icon: "logout", label: "로그아웃" , onClick : handleLogout}, // 로그아웃은 별도 처리
       //로그아웃 세션파기 다시 못들어감
     ];
-
 
 
 const renderMenuItem = (item) => {
