@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import { NavLink, Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, Link, Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
+import useThemeStore from "../../store/useThemeStore";
 import axios from "axios";
 function Main() {
   const { isLogined } = useUserStore();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const { setIsLogined, setLoginMember, setAccessToken, setRefreshToken } = useUserStore();
   //세션 파기 요청
   const handleLogout = async () => {
@@ -21,21 +22,26 @@ function Main() {
       setAccessToken(null);
       setRefreshToken(null);
       
-      
-      
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }
-      
   }
 
-  useEffect(() => {
-    if (!isLogined ) {
-      navigate("/home"); //navigate("/login") 수정
-    }
-  }, [isLogined, navigate]);
+// 임시 로그인 권한 부여
+const isDev = import.meta.env.DEV; // Vite 사용 시
+const initializeTheme = useThemeStore((state) => state.initializeTheme);
 
-  if (!isLogined) return null;
+useEffect(() => {
+    initializeTheme(); // 다크모드 상태 반영
+}, []);
+
+useEffect(() => {
+  if (!isLogined && !isDev) {
+    navigate("/home");
+  }
+}, [isLogined, navigate]);
+
+if (!isLogined && !isDev) return null;
 
     const mainMenus = [
       { to: "/main/search", icon: "search", label: "검색" },
@@ -45,8 +51,6 @@ function Main() {
       { to: "/main/invoice/list", icon: "contract_edit", label: "청구관리" },
       { to: "/main/schedule", icon: "calendar_today", label: "일정관리" },
       { to: "/main/meeting", icon: "groups", label: "회의관리" },
-      
-      
     ];
 
     const bottomMenus = [
@@ -57,82 +61,90 @@ function Main() {
     ];
 
 
-
 const renderMenuItem = (item) => {
   const isActive =
     item.to === "/main"
       ? location.pathname === "/main"
       : location.pathname.startsWith(item.to || "");
 
-  return (
-    <li key={item.label} className="relative">
-      {item.onClick ? (
-        <div
-          onClick={item.onClick}
-          className={`
-            group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
-            transition-all duration-200 ease-in-out cursor-pointer
-            text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]
-          `}
-        >
-          <span className="material-symbols-outlined text-[20px] group-hover:text-[#4318ff]">
-            {item.icon}
-          </span>
-          <span>{item.label}</span>
-        </div>
-      ) : (
-        <NavLink
-          to={item.to}
-          className={`
-            group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
-            transition-all duration-200 ease-in-out cursor-pointer
-            ${
-              isActive
-                ? "text-[#2b3674] font-bold"
-                : "text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]"
-            }
-          `}
-        >
-          <span
-            className={`material-symbols-outlined text-[20px] transition-all duration-200 ${
-              isActive
-                ? "text-[#4318ff]"
-                : "text-[#a3aed0] group-hover:text-[#4318ff]"
-            }`}
+    return (
+      <li key={item.label} className="relative">
+        {item.onClick ? (
+          <div
+            onClick={item.onClick}
+            className={`
+              group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+              transition-all duration-200 ease-in-out cursor-pointer
+              text-[#a3aed0] hover:text-[#2b3674] hover:bg-[#f4f7fe]
+              dark:text-[#b0b3c9] dark:hover:text-[#e4e7f5] dark:hover:bg-[#2c2e45]
+            `}
           >
-            {item.icon}
-          </span>
-          <span>{item.label}</span>
-        </NavLink>
-      )}
+            <span
+              className={`
+                material-symbols-outlined text-[20px] transition-colors duration-200
+                text-[#a3aed0] group-hover:text-[#4318ff]
+                dark:text-[#b0b3c9] dark:group-hover:text-[#7551ff]
+              `}
+            >
+              {item.icon}
+            </span>
+            <span>{item.label}</span>
+          </div>
+        ) : (
+          <NavLink
+            to={item.to}
+            className={`
+              group flex items-center gap-3 px-4 py-2.5 pr-6 rounded-lg text-[15px]
+              transition-all duration-200 ease-in-out cursor-pointer
+              ${
+                isActive
+                  ? "text-[#2b3674] dark:text-[#e4e7f5] font-bold"
+                  : "text-[#a3aed0] dark:text-[#b0b3c9] hover:text-[#2b3674] dark:hover:text-[#e4e7f5] hover:bg-[#f4f7fe] dark:hover:bg-[#2c2e45]"
+              }
+            `}
+          >
+            <span
+              className={`
+                material-symbols-outlined text-[20px] transition-colors duration-200
+                ${
+                  isActive
+                    ? "text-[#4318ff] dark:text-[#7551ff]"
+                    : "text-[#a3aed0] dark:text-[#b0b3c9] group-hover:text-[#4318ff] dark:group-hover:text-[#7551ff]"
+                }
+              `}
+            >
+              {item.icon}
+            </span>
+            <span>{item.label}</span>
+          </NavLink>
+        )}
 
       {/* 우측 강조선: NavLink인 경우만 표시 */}
-      {isActive && !item.onClick && (
-        <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] rounded-full" />
-      )}
+        {isActive && !item.onClick && (
+          <div className="absolute top-1/2 -translate-y-1/2 right-[-18px] w-[4px] h-[32px] bg-[#4318ff] dark:bg-[#7551ff] rounded-full" />
+        )}
     </li>
   );
 };
 
   return (
 
-    <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] text-[#2a3547] font-['Pretendard']">
-      
+    <div className="flex h-screen p-5 gap-5 box-border bg-[#f4f7fe] dark:bg-[#1a1a2e] text-[#2a3547] dark:text-[#e0e6ed] font-['Pretendard']">
+
       {/* 좌측 GNB */}
-      <nav className="w-[260px] bg-white rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
+      <nav className="w-[260px] bg-white dark:bg-[#21243a] rounded-xl shadow-md flex flex-col p-5 shrink-0 relative">
 
-      {/* 로고 */}
-      <div className="pb-5 mb-0 border-b border-[#e5eaef]">
-        <div
-          className="flex items-center justify-center h-16 cursor-default select-none"
-          aria-hidden="true"
-        >
-          <h1 className="text-[33px] font-extrabold tracking-tight text-[#1B254B] font-logo">
-            MyJarvis
-          </h1>
-
+        {/* 로고 */}
+        <div className="pb-5 mb-0 border-b border-[#e5eaef] dark:border-[#3b3e52]">
+          <div
+            className="flex items-center justify-center h-16 cursor-default select-none"
+            aria-hidden="true"
+          >
+            <h1 className="text-[33px] font-extrabold tracking-tight text-[#1B254B] dark:text-white font-logo">
+              MyJarvis
+            </h1>
+          </div>
         </div>
-      </div>
 
         {/* 기본 메뉴 */}
         <ul className="flex-grow py-4 space-y-1">
@@ -140,16 +152,15 @@ const renderMenuItem = (item) => {
         </ul>
 
         {/* 하단 고정 메뉴 */}
-        <ul className="pt-3 border-t border-[#e5eaef] space-y-1">
+        <ul className="pt-3 border-t border-[#e5eaef] dark:border-[#3b3e52] space-y-1">
           {bottomMenus.map(renderMenuItem)}
         </ul>
       </nav>
 
-        {/* 메인 콘텐츠 */}
-        <div className="flex flex-col flex-grow bg-[#f4f7fe] overflow-y-auto px-3 pt-6 pb-3">
-          <Outlet />
-        </div>
-
+      {/* 메인 콘텐츠 */}
+      <div className="flex-grow bg-[#f4f7fe] dark:bg-[#1a1a2e] overflow-y-auto px-3 pt-6 pb-3">
+        <Outlet />
+      </div>
     </div>
   );
 }

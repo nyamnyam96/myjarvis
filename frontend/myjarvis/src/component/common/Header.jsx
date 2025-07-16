@@ -42,10 +42,10 @@ function Header() {
   }, []);
 
   return (
-    <header
-      className={`top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "fixed bg-white shadow-md text-gray-800" : "absolute bg-transparent text-white"
-      }`}
+<header
+  className={`top-0 left-0 w-full z-50 transition-all duration-300 ${
+    isScrolled ? "fixed bg-white shadow-md text-gray-800" : "fixed bg-transparent text-white"
+  }`}
     >
       <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-4 relative">
         {/* MyJarvis 텍스트 */}

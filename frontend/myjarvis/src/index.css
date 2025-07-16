@@ -1,7 +1,4 @@
 /* 브라우저가 기본적으로 가지고 있는 여백 제거 */
-body {
-  margin: 0;
-}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

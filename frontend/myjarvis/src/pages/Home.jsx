@@ -32,7 +32,7 @@ function Home() {
          <motion.h1
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }} h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            transition={{ delay: 0.3, duration: 0.8 }} className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             당신의 비즈니스, Jarvis가 책임집니다.
           </motion.h1>
           <motion.p 
@@ -53,16 +53,12 @@ function Home() {
       </motion.section>
 
         {/*  기능 소개 Section: 문구 + 일러스트 */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        variants={{
-          hidden: { opacity: 0, y: 40 },
-          visible: { opacity: 1, y: 0 }
-        }}
-        className="w full min-h-screen bg-white py-24 px-6"> {/*  간격 여유 확보 */}
+        className="w-full min-h-screen bg-white py-24 px-6"
+        >
         {/* 중앙 정렬된 문구 */}
         <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
@@ -433,7 +429,7 @@ function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="w-full min-h-screen bg-white flex flex-col items-center justify-center px-6 py-24"
+        className="w-full min-h-screen bg-white flex flex-col items-center justify-center px-6 py-40"
         >
         {/* 브랜드 로고 */}
         <motion.img
@@ -460,7 +456,7 @@ function Home() {
         </motion.section>
 
         {/* Footer (페이지 맨 하단에 붙이기) */}
-        <footer className="w-full border-t border-gray-200 px-6 py-8 text-sm text-gray-500">
+        <footer className="w-full border-t border-gray-200 px-6 py-24 text-sm text-gray-500">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between gap-4">
             {/* 좌측 텍스트 */}
             <div className="flex flex-col gap-1">
