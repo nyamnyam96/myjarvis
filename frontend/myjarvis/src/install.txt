@@ -26,9 +26,20 @@ npm install -D tailwindcss postcss autoprefixer
 npm install framer-motion
 npm install sweetalert2 --force   
 
-2025-07-14 임동주
-npm install react-quill // 해당 파일 오류로 인하여 다른 것으로 바꿈
-npm uninstall react-quill
+2025-07-15 임동주
+npm uninstall react react-dom
+npm install react@^18.2.0 react-dom@^18.2.0
+    1. node_modules 폴더와 package-lock.json 파일을 삭제합니다.
+    2. 터미널에서 npm install 명령어를 실행하여 모든 라이브러리를 깨끗하게 재설치합니다.
+    3. npm run dev로 개발 서버를 다시 시작합니다.
+    4. 이전에 npm install axios 나 npm install zustand 같은 명령어를 한 번이라도 성공적으로 실행하셨다면, 해당 라이브러리 정보는 이미 프로젝트의 package.json 파일에 자동으로 기록되어 있습니다.
+       package.json 파일은 우리 프로젝트의 "필요한 부품 목록" 또는 "장바구니" 와 같습니다.
+       따라서, 이전에 "대청소" 과정에서 node_modules 폴더를 지운 뒤 실행하신 npm install 명령어 하나가, package.json이라는 장바구니를 보고 필요한 모든 라이브러리(axios, zustand, tailwindcss 등)를 알아서 한 번에 다 설치해 준 것입니다.
 
-TipTap 관련 라이브러리 설치
-npm install @tiptap/react @tiptap/starter-kit
+npm install react-quill
+npm install react-signature-canvas
+npm install recharts
+npm install react-toastify
+
+2025-07-16 임동주
+npm install html2canvas jspdf

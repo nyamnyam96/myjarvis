@@ -118,8 +118,7 @@
 /* --- 테이블 카드 --- */
 .table-card {    
     overflow: hidden;    
-    color: #4D4D4D;
-    flex-grow: 1; /* [추가] 이 카드가 남은 세로 공간을 모두 채우도록 설정 */
+    color: #4D4D4D;    
     display: flex; /* [추가] 내부 요소 정렬을 위해 flex 컨테이너로 설정 */
     flex-direction: column; /* [추가] 내부 요소를 세로로 정렬 */
     

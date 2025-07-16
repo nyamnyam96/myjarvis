@@ -1,0 +1,228 @@
+/* --- 전체 레이아웃 --- */
+.content-wrap {
+    background-color: white; 
+    border-radius: 12px;    
+    border: 1px solid #e9eef5;        
+    margin-top: -24px;    /* 부모의 pt-6 (24px) 만큼 당기기 */
+    margin-bottom: -12px; /* 부모의 pb-3 (12px) 만큼 당기기 */    
+    width: calc(100%);  
+    /* height: calc(100% + 36px); */
+    padding: 32px;   
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 카드 사이의 간격 */  
+    flex-grow: 1; 
+}
+
+.content-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.content-title { 
+    font-size: 26px; 
+    font-weight: 700; 
+}
+
+.content-subtitle { 
+    font-size: 14px; 
+    color: #888; 
+}
+
+/* --- 필터 및 액션 카드 --- */
+.filter-card {
+    border: 1px solid #f0f0f0; /* 연한 회색 선 */
+    border-radius: 12px;
+    padding: 12px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* 각 필터 요소 사이의 간격 */
+}
+
+/* 검색창 스타일 */
+.search-box { position: relative; }
+.search-box > .material-symbols-outlined {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 16px;
+}
+.search-box > input {    
+    padding-left: 40px; /* 왼쪽 아이콘 공간만 유지 */
+    height: 32px; /* 기준 높이로 설정 */
+    box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    width: 250px;
+    font-size: 14px;
+}
+
+/* 셀렉트 박스 스타일 */
+.select-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.select-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    flex-shrink: 0; /* 라벨 글자가 줄어들지 않도록 설정 */
+}
+.select-group select {    
+    padding: 0 12px; /* 세로 패딩 제거 */
+    height: 32px; /* 기준 높이로 설정 */
+    box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    background-color: white;
+    min-width: 120px;
+}
+
+
+/* 신규 등록 버튼 */
+.header-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;     
+    padding: 0 20px; /* 세로 패딩 제거 */
+    height: 32px; /* 기준 높이로 설정 */
+    box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
+    background-color: #3b48ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+.header-btn > .material-symbols-outlined {  
+    font-size: 16px;
+}
+.header-btn:hover { background-color: #2C3AFF; }
+
+/* --- 테이블 카드 --- */
+.table-card {    
+    overflow: hidden;    
+    color: #4D4D4D;    
+    display: flex; /* [추가] 내부 요소 정렬을 위해 flex 컨테이너로 설정 */
+    flex-direction: column; /* [추가] 내부 요소를 세로로 정렬 */
+    
+}
+
+/* 테이블 틀 */
+.table-card-inner { 
+    overflow-y: auto;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    flex-grow: 1; /* [추가] 부모(table-card) 안에서 남은 공간을 모두 채우도록 설정 */
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* 필터가 움직여도 테이블 너비 고정 */
+}
+
+.styled-table th, .styled-table td {
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;    
+    font-weight: 500;
+    color: #4D4D4D;
+}
+
+/* 테이블 제목줄 */
+.styled-table thead tr th { 
+    /* background-color: #fafafa; */ 
+    font-weight: 400;
+    color: #b4bfca; 
+}
+
+
+/* 마지막 줄의 하단 보더 제거 */
+.styled-table tbody tr:last-child td {
+    border-bottom: none;      
+}
+
+/* 원하는 행 선택 시 컬러변경 */
+.styled-table tbody tr:hover td {
+    background-color: #f4f7fe;
+    font-weight: 400;
+}
+
+/* 정렬 헤더 컨테이너 */
+.sort-header {
+    display: flex;      
+    align-items: center;
+    gap: 4px; /* 텍스트와 아이콘 사이 간격 */
+    
+}
+.sort-header .material-symbols-outlined {
+    font-size: 17px; 
+}
+
+
+/* --- 유형 및 거래상태 뱃지(스티커) 스타일 --- */
+.type-badge, .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px; /* 둥근 모서리 */
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+}
+
+/* 유형 뱃지 색상 */
+.type-corp { /* 법인 */
+    background-color: #e6f4ff;
+    color: #007bff;
+}
+.type-indiv { /* 개인 */
+    background-color: #e7f7ef;
+    color: #28a745;
+}
+
+/* 거래상태 뱃지 색상 */
+.status-active { /* 거래 중 */
+    background-color: #e7f7ef;
+    color: #28a745;
+}
+.status-inactive { /* 거래 중지 */
+    background-color: #fdeeee;
+    color: #dc3545;
+}
+
+
+/* 호버시, 유형 뱃지 색상 */
+.styled-table tbody tr:hover td .type-corp { /* 법인 */ 
+    background-color: #b2d9f7;
+    color: #0368d3; 
+}
+.styled-table tbody tr:hover td .type-indiv { /* 개인 */
+    background-color: #abebcb;
+    color: #258d3e;
+}
+
+/* 호버시, 거래상태 뱃지 색상 */
+.styled-table tbody tr:hover td .status-active { /* 거래 중 */
+    background-color: #abebcb;
+    color: #258d3e;
+}
+.styled-table tbody tr:hover td .status-inactive { /* 거래 중지 */
+    background-color: #facfcf;
+    color: #b32d3a;
+}
+

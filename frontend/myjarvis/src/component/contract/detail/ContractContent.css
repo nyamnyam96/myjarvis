@@ -1,0 +1,63 @@
+.contract-content-wrap {
+    padding-top: 10px;
+}
+
+/* Quill Editor로 작성된 컨텐츠 보기 스타일 */
+.editor-content-view {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+}
+
+/* 서명 영역 */
+.signature-section {
+    border-top: 1px solid #e9eef5;
+    padding-top: 24px;
+    margin-top: 24px;
+}
+.signature-section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+}
+.signature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+.signature-box {
+    border: 1px solid #f0f2f5;
+    border-radius: 8px;
+    padding: 20px;
+}
+.party-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f2f5;
+    margin-bottom: 12px;
+}
+.party-info .party-role { font-weight: 700; font-size: 16px;}
+.party-info .party-name { font-size: 15px; }
+
+.signature-pad {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.signature-pad .signed-text {
+    font-size: 14px;
+    color: #00D563;
+    font-weight: 700;
+}
+.signature-pad .unsigned-text {
+    font-size: 14px;
+    color: #888;
+}
+.signature-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}

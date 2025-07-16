@@ -33,9 +33,10 @@ public class CompanyController {
 											  @RequestParam String sortDirection,
 											  @RequestParam(defaultValue = "All") String type,
 											  @RequestParam(defaultValue = "0") int status,
-											  @RequestParam(defaultValue = "") String search											  
+											  @RequestParam(defaultValue = "") String search,
+											  @RequestParam String memberId
 	) {		
-		HashMap<String, Object> companyMap = companyService.selectCompanyList(reqPage, sortKey, sortDirection, type, status, search);		
+		HashMap<String, Object> companyMap = companyService.selectCompanyList(reqPage, sortKey, sortDirection, type, status, search, memberId);		
 		return companyMap;
 	}	
 	
@@ -49,8 +50,8 @@ public class CompanyController {
 	
 	@GetMapping("/search")
     @NoTokenCheck 
-    public List<Company> searchCompany(@RequestParam String searchName) {
-        return companyService.searchCompanyByName(searchName);
+    public List<Company> searchCompany(@RequestParam String searchName, @RequestParam String memberId) {
+        return companyService.searchCompanyByName(searchName, memberId);
     }
 
 }
