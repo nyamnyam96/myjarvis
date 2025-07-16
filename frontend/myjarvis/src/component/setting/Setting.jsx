@@ -23,6 +23,7 @@ const Setting = () => {
 
   return (
     <div className="setting-wrapper">
+      <div className="setting-grid">
       {/* 환경 설정 카드 */}
       <div className="setting-card">
         <h2 className="section-title mb-4">환경 설정</h2>
@@ -92,6 +93,7 @@ const Setting = () => {
           <MemberMain />
         </div>
       </div>
+     </div> 
     </div>
   );
 };
