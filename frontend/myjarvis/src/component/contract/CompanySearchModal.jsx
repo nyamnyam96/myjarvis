@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import createInstance from '../../axios/interceptor';
 import './CompanySearchModal.css'; // 모달 전용 CSS
+import useUserStore from '../../store/useUserStore';
 
 export default function CustomerSearchModal({ onSelect, closeModal }) {
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     
+    const {loginMember} = useUserStore();
     const [companyList, setCompanyList] = useState([]);    
     const [searchTerm, setSearchTerm] = useState('');
 
     // 컴포넌트가 열리거나, 검색어가 바뀔 때마다 고객사 목록을 다시 불러옴
     useEffect(() => {
         // 검색어가 포함된 API 주소
-        const url = `${serverUrl}/company/search?searchName=${searchTerm}`;
+        const url = `${serverUrl}/company/search?searchName=${searchTerm}&memberId=${loginMember.memberId}`;
 
         axiosInstance.get(url)
             .then(res => {
@@ -21,7 +23,7 @@ export default function CustomerSearchModal({ onSelect, closeModal }) {
             .catch(err => {
                 console.error(err);
             });
-    }, [searchTerm]);
+    }, [searchTerm, loginMember.memberId]);
 
     // 고객사 선택 시 실행되는 함수
     const handleSelect = (company) => {

@@ -30,13 +30,14 @@ public class CompanyService {
 	*/
 	
 
-	public HashMap<String, Object> selectCompanyList(int reqPage, String sortKey, String sortDirection, String type, int status, String search) {
+	public HashMap<String, Object> selectCompanyList(int reqPage, String sortKey, String sortDirection, String type, int status, String search, String memberId) {
 		
 		// 1. 필터 & 검색 값 해쉬맵에 담기
 		HashMap<String, Object> params = new HashMap<>();		
 		params.put("type", type); // 사업자 유형 선택 조회
         params.put("status", status); // 거래 상태 선택 조회
-        params.put("search", search); // 검색 기능
+        params.put("search", search); // 검색 기능        
+        params.put("memberId", memberId); //특정 로그인 유저의 고객사만 조회
 		
 		int totalCount = companyDao.selectCompanyCount(params); //전체 고객사 수
 		
@@ -86,8 +87,8 @@ public class CompanyService {
 		return result;
 	}
 
-	public List<Company> searchCompanyByName(String searchName) {
-		return companyDao.searchCompanyByName(searchName);
+	public List<Company> searchCompanyByName(String searchName, String memberId) {
+		return companyDao.searchCompanyByName(searchName, memberId);
 	}
 	
 	

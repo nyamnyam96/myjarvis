@@ -208,45 +208,28 @@
     text-align: left;
 }
 
-/* 유형 뱃지 색상 */
-.type-corp { /* 법인 */
-    background-color: #e6f4ff;
-    color: #007bff;
-}
-.type-indiv { /* 개인 */
-    background-color: #e7f7ef;
-    color: #28a745;
+/* 상태: 초안 (회색) */
+.status-draft {
+  background-color: #8A92A6; 
+  color: white;
 }
 
-/* 거래상태 뱃지 색상 */
-.status-active { /* 거래 중 */
-    background-color: #e7f7ef;
-    color: #28a745;
-}
-.status-inactive { /* 거래 중지 */
-    background-color: #fdeeee;
-    color: #dc3545;
+/* 상태: 진행 (파란색) */
+.status-progress {
+  background-color: #3A57E8; 
+  color: white;
 }
 
-
-/* 호버시, 유형 뱃지 색상 */
-.styled-table tbody tr:hover td .type-corp { /* 법인 */ 
-    background-color: #b2d9f7;
-    color: #0368d3; 
-}
-.styled-table tbody tr:hover td .type-indiv { /* 개인 */
-    background-color: #abebcb;
-    color: #1f8035;
+/* 상태: 완료 (초록색) */
+.status-completed {
+  background-color: #00D563; 
+  color: white;
 }
 
-/* 호버시, 거래상태 뱃지 색상 */
-.styled-table tbody tr:hover td .status-active { /* 거래 중 */
-    background-color: #abebcb;
-    color: #1f8035;
-}
-.styled-table tbody tr:hover td .status-inactive { /* 거래 중지 */
-    background-color: #facfcf;
-    color: #b32d3a;
+/* 상태: 취소 (빨간색) */
+.status-canceled {
+  background-color: #E53935; 
+  color: white;
 }
 
 
@@ -352,4 +335,16 @@ h4.card-title {
 
 .info-value.date {
     font-size: 12px;
+}
+
+/* 보드뷰 상세페이지 링크 */
+.card-title.clickable-title {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    display: inline-block; /* 밑줄이 텍스트 길이에 맞게 생기도록 */
+}
+.card-title.clickable-title:hover {
+    color: #3b48ff; /* 마우스를 올렸을 때 색상 변경 */
 }

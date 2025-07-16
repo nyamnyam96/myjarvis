@@ -40,11 +40,12 @@ function Main() {
     const mainMenus = [
       { to: "/main/search", icon: "search", label: "검색" },
       { to: "/main", icon: "home", label: "대시보드" },
-      { to: "/main/company/list", icon: "domain", label: "고객사관리" },
-      { to: "/main/contract/list", icon: "request_quote", label: "계약관리" },
+      { to: "/main/company/list", icon: "add_business", label: "고객사관리" },
+      { to: "/main/contract/list", icon: "handshake", label: "계약관리" },
+      { to: "/main/invoice/list", icon: "contract_edit", label: "청구관리" },
       { to: "/main/schedule", icon: "calendar_today", label: "일정관리" },
       { to: "/main/meeting", icon: "groups", label: "회의관리" },
-      { to: "/main/invoice", icon: "receipt_long", label: "결제관리" },
+      
       
     ];
 

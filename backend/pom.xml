@@ -89,24 +89,16 @@
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
+		</dependency>	
 		
-	
-
-		
-		<!-- password Encrypt-->
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-security</artifactId>
-		    <version>3.4.2</version>
-		</dependency>
+		<!-- WebClient 구글 AI API 사용을 위한 설치 -->
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-webflux</artifactId>
+	    </dependency>
 		
 		
-		
-		
-	</dependencies>
-	
+	</dependencies>	
 	
 
 	<build>

@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import PageNavi from "./companyCommon/PageNavi";
 import CompanyInsertModal from "./CompanyInsertModal";
 import createInstance from "../../axios/interceptor";
+import useUserStore from "../../store/useUserStore";
 
 
 export default function CompanyList(){    
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;     //API 서버 주소 serverUrl에 저장    
     const axiosInstance = createInstance();                 //중요!! interceptor에서 만들어놓은 axios
+    const {loginMember} = useUserStore();
+
     const [companyList, setCompanyList] = useState([]);     //백엔드에서 받아온 데이터를 저장할   
     const [reqPage, setReqPage] = useState(1);              //요청 페이지    
     const [pageInfo, setPageInfo] = useState({});           //페이지 네비게이션    
@@ -24,7 +27,7 @@ export default function CompanyList(){
     
     useEffect(function(){
         //URL 뒤에 붙일 쿼리스트링(필터값을 포함하고 있음.)
-        const queryString = `?reqPage=${reqPage}&sortKey=${sortConfig.key}&sortDirection=${sortConfig.direction}&type=${filterType}&status=${filterStatus}&search=${searchTerm}`;
+        const queryString = `?reqPage=${reqPage}&sortKey=${sortConfig.key}&sortDirection=${sortConfig.direction}&type=${filterType}&status=${filterStatus}&search=${searchTerm}&memberId=${loginMember.memberId}`;
 
         let options = {};
         options.url = serverUrl + "/company/list" + queryString;
