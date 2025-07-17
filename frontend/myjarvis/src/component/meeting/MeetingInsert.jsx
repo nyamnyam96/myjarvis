@@ -25,11 +25,12 @@ function MeetingInsert({ setTab }) {
     e.preventDefault();
     // FormData로 파일 포함 데이터 전송
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('date', date);
-    formData.append('content', content);
+    formData.append('meetTitle', title);
+    formData.append('meetDate', date);
+    formData.append('meetContent', content);
     formData.append('participants', participants);
 
+    // formData.append('memberNo', '1'); // 회원 번호 임시 지정. - 추후 삭제 해야 됨.
     if (file) formData.append('file', file);
 
     try {

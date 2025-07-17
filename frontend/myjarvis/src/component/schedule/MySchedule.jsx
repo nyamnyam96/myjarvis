@@ -1,27 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Schedule.css';
 
 function MySchedule({ view = 'month' }) {
-  const [schedules, setSchedules] = useState([
-    { id: 1, title: '팀 미팅', date: '2025-06-30', color: '#4caf50', detail: '주간 업무 공유', done: false, start: '10:00' },
-    { id: 2, title: '개인 업무', date: '2025-07-01', color: '#2196f3', detail: '코드 리뷰', done: false, start: '14:00' },
-  ]);
+  const [schedules, setSchedules] = useState([]);
   const [input, setInput] = useState('');
   const [date, setDate] = useState('');
   const [color, setColor] = useState('#4caf50');
   const [start, setStart] = useState('09:00');
   const [selected, setSelected] = useState(null);
   const [dragId, setDragId] = useState(null);
+  const [detail, setDetail] = useState("");
+  const [desc, setDesc] = useState("");
 
-  const handleAdd = () => {
+  // 최초 1회 일정 목록 불러오기 (meeting 방식과 동일하게 fetch)
+  useEffect(() => {
+    async function fetchSchedules() {
+      try {
+        const res = await fetch('/api/schedule');
+        if (res.ok) {
+          const result = await res.json();
+          // 예시: result.resData가 배열이라고 가정
+          const data = Array.isArray(result.resData)
+            ? result.resData.filter(s => s).map(s => ({
+                id: s.scheduleNo,
+                title: s.title,
+                date: s.date,
+                color: s.color || '#4caf50',
+                detail: s.detail || '',
+                done: s.done || false,
+                start: s.start || '09:00',
+              }))
+            : [];
+          setSchedules(data);
+        } else {
+          const errorText = await res.text();
+          console.error('서버 오류:', res.status, errorText);
+        }
+      } catch (e) {
+        console.error('네트워크 오류:', e);
+      }
+    }
+    fetchSchedules();
+  }, []);
+
+  // 일정 추가 (meeting 방식과 동일하게 POST)
+  const handleAdd = async () => {
     if (input && date) {
-      setSchedules([
-        ...schedules,
-        { id: Date.now(), title: input, date, color, detail: '', done: false, start },
-      ]);
-      setInput('');
-      setDate('');
-      setStart('09:00');
+      const newSchedule = {
+        title: input,
+        date,
+        color,
+        detail,
+        desc,
+        done: false,
+        start,
+      };
+      try {
+        const res = await fetch('/api/schedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newSchedule),
+        });
+        if (res.ok) {
+          const saved = await res.json();
+          setSchedules([...schedules, {
+            ...newSchedule,
+            id: saved.scheduleNo || Date.now(),
+          }]);
+          setInput('');
+          setDate('');
+          setStart('09:00');
+          setDetail('');
+          setDesc('');
+        } else {
+          const errorText = await res.text();
+          console.error('추가 실패:', errorText);
+        }
+      } catch (e) {
+        console.error('네트워크 오류:', e);
+      }
     }
   };
 
@@ -65,6 +122,17 @@ function MySchedule({ view = 'month' }) {
         <input type="date" value={date} onChange={e => setDate(e.target.value)} />
         <input type="time" value={start} onChange={e => setStart(e.target.value)} />
         <input type="color" value={color} onChange={e => setColor(e.target.value)} />
+        <select value={detail} onChange={e => setDetail(e.target.value)}>
+          <option value="">일정 종류 선택</option>
+          <option value="회의">회의</option>
+          <option value="업무">업무</option>
+          <option value="개인">개인</option>
+          <option value="기타">기타</option>
+        </select>
+        <label style={{width:'100%', marginTop:'4px'}}>
+          <span style={{fontSize:'0.95em'}}>일정 내용(상세)</span>
+          <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="일정 내용(상세) 입력" rows={2} style={{resize:'vertical', minHeight:'32px', width:'100%'}} />
+        </label>
         <button onClick={handleAdd}>추가</button>
       </div>
       <ul className="myschedule-list">
@@ -72,7 +140,7 @@ function MySchedule({ view = 'month' }) {
           <li
             key={s.id}
             className={`myschedule-item${s.date === today ? ' today' : ''}`}
-            style={{ borderLeft: `6px solid ${s.color}` }}
+            data-color={s.color}
             draggable
             onDragStart={() => handleDragStart(s.id)}
             onDragOver={e => e.preventDefault()}

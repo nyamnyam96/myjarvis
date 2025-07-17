@@ -1,0 +1,11 @@
+.meeting-update-container {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 10px;
+}
+.meeting-update-textarea {
+  width: 100%;
+}
+.meeting-update-btns {
+  margin-top: 12px;
+}

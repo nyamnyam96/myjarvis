@@ -1,3 +1,7 @@
+/* 삭제 버튼 왼쪽 마진 */
+.meeting-detail-delete-btn-margin {
+  margin-left: 8px;
+}
 .meeting-list {
   padding: 0;
   list-style: none;

@@ -1,4 +1,300 @@
+/* 일정 등록 폼 상세 내용 textarea 스타일 */
+.schedulemain-detail-textarea {
+  resize: vertical;
+  min-height: 32px;
+  padding: 8px;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fafbfc;
+  transition: border 0.2s;
+}
+.schedulemain-detail-textarea:focus {
+  border-color: #1976d2;
+  outline: none;
+  background: #fff;
+}
+/* 일정 통합 관리 스타일 */
+.schedulemain-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.schedulemain-tabs button {
+  background: #e7f0fa;
+  color: #3b5bdb;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.schedulemain-tabs button.active {
+  background: #1976d2;
+  color: #fff;
+}
+.schedulemain-tabs button:hover {
+  background: #5c7cfa;
+  color: #fff;
+}
+.schedulemain-main-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  justify-content: center;
+}
+.schedulemain-main-tabs button {
+  background: #e7f0fa;
+  color: #3b5bdb;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.schedulemain-main-tabs button.active {
+  background: #1976d2;
+  color: #fff;
+}
+.schedulemain-main-tabs button:hover {
+  background: #5c7cfa;
+  color: #fff;
+}
+.schedulemain-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.schedulemain-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: #fff;
+  border-left: 6px solid #4caf50;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.schedulemain-item[data-color] {
+  border-left-color: attr(data-color color, #4caf50);
+}
+.schedulemain-item.selected {
+  background: #e3f2fd;
+}
+.schedulemain-title {
+  flex: 1;
+  font-weight: bold;
+}
+.schedulemain-date,
+.schedulemain-status,
+.schedulemain-progress {
+  margin-left: 12px;
+}
+.schedulemain-detail-popup {
+  background: #fff;
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.schedulemain-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.schedulemain-tabs button.active {
+  background: #1976d2;
+  color: #fff;
+}
+.schedulemain-view-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  justify-content: center;
+}
+
+.schedulemain-calendar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.calendar-table {
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.calendar-table th, .calendar-table td {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  vertical-align: middle;
+  position: relative;
+}
+.calendar-day {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.calendar-day.selected {
+  background: #1976d2;
+  color: #fff;
+}
+.calendar-dot {
+  width: 6px;
+  height: 6px;
+  background: #ff9800;
+  border-radius: 50%;
+  margin-top: 2px;
+  display: inline-block;
+}
+.has-schedule .calendar-day {
+  font-weight: bold;
+}
+.schedulemain-view-btns button.active {
+  background: #1976d2;
+  color: #fff;
+}
+.schedulemain-addform {
+  background: #fff;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.schedulemain-addform label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.schedulemain-addform button {
+  margin-top: 12px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 0;
+  cursor: pointer;
+}
 /* ScheduleMain 컴포넌트 스타일 */
 .button-row {
   margin-bottom: 16px;
+}
+
+/* ScheduleMain 전체 컨테이너 스타일 */
+.schedulemain-container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 탭 버튼 스타일 */
+.schedulemain-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.schedulemain-tabs button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.schedulemain-tabs button.active {
+  background-color: #388e3c;
+}
+
+.schedulemain-tabs button:hover {
+  background-color: #66bb6a;
+}
+
+/* 콘텐츠 영역 스타일 */
+.schedulemain-content {
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 일정 리스트 스타일 */
+.schedulemain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.schedulemain-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  transition: background-color 0.3s;
+}
+
+.schedulemain-item:hover {
+  background-color: #e0e0e0;
+}
+
+.schedulemain-item.selected {
+  background-color: #c8e6c9;
+}
+
+.schedulemain-title {
+  font-weight: bold;
+}
+
+.schedulemain-date {
+  color: #757575;
+}
+
+.schedulemain-status {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+}
+
+.schedulemain-status.completed {
+  background-color: #388e3c;
+}
+
+.schedulemain-progress {
+  font-size: 14px;
+  color: #757575;
+}
+.schedulemain-empty {
+  text-align: center;
+  color: #888;
+  padding: 32px 0;
+  font-size: 1.1em;
 }

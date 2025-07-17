@@ -1,3 +1,16 @@
+
+.dailywork-progress-bar {
+  height: 8px;
+  background: #4caf50;
+  border-radius: 4px;
+  transition: width 0.3s;
+  width: 0%;
+}
+
+.dailywork-progress-bar[data-progress] {
+  /* JS에서 width를 직접 style로 주지 않고, 아래와 같이 CSS 변수로 처리할 수도 있음 */
+  width: calc(attr(data-progress percentage, 0) * 1%);
+}
 /* DailyWorkList 컴포넌트 스타일 */
 .button-row {
   margin-bottom: 12px;

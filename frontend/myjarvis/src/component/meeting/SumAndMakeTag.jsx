@@ -26,10 +26,30 @@ function SumAndMakeTag({ initialContent = '', onSaveTags }) {
     setEditSummary(false);
   }, [initialContent]);
 
-  const handleSummarize = () => {
-    setSummary(content ? `${content.slice(0, 20)}... (AI 요약 예시)` : '회의 내용을 입력하세요.');
+const handleSummarize = async () => {
+  if (!content) {
+    setSummary('회의 내용을 입력하세요.');
     setEditSummary(false);
-  };
+    return;
+  }
+  try {
+    const res = await fetch('/api/meetings/summary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ meetContent: content }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setSummary(data.summary); // 백엔드에서 summary 필드로 반환해야 함
+    } else {
+      setSummary('요약 실패 (서버 오류)');
+    }
+  } catch {
+    setSummary('요약 실패 (네트워크 오류)');
+  }
+  setEditSummary(false);
+};
+
   const handleTag = () => {
     setTags(content ? ['업무', '회의', 'AI'] : []);
   };
@@ -46,7 +66,7 @@ function SumAndMakeTag({ initialContent = '', onSaveTags }) {
   return (
     <div className="gpt-summary-tag">
       <div className="gpt-summary-section">
-        <h3>회의 내용 GPT 요약 및 태그</h3>
+        <h3>회의 내용 GPT 요약</h3>
         <textarea
           placeholder="회의 내용을 입력하세요"
           value={content}
