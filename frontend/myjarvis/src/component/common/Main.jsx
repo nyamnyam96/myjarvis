@@ -27,21 +27,12 @@ function Main() {
     }
   }
 
-// 임시 로그인 권한 부여
-const isDev = import.meta.env.DEV; // Vite 사용 시
+
 const initializeTheme = useThemeStore((state) => state.initializeTheme);
 
 useEffect(() => {
     initializeTheme(); // 다크모드 상태 반영
 }, []);
-
-useEffect(() => {
-  if (!isLogined && !isDev) {
-    navigate("/home");
-  }
-}, [isLogined, navigate]);
-
-if (!isLogined && !isDev) return null;
 
     const mainMenus = [
       { to: "/main/search", icon: "search", label: "검색" },
@@ -158,7 +149,7 @@ const renderMenuItem = (item) => {
       </nav>
 
       {/* 메인 콘텐츠 */}
-      <div className="flex-grow bg-[#f4f7fe] dark:bg-[#1a1a2e] overflow-y-auto px-3 pt-6 pb-3">
+      <div className="flex flex-col flex-grow bg-[#f4f7fe] dark:bg-[#1a1a2e] overflow-y-auto px-3 pt-6 pb-3">
         <Outlet />
       </div>
     </div>

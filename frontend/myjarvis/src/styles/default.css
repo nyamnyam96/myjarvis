@@ -504,6 +504,30 @@ body {
 .bar-label {
   fill: #111827; /* 기본: gray-900 */
 }
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 1.5s ease-out both;
+}
+
+[class*="animate-delay-"] {
+  animation-delay: var(--delay);
+}
+.animate-delay-[0ms] { --delay: 0ms; }
+.animate-delay-[100ms] { --delay: 100ms; }
+.animate-delay-[200ms] { --delay: 200ms; }
+.animate-delay-[300ms] { --delay: 300ms; }
+.animate-delay-[400ms] { --delay: 400ms; }
+.animate-delay-[500ms] { --delay: 500ms; }
+
 .dark .bar-label {
   fill: #ffffff; /* 다크모드: white */
 }
@@ -680,6 +704,9 @@ body {
 }
 .timeline-time {
   @apply text-xs text-gray-400 dark:text-gray-500 mt-1;
+}
+.timeline-content {
+  @apply text-sm text-gray-700 dark:text-gray-200 transition-colors duration-200;
 }
 
 

@@ -38,10 +38,15 @@ const Checklist = ({ items = [], onToggle }) => {
       <div className="flex items-start gap-6">
         {/* 좌측 3개 */}
         <div className="flex flex-col gap-4 w-1/2">
-          {leftItems.map((item) => (
+          {leftItems.map((item, index) => (
             <div
               key={item.id}
-              className="flex items-center bg-gray-50 dark:bg-[#3a3e5a] px-4 py-4 rounded-lg shadow-sm hover:bg-indigo-50 transition"
+              className={`
+                flex items-center bg-gray-50 dark:bg-[#3a3e5a] px-4 py-4 rounded-lg shadow-sm
+                hover:bg-indigo-100 dark:hover:bg-indigo-500/10
+                hover:shadow-md transition-all duration-300 ease-in-out
+                animate-fade-up animate-delay-[${index * 100}ms]
+              `}
             >
               <span className="w-2 h-2 bg-blue-500 rounded-full mr-2" />
               <div className="flex-1 text-base font-medium text-gray-800 dark:text-gray-100">
@@ -63,10 +68,15 @@ const Checklist = ({ items = [], onToggle }) => {
 
         {/* 우측 3개 */}
         <div className="flex flex-col gap-4 w-1/2">
-          {rightItems.map((item) => (
+          {rightItems.map((item, index) => (
             <div
               key={item.id}
-              className="flex items-center bg-gray-50 dark:bg-[#3a3e5a] px-4 py-4 rounded-lg shadow-sm hover:bg-indigo-50 transition"
+              className={`
+                flex items-center bg-gray-50 dark:bg-[#3a3e5a] px-4 py-4 rounded-lg shadow-sm
+                hover:bg-indigo-100 dark:hover:bg-indigo-500/10
+                hover:shadow-md transition-all duration-300 ease-in-out
+                animate-fade-up animate-delay-[${(index + 3) * 100}ms]
+              `}
             >
               <span className="w-2 h-2 bg-blue-500 rounded-full mr-2" />
               <div className="flex-1 text-base font-medium text-gray-800 dark:text-gray-100">

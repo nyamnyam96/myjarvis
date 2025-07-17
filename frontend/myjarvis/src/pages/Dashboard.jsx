@@ -69,12 +69,12 @@ export default function Dashboard() {
           </div>
 
         {/* 최근 활동 내역 카드 (우측 6열) */}
-        <div className="xl:col-span-6">
-          <Card className="min-h-[300px] p-6 rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] bg-white dark:bg-[#21243a]">
-            <h2 className="section-title text-gray-800 dark:text-gray-200">최근 활동 내역</h2>
-            <TimelineList items={timelineItems} />
-          </Card>
-        </div>
+          <div className="xl:col-span-6">
+            <div className="bg-white dark:bg-[#21243a] rounded-[20px] shadow-[0_20px_27px_0px_rgba(0,0,0,0.05)] min-h-[300px] p-6 flex flex-col gap-4">
+              <h2 className="section-title text-gray-800 dark:text-gray-200">최근 활동 내역</h2>
+              <TimelineList items={timelineItems} />
+            </div>
+          </div>
 
         {/* 업무 리마인더 카드 (좌측 6열) */}
         <div className="xl:col-span-6">
