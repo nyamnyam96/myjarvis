@@ -255,45 +255,54 @@ public class ContractService {
 	//계약서 서명 업데이트
 	public int updateSignature(SignatureUpdateDto signatureDto) {
 		
-		System.out.println("===== 서명 업데이트 요청 데이터 =====");
-	    System.out.println("ContractNo: " + signatureDto.getContractNo());
-	    System.out.println("getPartyId: " + signatureDto.getPartyId());
-	    System.out.println("==================================");
-	
-		return contractDao.updateSignature(signatureDto);
-	}
-	
-	//서명 요청 이메일 발송
-	@Transactional
-	public void sendSignatureRequestEmail(String contractNo, SignatureRequestDto req) { // 파라미터 변경
-		
-		// 👇👇 이 로그를 추가해주세요! 👇👇
-	    System.out.println("--- [이메일 발송 로그] 서명 요청 대상 ID: " + req.getRecipientMemberNo() + " ---");
-	    
-	    // 1. 랜덤 고유 토큰 생성
-	    String signToken = UUID.randomUUID().toString();	    
+		System.out.println("\n\n--- [로그] 당사자 서명 저장 API 시작 ---");
 
-	    // 2. 해당 담당자의 TBL_CONTRACT_PARTY에 토큰 저장
-	    //    (이 로직이 성공해야만 메일이 발송되므로 안전합니다.)
-	    int result = contractDao.updateSignToken(signToken, contractNo, req.getRecipientMemberNo());
+	    // 1. DTO에서 필요한 정보 추출
+	    String contractNo = signatureDto.getContractNo();
+	    String partyId = signatureDto.getPartyId(); // 서명한 사람의 ID (MEMBER_NO)
+	    String signatureData = signatureDto.getSignatureImage(); // Base64 데이터
 
-	    if (result > 0) {
-	        // 3. 이메일 제목과 본문 생성
-	        String subject = "[마이자비스] 서명 요청: 계약서 서명을 완료해주세요.";
+	    System.out.println("ContractNo: " + contractNo + ", PartyId: " + partyId);
 
-	        // 👇 [핵심] 이제 토큰을 이용해 '공개 서명 페이지' 링크를 생성합니다.
-	        String signUrl = "http://localhost:5173/sign/" + signToken; 
+	    // 2. Base64 데이터를 실제 이미지 파일로 저장
+	    FileDTO fileDto = fileUtils.uploadBase64Image(
+	        signatureData,
+	        "CONTRACT_SIGNATURE", // 파일 구분
+	        contractNo,           // 계약 번호
+	        partyId               // 파일 소유자 (서명한 사람)
+	    );
 
-	        String body = "<h1>계약서 서명 요청</h1>"
-	                    + "<p>안녕하세요. " + req.getRecipientName() + "님,</p>"
-	                    + "<p>아래 링크를 클릭하여 계약서 내용을 확인하고 서명을 완료해주세요.</p>"
-	                    + "<h3><a href='" + signUrl + "'>계약서 확인 및 서명하기</a></h3>"
-	                    + "<p>감사합니다.</p>";
+	    int result = 0;
+	    if (fileDto != null) {
+	        System.out.println("파일 저장 성공: " + fileDto.getFileName());
+	        
+	        // 3. 파일 정보를 TBL_FILE에 삽입
+	        result = fileDao.insertFile(fileDto);
+	        
+	        if (result > 0) {
+	            System.out.println("TBL_FILE 저장 성공!");
 
-	        emailService.sendEmail(req.getRecipientEmail(), subject, body);
+	            // 4. DB에 '파일 이름'을 저장하도록 DTO의 값을 변경
+	            signatureDto.setSignatureImage(fileDto.getFileName());
 
-	        // (선택) 이메일 발송 이력을 DB에 기록
+	            // 5. 최종적으로 TBL_CONTRACT_PARTY에 서명 정보(파일명)를 업데이트
+	            result += contractDao.updateSignature(signatureDto);
+	            
+	             if (result > 1) {
+	                 System.out.println("최종 업데이트 성공!");
+	            } else {
+	                 System.err.println(">>>>> [오류] TBL_CONTRACT_PARTY 업데이트 실패!");
+	            }
+
+	        } else {
+	            System.err.println(">>>>> [오류] TBL_FILE 저장 실패!");
+	        }
+	    } else {
+	        System.err.println(">>>>> [오류] 이미지 파일 저장 자체에 실패했습니다.");
 	    }
+
+	    System.out.println("--- [로그] 당사자 서명 저장 API 종료, 최종 반환 값: " + result + " ---");
+	    return result;
 	}
 	
 	//고객사 서명 불러오기
@@ -412,7 +421,51 @@ public class ContractService {
         System.out.println("--- [첨부파일 추적 로그] 7. 최종 데이터 반환 ---\n\n");
         return contractDetail;
     }
-    
+        
+
+    @Transactional
+    public void sendSignatureRequestEmail(String contractNo, SignatureRequestDto req) {
+        System.out.println("\n\n--- [서명 증발 추적] 이메일 발송 API 시작 ---");
+        System.out.println("요청 대상 ID: " + req.getRecipientMemberNo());
+
+        // --- [1단계] 토큰 저장 전, '당사자'의 서명 상태 확인 ---
+        System.out.println("[추적 로그] 1. updateSignToken 실행 전 데이터 확인");
+        List<PartyDto> beforeParties = contractDao.selectContractParties(contractNo);
+        for(PartyDto p : beforeParties) {
+            if("당사자".equals(p.getRole())) {
+                System.out.println(" -> '당사자'의 서명 이미지(before): " + p.getSignatureImage());
+            }
+        }
+
+        // 2. 랜덤 고유 토큰 생성 및 저장
+        String signToken = UUID.randomUUID().toString();
+        int result = contractDao.updateSignToken(signToken, contractNo, req.getRecipientMemberNo());
+        System.out.println("[추적 로그] 2. updateSignToken 실행 완료, 결과: " + result);
+
+        // --- [3단계] 토큰 저장 후, '당사자'의 서명 상태 다시 확인 ---
+        System.out.println("[추적 로그] 3. updateSignToken 실행 후 데이터 확인");
+        List<PartyDto> afterParties = contractDao.selectContractParties(contractNo);
+        for(PartyDto p : afterParties) {
+            if("당사자".equals(p.getRole())) {
+                System.out.println(" -> '당사자'의 서명 이미지(after): " + p.getSignatureImage());
+            }
+        }
+
+        if (result > 0) {
+            System.out.println("[추적 로그] 4. 이메일 발송 처리 시작");
+            // 이메일 발송 로직
+            String subject = "[마이자비스] 서명 요청: 계약서 서명을 완료해주세요.";
+            String signUrl = "http://localhost:5173/sign/" + signToken; 
+            String body = "<h1>계약서 서명 요청</h1>"
+                        + "<p>안녕하세요. " + req.getRecipientName() + "님,</p>"
+                        + "<p>아래 링크를 클릭하여 계약서 내용을 확인하고 서명을 완료해주세요.</p>"
+                        + "<h3><a href='" + signUrl + "'>계약서 확인 및 서명하기</a></h3>"
+                        + "<p>감사합니다.</p>";
+            emailService.sendEmail(req.getRecipientEmail(), subject, body);
+            System.out.println("[추적 로그] 5. 이메일 발송 완료");
+        }
+        System.out.println("--- [서명 증발 추적] 이메일 발송 API 종료 ---\n\n");
+    }    
     
 
 }
