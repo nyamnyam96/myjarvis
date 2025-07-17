@@ -124,11 +124,35 @@
 	       COMP_NAME AS compName,
 	       OWNER_NAME AS ownerName,
 	       COMP_TEL AS compTel,
-	       COMP_NO AS compNo
+	       COMP_NO AS compNo		             
       FROM TBL_COMPANY C
       JOIN TBL_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
      WHERE M.MEMBER_ID = #{memberId}
            and COMP_NAME LIKE '%' || #{searchName} || '%'
+	</select>
+	
+	<!-- 고객사 멤버 조회 -->
+	<select id="selectCompanyMembers" resultType="kr.or.iei.company.model.dto.CompanyMember">
+    SELECT
+        CONTACT_IDX AS contactIdx,
+        COMP_CD AS compCd,
+        MEMBER_NO AS memberNo,
+        CONTACT_NAME AS contactName,
+        CONTACT_EMAIL AS contactEmail,
+        CONTACT_PHONE AS contactPhone,
+        IS_MAIN_CONTACT AS isMainContact,
+        CONTACT_POSITION AS contactPosition,
+        CONTACT_DEPT AS contactDept,
+        TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
+    FROM TBL_COMPANY_MEMBER
+    WHERE COMP_CD = #{compCd}
+    ORDER BY IS_MAIN_CONTACT DESC, REG_DATE ASC
+	</select>
+	
+	<select id="findCompCdByMemberNo" parameterType="string" resultType="string">
+    SELECT COMP_CD 
+    FROM TBL_COMPANY 
+    WHERE MEMBER_NO = #{memberNo} AND ROWNUM = 1
 	</select>
   
 </mapper>

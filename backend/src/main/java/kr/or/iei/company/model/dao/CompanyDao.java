@@ -26,4 +26,8 @@ public interface CompanyDao {
 
 	List<Company> searchCompanyByName(String searchName, String memberId);
 
+	List<CompanyMember> selectCompanyMembers(String compCd);
+
+	String findCompCdByMemberNo(String memberNo);
+
 }

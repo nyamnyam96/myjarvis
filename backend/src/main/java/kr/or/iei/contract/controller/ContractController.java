@@ -23,16 +23,17 @@ import kr.or.iei.contract.model.dto.AiReviewResponse;
 import kr.or.iei.contract.model.dto.Contract;
 import kr.or.iei.contract.model.dto.ContractDetailDto;
 import kr.or.iei.contract.model.dto.ContractStatusUpdateDTO;
+import kr.or.iei.contract.model.dto.SignatureRequestDto;
 import kr.or.iei.contract.model.dto.SignatureUpdateDto;
 import kr.or.iei.contract.model.service.ContractService;
 
-@RestController
-@CrossOrigin("*")		          
+@RestController	          
 @RequestMapping("/contract")
 public class ContractController {
 
 	@Autowired
 	private ContractService contractService;
+	
 	
 	@NoTokenCheck
 	@GetMapping("/list")
@@ -47,6 +48,7 @@ public class ContractController {
 	}
 	
 	//신규 계약 추가
+	@NoTokenCheck 
     @PostMapping
     public int insertContract(@RequestPart Contract contract, @RequestPart(value="files", required = false) List<MultipartFile> files) {        
         return contractService.insertContract(contract, files);
@@ -79,6 +81,16 @@ public class ContractController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
-    }	
+    }
+    
+    //서명 요청 이메일 발송
+    @PostMapping("/{contractNo}/send-request")
+    public ResponseEntity<Void> sendSignatureRequest(@PathVariable String contractNo, @RequestBody SignatureRequestDto req ) {
+        
+    	// 서비스에 DTO 객체 전체를 전달
+        contractService.sendSignatureRequestEmail(contractNo, req);
+        return ResponseEntity.ok().build();
+    }
+            
 	
 }

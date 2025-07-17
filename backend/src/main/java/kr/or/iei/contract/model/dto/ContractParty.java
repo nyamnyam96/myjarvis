@@ -14,5 +14,6 @@ public class ContractParty {
     private String compCd;
     private String memberNo;
     private String role;
+    private String contactIdx;
 
 }

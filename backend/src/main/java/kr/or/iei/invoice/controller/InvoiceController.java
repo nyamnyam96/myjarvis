@@ -13,7 +13,6 @@ import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.invoice.model.service.InvoiceService;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/invoice")
 public class InvoiceController {
 	
@@ -23,13 +22,13 @@ public class InvoiceController {
 	@NoTokenCheck
 	@GetMapping("/list")
 	public HashMap<String, Object> invoiceMap(@RequestParam int reqPage,
-											  @RequestParam String memberNo,
+											  @RequestParam String memberId,
 											  @RequestParam String sortKey,
 											  @RequestParam String sortDirection,
 											  @RequestParam(defaultValue = "") String search,
 											  @RequestParam(defaultValue = "All") String status) {
 		
-		HashMap<String, Object> invoiceMap = invoiceService.selectInvoiceList(reqPage, sortKey, sortDirection, status, search, memberNo);		
+		HashMap<String, Object> invoiceMap = invoiceService.selectInvoiceList(reqPage, sortKey, sortDirection, status, search, memberId);		
 		return invoiceMap;		
 	}
 

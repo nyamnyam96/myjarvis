@@ -133,13 +133,15 @@
 	        CONTRACT_NO,
 	        COMP_CD,
 	        MEMBER_NO,
-	        ROLE
+	        ROLE,
+	        CONTACT_IDX
 	    ) VALUES (
 	        SEQ_CONTRACT_PARTY_ID.NEXTVAL,
 	        #{contractNo},
 	        #{compCd},
-	        #{memberNo},
-	        #{role}
+	        #{memberNo}, 
+	        #{role},
+	        #{contactIdx}
 	    )
 	</insert>
 	
@@ -166,45 +168,49 @@
         <collection property="memos" select="selectContractMemos" column="CONTRACT_NO" javaType="java.util.ArrayList" ofType="kr.or.iei.memo.model.dto.Memo" />
     </resultMap>
 
-    <select id="selectOneContract" parameterType="string" resultMap="contractDetailMap">
-        SELECT
-            C.CONTRACT_NO,
-            C.CONTRACT_TITLE,
-            C.CONTRACT_CONTENT,
-            TO_CHAR(C.CONTRACT_START, 'YYYY-MM-DD') AS CONTRACT_START,
-            TO_CHAR(C.CONTRACT_END, 'YYYY-MM-DD') AS CONTRACT_END,
-            C.CONTRACT_DEPOSIT,
-            C.STATUS_CODE,
-            CO.COMP_CD,
-            CO.COMP_NAME,
-            CO.OWNER_NAME,
-            CO.COMP_NO
-        FROM TBL_CONTRACT C
-        LEFT JOIN TBL_CONTRACT_PARTY CP ON C.CONTRACT_NO = CP.CONTRACT_NO AND CP.ROLE = '당사자'
-        LEFT JOIN TBL_COMPANY CO ON CP.COMP_CD = CO.COMP_CD
-        WHERE C.CONTRACT_NO = #{contractNo}
-    </select>
+	<select id="selectOneContract" parameterType="string" resultMap="contractDetailMap">
+	    SELECT
+	        C.CONTRACT_NO,
+	        C.CONTRACT_TITLE,
+	        C.CONTRACT_CONTENT,
+	        TO_CHAR(C.CONTRACT_START, 'YYYY-MM-DD') AS CONTRACT_START,
+	        TO_CHAR(C.CONTRACT_END, 'YYYY-MM-DD') AS CONTRACT_END,
+	        C.CONTRACT_DEPOSIT,
+	        C.STATUS_CODE,
+	        CO.COMP_CD,
+	        CO.COMP_NAME,
+	        CO.OWNER_NAME,
+	        CO.COMP_NO
+	    FROM TBL_CONTRACT C
+	    -- 👇 [핵심 수정] 이제 '고객사' 역할을 가진 참여자를 기준으로 회사 정보를 가져옵니다.
+	    LEFT JOIN TBL_CONTRACT_PARTY CP ON C.CONTRACT_NO = CP.CONTRACT_NO AND CP.ROLE = '고객사'
+	    LEFT JOIN TBL_COMPANY CO ON CP.COMP_CD = CO.COMP_CD
+	    WHERE C.CONTRACT_NO = #{contractNo}
+	</select>
 
-    <select id="selectContractParties" parameterType="string" resultType="kr.or.iei.contract.model.dto.PartyDto">
-        SELECT
-        	CP.MEMBER_NO AS memberNo, 
-            M.MEMBER_NAME AS name,
-            CP.ROLE AS role,
-            CP.SIGNED AS signed,
-            TO_CHAR(CP.SIGNED_DATE, 'YYYY-MM-DD') as signedDate,
-            CP.SIGNATURE_IMAGE as signatureImage
-        FROM TBL_CONTRACT_PARTY CP
-        JOIN TBL_MEMBER M ON CP.MEMBER_NO = M.MEMBER_NO
-        WHERE CP.CONTRACT_NO = #{contractNo}
-    </select>
-
+    <select id="selectContractParties" parameterType="string" resultType="PartyDto">
+	    SELECT 
+	        -- '나'의 정보 또는 '고객사 담당자' 정보를 구분해서 가져옴
+	        NVL(M.MEMBER_NO, CM.CONTACT_IDX) AS partyId, -- 고유 식별자
+	        NVL(M.MEMBER_NAME, CM.CONTACT_NAME) AS name, -- 이름
+	        NVL(M.MEMBER_EMAIL, CM.CONTACT_EMAIL) as email, -- 이메일 (추가)
+	        CP.ROLE AS role,
+	        CP.SIGNED AS signed,
+	        TO_CHAR(CP.SIGNED_DATE, 'YYYY-MM-DD') as signedDate,
+	        CP.SIGNATURE_IMAGE as signatureImage
+	    FROM TBL_CONTRACT_PARTY CP
+	    LEFT JOIN TBL_MEMBER M ON CP.MEMBER_NO = M.MEMBER_NO
+	    LEFT JOIN TBL_COMPANY_MEMBER CM ON CP.CONTACT_IDX = CM.CONTACT_IDX
+	    WHERE CP.CONTRACT_NO = #{contractNo}
+	</select>
+	
     <select id="selectContractFiles" parameterType="string" resultType="kr.or.iei.common.model.dto.FileDTO">
         SELECT
             FILE_NO as fileNo,
             FILE_ORIGIN as fileOrigin,
             FILE_PATH as filePath
         FROM TBL_FILE
-        WHERE FILE_TABLE = 'CONTRACT' AND FILE_ID = #{contractNo} AND FILE_DELETED = 'N'
+        WHERE FILE_TABLE = 'contract' AND FILE_ID = #{contractNo} AND FILE_DELETED = 'N'
     </select>
     
 	<select id="selectContractHistory" resultType="kr.or.iei.contract.model.dto.HistoryDto">
@@ -231,13 +237,75 @@
         ORDER BY REG_DATE DESC
     </select>
     
-    <update id="updateSignature" parameterType="kr.or.iei.contract.model.dto.SignatureUpdateDto">
+    <update id="updateSignature" parameterType="SignatureUpdateDto">
+	    UPDATE TBL_CONTRACT_PARTY
+	    SET
+	        SIGNED = 'Y',
+	        SIGNED_DATE = SYSDATE,
+	        SIGNATURE_IMAGE = #{signatureImage}
+	    WHERE 
+	        CONTRACT_NO = #{contractNo} 
+	        AND (MEMBER_NO = #{partyId} OR CONTACT_IDX = #{partyId}) -- ◀ [수정] partyId로 '나'와 '고객사' 모두를 찾을 수 있도록 변경
+	</update>
+	
+	<!-- 고유 서명 토큰으로 계약 상세 정보 조회 -->
+	<select id="selectContractByToken" parameterType="string" resultMap="contractDetailMap">
+    SELECT
+        C.CONTRACT_NO,
+        C.CONTRACT_TITLE,
+        C.CONTRACT_CONTENT,
+        TO_CHAR(C.CONTRACT_START, 'YYYY-MM-DD') AS CONTRACT_START,
+        TO_CHAR(C.CONTRACT_END, 'YYYY-MM-DD') AS CONTRACT_END,
+        C.CONTRACT_DEPOSIT,
+        C.STATUS_CODE,
+        CO.COMP_CD,
+        CO.COMP_NAME,
+        CO.OWNER_NAME,
+        CO.COMP_NO
+    FROM TBL_CONTRACT_PARTY CP_TOKEN
+    JOIN TBL_CONTRACT C ON CP_TOKEN.CONTRACT_NO = C.CONTRACT_NO
+    LEFT JOIN TBL_CONTRACT_PARTY CP ON C.CONTRACT_NO = CP.CONTRACT_NO AND CP.ROLE = '당사자'
+    LEFT JOIN TBL_COMPANY CO ON CP.COMP_CD = CO.COMP_CD
+    WHERE CP_TOKEN.SIGN_TOKEN = #{signToken} AND ROWNUM = 1
+	</select>
+	
+	<!-- 공개 서명 저장 API -->
+	<update id="updateSignatureByToken" parameterType="kr.or.iei.contract.model.dto.SignatureUpdateDto">
     UPDATE TBL_CONTRACT_PARTY
     SET
         SIGNED = 'Y',
         SIGNED_DATE = SYSDATE,
         SIGNATURE_IMAGE = #{signatureImage}
-    WHERE CONTRACT_NO = #{contractNo} AND MEMBER_NO = #{memberNo}
+    WHERE SIGN_TOKEN = #{signToken}
 	</update>
+	
+	<!-- 공개 서명 저장 API -->
+	<update id="updateSignToken">
+    UPDATE TBL_CONTRACT_PARTY
+    SET
+        SIGN_TOKEN = #{signToken}
+    WHERE 
+        CONTRACT_NO = #{contractNo}         
+        AND (MEMBER_NO = #{memberNo} OR CONTACT_IDX = #{memberNo})
+	</update>
+	
+	<select id="getContractNoBySignToken" parameterType="string" resultType="string">
+    SELECT CONTRACT_NO
+    FROM TBL_CONTRACT_PARTY
+    WHERE SIGN_TOKEN = #{signToken}
+	</select>
+
+	<select id="getMemberNoBySignToken" parameterType="string" resultType="string">
+    SELECT MEMBER_NO
+    FROM TBL_CONTRACT_PARTY
+    WHERE SIGN_TOKEN = #{signToken}
+	</select>
+	
+	<select id="getMemberNoByContractNo" parameterType="string" resultType="string">
+    SELECT
+        MEMBER_NO
+    FROM TBL_CONTRACT
+    WHERE CONTRACT_NO = #{contractNo}
+</select>
   
 </mapper>

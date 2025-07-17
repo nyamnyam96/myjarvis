@@ -1,6 +1,18 @@
 .contract-detail-wrap .content-header {
     margin-bottom: 24px;
 }
+
+/* 버튼 공통 */
+.btn-e-contract, .btn-pdf {
+    padding: 5px 20px;
+    border-radius: 8px;
+    border: 1px solid;
+    cursor: pointer;
+    font-weight: 500;
+}
+.btn-e-contract { background-color: #3b48ff; color: white; border-color: #3b48ff; }
+.btn-pdf { background-color: white; color: #555; border-color: #d9d9d9; }
+
 .btn-back {
     display: flex;
     align-items: center;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +18,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.or.iei.common.model.dao.FileDao;
 import kr.or.iei.common.model.dto.FileDTO;
 import kr.or.iei.common.model.dto.PageInfo;
+import kr.or.iei.common.model.service.EmailService;
 import kr.or.iei.common.util.FileUtils;
 import kr.or.iei.common.util.PageUtil;
+import kr.or.iei.company.model.dao.CompanyDao;
 import kr.or.iei.contract.model.dao.ContractDao;
 import kr.or.iei.contract.model.dto.AiReviewResponse;
 import kr.or.iei.contract.model.dto.Content;
@@ -29,6 +32,8 @@ import kr.or.iei.contract.model.dto.ContractStatusUpdateDTO;
 import kr.or.iei.contract.model.dto.GeminiRequest;
 import kr.or.iei.contract.model.dto.GeminiResponse;
 import kr.or.iei.contract.model.dto.Part;
+import kr.or.iei.contract.model.dto.PartyDto;
+import kr.or.iei.contract.model.dto.SignatureRequestDto;
 import kr.or.iei.contract.model.dto.SignatureUpdateDto;
 
 @Service
@@ -36,6 +41,9 @@ public class ContractService {
 	
 	@Autowired
 	private ContractDao contractDao;
+	
+	@Autowired
+	private CompanyDao companyDao;
 	
 	@Autowired
 	private PageUtil pageUtil;	
@@ -46,10 +54,48 @@ public class ContractService {
 	@Autowired
 	private FileDao fileDao;
 	
+	@Autowired
+	private EmailService emailService;
+	
+	@Value("${server.url}")
+	private String serverUrl;	
     @Value("${gemini.api.url}")
     private String apiUrl;
     @Value("${gemini.api.key}")
-    private String apiKey;
+    private String apiKey;   
+    
+	// 👇 [1단계] 경로 변환 로직을 더 범용적인 헬퍼 메소드로 개선합니다.
+    private String convertPathToUrl(String pathOrFilename) {
+        if (pathOrFilename == null || pathOrFilename.trim().isEmpty()) {
+            return null;
+        }
+        // '\' 또는 '/' 경로 구분자 모두를 처리하여 파일 이름만 안전하게 추출
+        int lastSlashIndex = Math.max(pathOrFilename.lastIndexOf('\\'), pathOrFilename.lastIndexOf('/'));
+        String filename = (lastSlashIndex != -1) 
+                          ? pathOrFilename.substring(lastSlashIndex + 1) 
+                          : pathOrFilename;
+        
+        return serverUrl + "/uploads/" + filename;
+    }
+    
+    
+    // 👇 [2단계] 기존의 서명 이미지 변환 로직을 새 헬퍼 메소드를 사용하도록 수정합니다.
+    private void convertSignaturePathsToUrls(ContractDetailDto contractDetail) {
+        if (contractDetail != null && contractDetail.getParties() != null) {
+            for (PartyDto party : contractDetail.getParties()) {
+                party.setSignatureImage(convertPathToUrl(party.getSignatureImage()));
+            }
+        }
+    }
+    
+    // 👇 [3단계] (핵심!) 첨부파일 경로도 웹 URL로 변환하는 로직을 추가합니다.
+    private void convertAttachmentPathsToUrls(ContractDetailDto contractDetail) {
+        if (contractDetail != null && contractDetail.getAttachedFiles() != null) {
+            for (FileDTO file : contractDetail.getAttachedFiles()) {
+                file.setFilePath(convertPathToUrl(file.getFilePath()));
+            }
+        }
+    }
     
     //계약서 AI 검토기능
     public AiReviewResponse getAiReview(String contractContent) {
@@ -166,11 +212,20 @@ public class ContractService {
         int result = contractDao.insertContract(contract);
 
         if (result > 0) {
-            // 2. 계약 추가 정보가 있다면 TBL_CONTRACT_PARTY에 추가로 저장               
-            List<ContractParty> partyList = contract.getPartyList(); // DTO에 getPartyList 추가 필요
+        	// 2. '나'를 '당사자'로 먼저 자동 등록
+            String myCompCd = companyDao.findCompCdByMemberNo(contract.getMemberNo());
+            ContractParty selfParty = new ContractParty();
+            selfParty.setContractNo(contract.getContractNo());
+            selfParty.setMemberNo(contract.getMemberNo());
+            selfParty.setCompCd(myCompCd);
+            selfParty.setRole("당사자");
+            result += contractDao.insertContractParty(selfParty);
+
+            // 3. 프론트에서 받은 '고객사' 정보(partyList)를 등록
+            List<ContractParty> partyList = contract.getPartyList();
             if (partyList != null && !partyList.isEmpty()) {
                 for (ContractParty party : partyList) {
-                    // 3. 방금 생성된 contractNo를 각 party 객체에 설정합니다.
+                    // 이제 이 party 객체는 항상 '고객사' 정보입니다.
                     party.setContractNo(contract.getContractNo());
                     result += contractDao.insertContractParty(party);
                 }
@@ -197,18 +252,167 @@ public class ContractService {
         return result;
     }	
 	
-	//회원 상세 조회
-	public ContractDetailDto selectOneContract(String contractNo) {
-		
-		return contractDao.selectOneContract(contractNo);
-	}
-	
 	//계약서 서명 업데이트
 	public int updateSignature(SignatureUpdateDto signatureDto) {
+		
+		System.out.println("===== 서명 업데이트 요청 데이터 =====");
+	    System.out.println("ContractNo: " + signatureDto.getContractNo());
+	    System.out.println("getPartyId: " + signatureDto.getPartyId());
+	    System.out.println("==================================");
 	
 		return contractDao.updateSignature(signatureDto);
 	}
 	
+	//서명 요청 이메일 발송
+	@Transactional
+	public void sendSignatureRequestEmail(String contractNo, SignatureRequestDto req) { // 파라미터 변경
+		
+		// 👇👇 이 로그를 추가해주세요! 👇👇
+	    System.out.println("--- [이메일 발송 로그] 서명 요청 대상 ID: " + req.getRecipientMemberNo() + " ---");
+	    
+	    // 1. 랜덤 고유 토큰 생성
+	    String signToken = UUID.randomUUID().toString();	    
+
+	    // 2. 해당 담당자의 TBL_CONTRACT_PARTY에 토큰 저장
+	    //    (이 로직이 성공해야만 메일이 발송되므로 안전합니다.)
+	    int result = contractDao.updateSignToken(signToken, contractNo, req.getRecipientMemberNo());
+
+	    if (result > 0) {
+	        // 3. 이메일 제목과 본문 생성
+	        String subject = "[마이자비스] 서명 요청: 계약서 서명을 완료해주세요.";
+
+	        // 👇 [핵심] 이제 토큰을 이용해 '공개 서명 페이지' 링크를 생성합니다.
+	        String signUrl = "http://localhost:5173/sign/" + signToken; 
+
+	        String body = "<h1>계약서 서명 요청</h1>"
+	                    + "<p>안녕하세요. " + req.getRecipientName() + "님,</p>"
+	                    + "<p>아래 링크를 클릭하여 계약서 내용을 확인하고 서명을 완료해주세요.</p>"
+	                    + "<h3><a href='" + signUrl + "'>계약서 확인 및 서명하기</a></h3>"
+	                    + "<p>감사합니다.</p>";
+
+	        emailService.sendEmail(req.getRecipientEmail(), subject, body);
+
+	        // (선택) 이메일 발송 이력을 DB에 기록
+	    }
+	}
 	
+	//고객사 서명 불러오기
+	public ContractDetailDto selectContractByToken(String signToken) {
+        ContractDetailDto contractDetail = contractDao.selectContractByToken(signToken);
+        
+        // 여기도 마찬가지로 모두 변환
+        convertSignaturePathsToUrls(contractDetail);
+        convertAttachmentPathsToUrls(contractDetail);
+
+        return contractDetail;
+    }
+	
+	// 공개 서명 저장 API	
+	@Transactional
+	public int updateSignatureByToken(SignatureUpdateDto signatureDto) {
+	    System.out.println("\n\n--- [로그] 공개 서명 저장 API 시작 ---");
+	    
+	    String signToken = signatureDto.getSignToken();
+	    System.out.println("[1] 전달받은 signToken: " + signToken);
+
+	    // 1. signToken으로 계약 번호 조회
+	    System.out.println("[2] DB에서 계약 번호 조회를 시작합니다...");
+	    String contractNo = contractDao.getContractNoBySignToken(signToken);
+	    System.out.println("[3] contractNo 조회 결과: " + contractNo);
+
+	    // [핵심 수정!] 토큰으로 계약 담당자(내부 직원)의 MEMBER_NO 조회
+	    String internalMemberNo = contractDao.getMemberNoByContractNo(contractNo);
+	    System.out.println("[4] 계약 담당자(파일 소유자) 조회 결과: " + internalMemberNo);
+
+	    // 2. 필수 정보 유효성 검사
+	    if (contractNo == null || internalMemberNo == null) {
+	        System.err.println(">>>>> [오류] 토큰으로 계약 또는 담당자 정보를 찾을 수 없습니다.");
+	        return 0; 
+	    }
+	    signatureDto.setContractNo(contractNo);
+
+	    // 3. Base64 이미지 파일 저장
+	    System.out.println("[5] Base64 이미지 파일 저장을 시도합니다...");
+	    FileDTO fileDto = fileUtils.uploadBase64Image(
+	        signatureDto.getSignatureImage(),
+	        "CONTRACT_SIGNATURE",
+	        contractNo,
+	        internalMemberNo  // 파일 업로더를 계약 담당자로 지정
+	    );
+
+	    int result = 0;
+	    if (fileDto != null) {
+	        System.out.println("[6] 파일 저장 성공! -> " + fileDto.getFileName());
+
+	        // 4. TBL_FILE에 파일 정보 삽입
+	        System.out.println("[7] TBL_FILE에 파일 정보 저장을 시도합니다...");
+	        result = fileDao.insertFile(fileDto);
+	        
+	        if (result > 0) {
+	            System.out.println("[8] TBL_FILE 저장 성공!");
+	            
+	            // DB에 '파일 이름'만 저장하는 방식으로 최종 수정
+	            signatureDto.setSignatureImage(fileDto.getFileName()); 
+	            System.out.println("[9] TBL_CONTRACT_PARTY 업데이트 시도...");
+	            
+	            result += contractDao.updateSignatureByToken(signatureDto);
+	            
+	            if (result > 1) {
+	                 System.out.println("[10] 최종 업데이트 성공! 총 " + result + "개 행 처리 완료.");
+	            } else {
+	                 System.err.println(">>>>> [오류] TBL_CONTRACT_PARTY 업데이트 실패!");
+	            }
+
+	        } else {
+	            System.err.println(">>>>> [오류] TBL_FILE에 파일 정보 저장 실패!");
+	        }
+	    } else {
+	        System.err.println(">>>>> [오류] Base64 이미지 파일 저장 실패!");
+	    }
+	    
+	    System.out.println("--- [로그] 공개 서명 저장 API 종료, 최종 반환 값: " + result + " ---");
+	    return result;
+	}
+	
+	
+	// 👇 [4단계] 두 개의 메인 조회 메소드를 수정합니다.
+    public ContractDetailDto selectOneContract(String contractNo) {
+    	System.out.println("\n\n--- [첨부파일 추적 로그] 1. 상세 조회 시작 ---");
+        System.out.println("조회할 계약 번호: " + contractNo);
+        
+        // 1. DAO를 통해 계약 상세 정보를 조회합니다.
+        ContractDetailDto contractDetail = contractDao.selectOneContract(contractNo);
+        System.out.println("[첨부파일 추적 로그] 2. DAO 실행 완료");
+
+        // 2. DAO가 반환한 데이터의 상태를 확인합니다.
+        if (contractDetail == null) {
+            System.err.println(">>>>> [오류] contractDetail 객체 자체가 null입니다.");
+            return null;
+        }
+
+        if (contractDetail.getAttachedFiles() == null) {
+            System.err.println(">>>>> [오류] attachedFiles 리스트가 null입니다! resultMap 설정을 확인하세요.");
+        } else if (contractDetail.getAttachedFiles().isEmpty()) {
+            System.out.println("[첨부파일 추적 로그] 3. attachedFiles 리스트가 비어있습니다 (size: 0).");
+        } else {
+            System.out.println("[첨부파일 추적 로그] 3. attachedFiles 리스트에 " + contractDetail.getAttachedFiles().size() + "개의 파일이 있습니다.");
+            // 첫 번째 파일의 경로를 확인해봅니다.
+            System.out.println("[첨부파일 추적 로그] 4. 변환 전 첫 번째 파일 경로: " + contractDetail.getAttachedFiles().get(0).getFilePath());
+        }
+
+        // 3. 기존의 경로 변환 로직을 실행합니다.
+        convertSignaturePathsToUrls(contractDetail);
+        convertAttachmentPathsToUrls(contractDetail);
+        System.out.println("[첨부파일 추적 로그] 5. 경로 변환 로직 실행 완료");
+
+        if (contractDetail.getAttachedFiles() != null && !contractDetail.getAttachedFiles().isEmpty()) {
+            System.out.println("[첨부파일 추적 로그] 6. 변환 후 첫 번째 파일 경로: " + contractDetail.getAttachedFiles().get(0).getFilePath());
+        }
+        
+        System.out.println("--- [첨부파일 추적 로그] 7. 최종 데이터 반환 ---\n\n");
+        return contractDetail;
+    }
+    
+    
 
 }

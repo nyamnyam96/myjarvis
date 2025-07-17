@@ -3,12 +3,14 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import createInstance from "../../axios/interceptor";
+import Swal from 'sweetalert2';
 
 import ContractContent from './detail/ContractContent';
 import ContractFiles from './detail/ContractFiles';
 import ContractHistory from './detail/ContractHistory';
 import ContractMemos from './detail/ContractMemos';
 import SignatureModal from "./detail/SignatureModal";
+import SendRequestModal from './detail/SendRequestModal';
 
 import "./ContractDetail.css"; // 상세 페이지용 CSS 파일
 import StatusChangeModal from './StatusChangeModal';
@@ -18,6 +20,7 @@ import jsPDF from 'jspdf';
 
 
 export default function ContractDetail() {
+
     const navigate = useNavigate();
     const { contractNo } = useParams(); // URL의 파라미터(계약번호) 가져오기
     const { loginMember } = useUserStore(); // 로그인 정보 (API 요청 시 사용)
@@ -32,6 +35,7 @@ export default function ContractDetail() {
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const pdfExportComponent = useRef(null);
+    const [isSendModalOpen, setSendModalOpen] = useState(false);
 
 
     const handlePdfExport = async () => {
@@ -124,44 +128,40 @@ export default function ContractDetail() {
 
     // 👇 4. 서명 완료 시 데이터를 받아 처리하는 함수
     const handleConfirmSignature = (signatureData) => {
-        // contract 상태를 업데이트해서 화면을 리렌더링
-        setContract(prevContract => {
-            // 기존 계약 데이터 복사
-            const newContract = { ...prevContract };
-            
-            // 서명한 당사자를 찾아서 정보 업데이트
-            const partyIndex = newContract.parties.findIndex(
-                p => p.name === signatureModal.party.name
-            );
+        // 서명한 당사자의 정보를 가져옵니다.
+        const partyToUpdate = signatureModal.party;
 
-            if (partyIndex !== -1) {            
-                newContract.parties[partyIndex] = {
-                    ...newContract.parties[partyIndex],
-                    signed: true,
-                    signedDate: new Date().toISOString().slice(0, 10),
-                    signatureImage: signatureData
-                };
-            }
-            return newContract;
-        });
-
+        // [핵심 수정] 백엔드 DTO에 맞게 데이터 객체를 구성합니다.
         const signatureDto = {
-        memberNo: signatureModal.party.memberNo, // 서명한 사람의 memberNo
-        signatureImage: signatureData
+            partyId: partyToUpdate.partyId, // 키를 'partyId'로, 값을 partyToUpdate.partyId로 변경
+            signatureImage: signatureData
         };
-
+        // API 호출
         axiosInstance.post(`${serverUrl}/contract/${contractNo}/signature`, signatureDto)
-        .then(res => {
-            // 성공적으로 DB에 저장되면 사용자에게 알림
-            toast.success("서명이 저장되었습니다."); // react-toastify 사용 예시
-        })
-        .catch(err => {
-            console.error("서명 저장 실패:", err);
-            toast.error("서명 저장 중 오류가 발생했습니다.");
-        });
-
-        // 모달 닫기
-        handleCloseSignatureModal();
+            .then(res => {
+                toast.success("서명이 저장되었습니다.");
+                // API 성공 시 화면 상태를 즉시 업데이트 (사용자 경험 향상)
+                setContract(prevContract => {
+                    const newContract = JSON.parse(JSON.stringify(prevContract));
+                    const partyIndex = newContract.parties.findIndex(
+                        p => p.partyId === partyToUpdate.partyId
+                    );
+                    if (partyIndex !== -1) {
+                        newContract.parties[partyIndex].signed = true;
+                        newContract.parties[partyIndex].signedDate = new Date().toISOString().slice(0, 10);
+                        newContract.parties[partyIndex].signatureImage = signatureData;
+                    }
+                    return newContract;
+                });
+            })
+            .catch(err => {
+                console.error("서명 저장 실패:", err);
+                toast.error("서명 저장 중 오류가 발생했습니다.");
+            })
+            .finally(() => {
+                // API 호출 성공/실패 여부와 상관없이 모달을 닫습니다.
+                handleCloseSignatureModal();
+            });
     };
         
     // 상태 코드에 따라 클래스와 텍스트를 반환하는 함수 (재사용)
@@ -184,7 +184,15 @@ export default function ContractDetail() {
     }
     
     const contractStatus = getStatusInfo(contract.contractInfo.statusCode);
-    
+
+    const myParty = contract.parties.find(p => p.role === '당사자');
+    const otherParty = contract.parties.find(p => p.role === '고객사');
+
+    // ContractContent에 전달할 party 객체들을 배열로 재구성합니다.
+    const displayParties = [];
+    if (myParty) displayParties.push(myParty);
+    if (otherParty) displayParties.push(otherParty);
+
     return (
         
         <div className="content-wrap contract-detail-wrap">
@@ -206,6 +214,14 @@ export default function ContractDetail() {
                 />
             )}
 
+            {/* 서명 요청 발송 모달을 조건부로 렌더링 */}
+            {isSendModalOpen && (
+                <SendRequestModal 
+                    contract={contract} 
+                    closeModal={() => setSendModalOpen(false)} 
+                />
+            )}
+
             {/* 최상단 버튼 영역 */}
             <div className="content-header">
                 <button type="button" className="btn-back" onClick={() => navigate('/main/contract/list')}>
@@ -213,10 +229,10 @@ export default function ContractDetail() {
                     이전 목록
                 </button>
                 <div className="header-actions">
-                    <button type="button" className="btn-secondary" onClick={handlePdfExport}>
+                    <button type="button" className="btn-pdf" onClick={handlePdfExport}>
                         PDF 출력
                     </button>
-                    <button type="button" className="btn-primary">전자 계약 요청</button>
+                    <button type="button" className="btn-e-contract" onClick={() => setSendModalOpen(true)}>전자 계약 요청</button>
                 </div>
             </div>
 
@@ -225,12 +241,12 @@ export default function ContractDetail() {
                 {/* 1. 연결된 고객사 정보 */}
                 <div className="form-card full-width-card">
                     <div className="company-header">
-                        <h3 className="company-name">{contract.companyInfo.compName}</h3>
+                        <h3 className="company-name">{contract.companyInfo?.compName}</h3>
                         <span className={`status-badge ${contractStatus.className}`}>{contractStatus.text}</span>
                     </div>
                     <div className="company-details">
-                        <span>대표자: {contract.companyInfo.ownerName}</span>
-                        <span>사업자번호: {contract.companyInfo.compNo}</span>
+                        <span>대표자: {contract.companyInfo?.ownerName}</span>
+                        <span>사업자번호: {contract.companyInfo?.compNo}</span>
                     </div>
                 </div>
 
@@ -239,9 +255,9 @@ export default function ContractDetail() {
                     <div className="form-card">
                         <h3 className="card-title">계약 기본 정보</h3>
                         <div className="info-grid">
-                            <span>계약명</span><p>{contract.contractInfo.contractTitle}</p>
-                            <span>계약기간</span><p>{contract.contractInfo.contractStart} ~ {contract.contractInfo.contractEnd}</p>
-                            <span>계약금액</span><p>{contract.contractInfo.contractDeposit.toLocaleString()} 원</p>
+                            <span>계약명</span><p>{contract.contractInfo?.contractTitle}</p>
+                            <span>계약기간</span><p>{contract.contractInfo?.contractStart} ~ {contract.contractInfo.contractEnd}</p>
+                            <span>계약금액</span><p>{contract.contractInfo?.contractDeposit?.toLocaleString()} 원</p>
                         </div>
                         <button className="btn-secondary full-width mt-20" onClick={() => setIsModalOpen(true)}>
                         상태 변경
@@ -258,8 +274,7 @@ export default function ContractDetail() {
                                     <span className="signature-status">{party.signed ? '서명 완료' : '서명 대기'}</span>
                                 </li>
                             ))}
-                        </ul>
-                         <button className="btn-secondary full-width mt-20">발송 이력 보기</button>
+                        </ul>                         
                     </div>
                 </div>
 
@@ -291,7 +306,7 @@ export default function ContractDetail() {
 
                     {/* 탭 컨텐츠 */}
                     <div className="tab-content">
-                        {activeTab === 'content' && <ContractContent ref={pdfExportComponent} content={contract.contractInfo.contractContent} parties={contract.parties} onOpenSignatureModal={handleOpenSignatureModal}/>}
+                        {activeTab === 'content' && <ContractContent ref={pdfExportComponent} content={contract.contractInfo.contractContent} parties={displayParties} onOpenSignatureModal={handleOpenSignatureModal} loginMember={loginMember}/>}
                         {activeTab === 'files' && <ContractFiles files={contract.attachedFiles} />}
                         {activeTab === 'history' && <ContractHistory history={contract.changeHistory} />}
                         {activeTab === 'memos' && <ContractMemos memos={contract.memos} />}

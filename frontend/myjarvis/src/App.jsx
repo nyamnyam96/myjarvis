@@ -21,6 +21,7 @@ import CompanyList from "./component/company/CompanyList";
 import ContractList from "./component/contract/ContractList";
 import ContractInsert from "./component/contract/ContractInsert";
 import ContractDetail from "./component/contract/ContractDetail";
+import PublicSignPage from "./pages/PublicSignPage";
 
 
 //  6. 일정관리
@@ -77,6 +78,9 @@ function App() {
       <Route path="/agreeText" element={<AgreeText />} />
       <Route path="/agreeTextSelect" element={<AgreeTextSelect />} />
 
+      {/* 로그인 없이 접근 가능한 공개 서명 페이지 경로 추가 */}
+      <Route path="/sign/:token" element={<PublicSignPage />} />
+
       {/* 🔹 마이페이지 관련 */}
       <Route path="/member/*" element={<MemberMain />} />
       <Route path="/memberUpd/:memberId" element={<MemberUpd />} />
@@ -99,6 +103,7 @@ function App() {
           <Route path="contract/new" element={<ContractInsert />} />
             {/* 계약 상세 */}
             <Route path="contract/:contractNo" element={<ContractDetail />} /> 
+            
 
         {/* ▶ 청구관리 */}
         <Route path="invoice/list" element={<InvoiceList />} />    
