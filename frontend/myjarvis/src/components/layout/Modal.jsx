@@ -21,7 +21,10 @@ const Modal = ({ open, onClose, children }) => {
       >
         {children}
         <div className="mt-4 text-right">
-          <button className="btn btn-outline" onClick={onClose}>
+          <button
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition"
+            onClick={onClose}
+          >
             닫기
           </button>
         </div>

@@ -31,7 +31,7 @@ import TimelineList from "../components/feedback/TimelineList";
 
 //  대시보드 컴포넌트 (dashboard/)
 import StatCard from "../components/dashboard/StatCard";
-import ChartCard from "../components/dashboard/ChartCard";
+//import ChartCard from "../components/dashboard/ChartCard";
 import ChartWrapper from "../components/dashboard/ChartWrapper";
 import ActivityCard from "../components/dashboard/ActivityCard";
 
@@ -290,23 +290,7 @@ const StyleGuide = () => {
           </div>
         </Card>
 
-
-          {/* 📈 차트 카드 (.chart-card) */}
-        <Card>
-          <h2 className="section-title">📈 ChartCard</h2>
-          <p className="text-subtle">
-            통계 차트 또는 시각화 데이터를 출력하는 박스 UI입니다. `.chart-card`, `.chart-title`, `.chart-subtext`, `.chart-container` 클래스를 사용합니다.
-          </p>
-          <br />
-
-          {/*  컴포넌트 기반 차트 카드 예시 */}
-          <ChartCard title="매출 추이" subtext="최근 6개월 기준">
-            <div className="flex items-center justify-center w-full h-full text-gray-400 text-sm">
-              🔧 차트 컴포넌트 (예: BarChart 등) 위치
-            </div>
-          </ChartCard>
-        </Card>
-
+    
             {/* 📂 파일 드롭존 (.dropzone) */}
         <Card>
           <h2 className="section-title">📂 Dropzone</h2>

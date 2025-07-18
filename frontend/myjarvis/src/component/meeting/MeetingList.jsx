@@ -1,30 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SumAndMakeTag from './SumAndMakeTag';
-import './MeetingList.css';
 
-/*
-  태그 기반 필터, 고객사별 보기
-
-  - 태그 다중 선택  
-  - 태그 자동 완성 입력
-  - 필터 초기화 버튼
-  - 고객사 선택 드롭 다운
-  - 고객사별 회의 리스트 출력
-  - 회의 요약 / 태그 미리보기
-
-*/
-
-// 회의록 리스트, 태그/필터 기능 샘플 + 회의 내용 보기
 const initialMeetings = [
   { id: 1, title: '주간 회의', date: '2025-06-20', tags: ['업무', '주간'], content: '주간 업무 공유 및 진행 상황 논의.' },
   { id: 2, title: '기획 회의', date: '2025-06-21', tags: ['기획'], content: '신규 프로젝트 기획 및 역할 분담.' },
+  { id: 3, title: '디자인 리뷰', date: '2025-06-22', tags: ['디자인'], content: 'UI 개선 사항 피드백 및 적용 논의.' },
+  { id: 4, title: '클라이언트 미팅', date: '2025-06-23', tags: ['외부'], content: '고객사 요구사항 정리 및 Q&A 진행.' },
+  { id: 5, title: '마케팅 전략 회의', date: '2025-06-24', tags: ['마케팅'], content: '하반기 캠페인 전략 논의 및 채널별 예산 조율.' },
 ];
 
-function MeetingList({ meetings, setMeetings, setTab, selected, setSelected, scrollToId }) {
-  // 각 회의 li에 ref를 연결
+function MeetingList({
+  meetings: propMeetings,
+  setMeetings: propSetMeetings,
+  selected: propSelected,
+  setSelected: propSetSelected,
+  scrollToId
+}) {
+  const [fallbackMeetings, setFallbackMeetings] = useState(initialMeetings);
+  const [fallbackSelected, setFallbackSelected] = useState(null);
+
+  const meetings = propMeetings ?? fallbackMeetings;
+  const setMeetings = propSetMeetings ?? setFallbackMeetings;
+  const selected = propSelected ?? fallbackSelected;
+  const setSelected = propSetSelected ?? setFallbackSelected;
+
   const itemRefs = useRef({});
 
-  // 외부에서 selected가 바뀌면 상세 포커스 및 스크롤 이동
   useEffect(() => {
     if (selected && itemRefs.current[selected.id]) {
       itemRefs.current[selected.id].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -34,32 +35,14 @@ function MeetingList({ meetings, setMeetings, setTab, selected, setSelected, scr
     }
   }, [selected, meetings, setSelected]);
 
-  // 외부에서 scrollToId가 들어오면 해당 회의로 이동 및 상세 오픈
   useEffect(() => {
     if (scrollToId && itemRefs.current[scrollToId]) {
       setSelected(meetings.find(m => m.id === scrollToId));
       setTimeout(() => {
-        if (itemRefs.current[scrollToId]) {
-          itemRefs.current[scrollToId].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        itemRefs.current[scrollToId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
     }
   }, [scrollToId, meetings, setSelected]);
-
-  const handleTagClick = () => {
-    if (setTab) {
-      setTab('tag');
-    }
-  };
-
-  const handleSaveTags = (meetingId, newTags) => {
-    setMeetings(prev => prev.map(m => m.id === meetingId ? { ...m, tags: Array.from(new Set([...(m.tags || []), ...newTags])) } : m));
-  };
-
-  // 태그 삭제 핸들러
-  const handleRemoveTag = (meetingId, tag) => {
-    setMeetings(prev => prev.map(m => m.id === meetingId ? { ...m, tags: (m.tags || []).filter(t => t !== tag) } : m));
-  };
 
   const [editId, setEditId] = useState(null);
   const [editContent, setEditContent] = useState('');
@@ -74,74 +57,154 @@ function MeetingList({ meetings, setMeetings, setTab, selected, setSelected, scr
     setEditId(null);
   };
 
-  const filtered = meetings;
+  const handleSaveTags = (meetingId, newTags) => {
+    setMeetings(prev =>
+      prev.map(m =>
+        m.id === meetingId ? { ...m, tags: Array.from(new Set([...(m.tags || []), ...newTags])) } : m
+      )
+    );
+  };
+
+  const handleRemoveTag = (meetingId, tag) => {
+    setMeetings(prev =>
+      prev.map(m =>
+        m.id === meetingId ? { ...m, tags: (m.tags || []).filter(t => t !== tag) } : m
+      )
+    );
+  };
+
+  const handleToggleSelect = (meeting) => {
+    if (selected?.id === meeting.id) {
+      setSelected(null); //  다시 누르면 접힘
+    } else {
+      setSelected(meeting);
+    }
+  };
 
   return (
-    <div>
-      <h3>회의록 목록</h3>
-      <ul className="meeting-list">
-        {filtered.map(m => (
-          <li
+    <div className="meeting-list-wrapper px-6 py-4">
+      <div className="meeting-list-container max-h-[600px] overflow-y-auto space-y-4">
+
+        {meetings.map(m => (
+          <div
             key={m.id}
             ref={el => itemRefs.current[m.id] = el}
-            className={`meeting-list-item${selected && selected.id === m.id ? ' selected' : ''}`}
-            onClick={() => setSelected(m)}
+            className={`meeting-card p-4 rounded-xl shadow-sm 
+              bg-white dark:bg-[#2a2e47]
+              border border-gray-200 dark:border-[#343951]
+              ${selected?.id === m.id ? 'ring-2 ring-indigo-500' : ''}
+            `}
           >
-            <b className="meeting-title">{m.title}</b> <span className="meeting-date">({m.date})</span><br />
-            <span>
-              태그: {m.tags && m.tags.length > 0 ? m.tags.map((tag, idx) => (
-                <React.Fragment key={tag}>
-                  <span className="meeting-tag" onClick={e => { e.stopPropagation(); handleTagClick(tag); }}>
+            {/* 카드 헤더: 제목 + 날짜 */}
+            <div className="meeting-card-header flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold cursor-pointer" onClick={() => handleToggleSelect(m)}
+              >{m.title}</h3>
+              <span className="text-sm text-gray-500">{m.date}</span>
+            </div>
+
+            {/* 카드 바디: 태그 표시 */}
+            <div className="meeting-card-body flex flex-wrap gap-2">
+              {m.tags?.length > 0 ? (
+                m.tags.map(tag => (
+                  <span
+                    key={tag}
+                    className="meeting-tag bg-blue-100 text-blue-700 text-sm px-2 py-1 rounded-md"
+                  >
                     {tag}
-                    {selected && selected.id === m.id && (
-                      <button
-                        className="meeting-tag-remove"
-                        onClick={e => { e.stopPropagation(); handleRemoveTag(m.id, tag); }}
-                        title="태그 삭제"
-                      >×</button>
-                    )}
                   </span>
-                  {idx < m.tags.length - 1 && <span className="meeting-tag-comma">, </span>}
-                </React.Fragment>
-              )) : '없음'}
-            </span>
-            {selected && selected.id === m.id && (
-              <div className="meeting-detail">
-                <div className="meeting-detail-section">
-                  <b>회의 내용:</b>
-                  <div>{editId === m.id ? (
+                ))
+              ) : (
+                <span className="text-sm text-gray-400">태그 없음</span>
+              )}
+            </div>
+
+            {/* 카드 상세: 펼침 상태일 때 */}
+              {selected?.id === m.id && (
+                <div className="meeting-card-detail bg-gray-50 dark:bg-[#21243a] mt-4 p-4 rounded-md">
+
+                  {/* 회의 내용 제목 + 버튼 수평 정렬 */}
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                      회의 내용
+                    </label>
+
+                    <div className="flex gap-2">
+                      {editId === m.id ? (
+                        <>
+                          <button
+                            className="bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] 
+                                      text-white font-semibold text-sm py-1.5 px-4 rounded-md 
+                                      shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleSaveEdit(m.id);
+                            }}
+                          >
+                            저장
+                          </button>
+                          <button
+                            className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100
+                                      font-semibold text-sm py-1.5 px-4 rounded-md
+                                      hover:opacity-90 transition-all"
+                            onClick={e => {
+                              e.stopPropagation();
+                              setEditId(null);
+                            }}
+                          >
+                            취소
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className="bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] 
+                                    text-white font-semibold text-sm py-1.5 px-4 rounded-md 
+                                    shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                          onClick={e => {
+                            e.stopPropagation();
+                            handleEdit(m);
+                          }}
+                        >
+                          수정
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 회의 본문 내용 */}
+                  {editId === m.id ? (
                     <textarea
-                      className="meeting-edit-textarea"
+                      className="w-full h-24 p-3 border rounded-md bg-white dark:bg-[#2c3a56] 
+                                text-sm text-gray-800 dark:text-gray-100 mb-6"
                       value={editContent}
                       onChange={e => setEditContent(e.target.value)}
-                      rows={4}
                     />
                   ) : (
-                    selected.content
+                    <div className="bg-white dark:bg-[#2c3a56] border border-gray-200 dark:border-[#4b5563] 
+                                    rounded-md p-3 mb-6">
+                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{m.content}</p>
+                    </div>
                   )}
-                  <div className="meeting-detail-btns-bottom">
-                    {editId === m.id ? (
-                      <>
-                        <button className="meeting-detail-save-btn" onClick={e => { e.stopPropagation(); handleSaveEdit(m.id); }}>저장</button>
-                        <button className="meeting-detail-cancel-btn" onClick={e => { e.stopPropagation(); setEditId(null); }}>취소</button>
-                      </>
-                    ) : (
-                      <button className="meeting-detail-edit-btn" onClick={e => { e.stopPropagation(); handleEdit(m); }}>수정</button>
-                    )}
-                  </div>
+
+                  {/* GPT 요약 및 태그 제목 */}
+                  <label className="text-base font-bold text-gray-800 dark:text-gray-100 mb-2 block">
+                    GPT 요약 및 태그
+                  </label>
+
+                  {/* 요약 도구 박스 */}
+                  <div className="bg-white dark:bg-[#2c3a56] border border-gray-200 dark:border-[#4b5563] 
+                                  rounded-md p-3">
+                    <div className="meeting-summary-block">
+                      <SumAndMakeTag
+                        initialContent={m.content}
+                        onSaveTags={(tags) => handleSaveTags(m.id, tags)}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="meeting-detail-section">
-                  <SumAndMakeTag
-                    initialContent={selected.content}
-                    onSaveTags={tags => handleSaveTags(selected.id, tags)}
-                  />
-                </div>
-              </div>
-            )}
-          </li>
+              )}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

@@ -50,6 +50,7 @@ export default function Login() {
         confirmButtonText: '확인'
       });
     } else {
+        const axiosInstance = createInstance();
       // 정상 입력 시 서버에 로그인 요청
       let options = {
         url: serverUrl + '/member/login',

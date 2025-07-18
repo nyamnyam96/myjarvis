@@ -1,132 +1,88 @@
-.meeting-list {
-  padding: 0;
-  list-style: none;
+/* ===============================
+📌 MeetingList.css - 다크모드 톤다운 리팩토링
+=============================== */
+
+/* 회의 카드 전체 */
+/*  공통 기본 스타일은 Tailwind의 @apply 사용 */
+.meeting-card {
+  @apply border rounded-xl p-4 shadow-sm cursor-pointer transition-all duration-200;
+  background-color: white;       /* 라이트모드 */
+  border-color: #e5e7eb;         /* gray-200 */
 }
-.meeting-list-item {
-  background: #f8fafc;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  padding: 28px 32px 24px 32px;
-  box-shadow: 0 2px 12px #e0e7ef33;
-  cursor: pointer;
-  position: relative;
-  max-width: 1000px;
-  width: 100%;
-  text-align: center;
-  transition: box-shadow 0.2s, background 0.2s;
+
+/* 다크모드는 직접 CSS 속성으로 설정 */
+.dark .meeting-card {
+  background-color: #2a2e47; 
+  border-color: #343951;
 }
-.meeting-list-item.selected {
-  background: #e0e7ef44;
-  box-shadow: 0 4px 24px #c7d2fe55;
-  padding-right: 180px;
+/* 카드 상단 */
+.meeting-card-header h3 {
+  @apply text-lg font-semibold text-gray-800;
 }
-.meeting-detail {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  gap: 3.5rem;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 16px #e0e7ef55;
-  padding: 40px 32px;
-  padding-right: 182px;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
+.dark .meeting-card-header h3 {
+  @apply text-gray-100;
 }
-.meeting-detail-section {
-  flex: 1;
-  min-width: 260px;
-  max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
-  box-sizing: border-box;
+.meeting-card-header span {
+  @apply text-sm text-gray-500;
 }
-.meeting-detail-section .gpt-summary-tag {
-  max-width: 480px;
-  width: 100%;
-  box-sizing: border-box;
+.dark .meeting-card-header span {
+  @apply text-gray-300;
 }
-.meeting-detail-edit-btn{
-  display: flex;
-  justify-content: ;
-}
-.meeting-detail-btns {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  margin-top: 32px;
-}
-.meeting-detail .edit-btn {
-  background: #fff;
-  color: #2563eb;
-  border: 1px solid #2563eb;
-  border-radius: 8px;
-  padding: 8px 24px;
-  font-weight: 500;
-  font-size: 1.05rem;
-  cursor: pointer;
-}
-.meeting-detail .delete-btn {
-  background: #e11d48;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 32px;
-  font-weight: 600;
-  font-size: 1.05rem;
-  cursor: pointer;
-}
-.meeting-detail .back-btn {
-  background: #f1f5f9;
-  color: #222;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 8px 26px;
-  font-weight: 500;
-  font-size: 1.05rem;
-  cursor: pointer;
-}
+
+/* 태그 영역 */
 .meeting-tag {
-  display: inline-block;
-  background: #e0f2fe;
-  color: #2563eb;
-  border-radius: 12px;
-  padding: 2px 8px;
-  margin-right: 2px;
-  font-size: 0.85em;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid #b6e0fe;
-  transition: background 0.2s, color 0.2s;
+  @apply bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-md cursor-pointer transition hover:opacity-80;
 }
-.meeting-tag:hover {
-  background: #2563eb;
-  color: #fff;
+.dark .meeting-tag {
+  background-color: rgba(147, 197, 253, 0.15); /*  약한 파란 배경 */
+  color: #c3dafe;                              /*  밝은 블루 텍스트 */
 }
-.meeting-tag-comma {
-  display: inline-block;
-  margin: 0 2px 0 0;
-  color: #bbb;
-  font-size: 0.9em;
-  vertical-align: middle;
+
+/* 상세 내용 */
+.meeting-card-detail {
+  @apply mt-4 rounded-md p-4;
+  background-color: #f9fafb;     /* gray-50 */
 }
-@media (max-width: 1200px) {
-  .meeting-detail, .meeting-list-item {
-    max-width: 98vw;
-    padding: 18px 2vw;
-  }
-  .meeting-detail-section {
-    min-width: 0;
-    max-width: 100%;
-  }
-  .meeting-detail-section .gpt-summary-tag {
-    max-width: 100%;
-  }
+.dark .meeting-card-detail {
+  background-color: #2f334d;
+}
+
+/* 회의 내용 */
+.meeting-content-block label {
+  @apply block text-sm font-semibold text-gray-700 mb-1;
+}
+.dark .meeting-content-block label {
+  @apply text-gray-200;
+}
+.meeting-content-block textarea {
+  @apply w-full h-24 p-2 border rounded-md bg-white text-sm text-gray-800;
+}
+.dark .meeting-content-block textarea {
+  background-color: #2c3a56;   /*  진한 다크 배경 */
+  color: #f1f5f9;
+  border-color: #4b5563;
+}
+.meeting-content-block p {
+  @apply text-sm text-gray-700;
+}
+.dark .meeting-content-block p {
+  @apply text-gray-100;
+}
+
+/* 버튼 그룹 */
+.meeting-button-group {
+  @apply flex gap-2 mt-4;
+}
+
+/* 요약 블록 */
+.meeting-summary-block {
+  @apply mt-6;
+}
+
+/* 외부 wrapper */
+.meeting-list-wrapper {
+  @apply w-full px-6 py-4;
+}
+.meeting-list-container {
+  @apply max-h-[600px] overflow-y-auto space-y-4;
 }
