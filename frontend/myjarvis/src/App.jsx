@@ -27,7 +27,7 @@ import ContractDetail from "./component/contract/ContractDetail";
 import MySchedule from "./component/schedule/MySchedule";
 
 //  7. 회의관리
-import MeetingList from "./component/meeting/MeetingList";
+import MeetingMain from "./component/meeting/MeetingMain";
 
 //  8. 청구관리
 import InvoiceList from "./component/invoice/InvoiceList";
@@ -107,7 +107,7 @@ function App() {
         <Route path="schedule" element={<MySchedule />} />
 
         {/* ▶ 회의관리 */}
-        <Route path="meeting" element={<MeetingList />} />        
+        <Route path="meeting" element={<MeetingMain />} />        
 
         {/* ▶ 통계 확인 */}
         <Route path="stats" element={<Stats />} />

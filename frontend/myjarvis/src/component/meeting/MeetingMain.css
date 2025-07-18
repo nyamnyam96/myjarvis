@@ -1,9 +1,101 @@
-.meeting-main {
-  /* 필요시 스타일 추가 */
-}
-.button-row {
+/*  전체 wrapper */
+.meeting-main-wrap {
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e9eef5;
+  margin-top: -24px;
+  margin-bottom: -12px;
+  width: 100%;
+  padding: 32px;
+  box-sizing: border-box;
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  flex-grow: 1;
+}
+.dark .meeting-main-wrap {
+  background-color: #21243a;
+  border-color: #2e324a;
+}
+
+/*  제목 (기존 유지) */
+.meeting-content-title {
+  font-size: 26px; 
+  font-weight: 700; 
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+.dark .meeting-content-title {
+  color: #e2e8f0;
+}
+
+/*  상단 탭 버튼 헤더 */
+.meeting-main-header {
+  @apply flex justify-start gap-4 px-4 py-2;
+  background-color: white;
+}
+.dark .meeting-main-header {
+  background-color: #21243a;
+  border-color: #394150;
+}
+
+/*  탭 버튼 영역 */
+.meeting-main-tab-buttons button {
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 140px;
+  max-width: 200px;
+  flex-grow: 0 !important;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  color: #374151;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-right: 8px;
+}
+
+.meeting-main-tab-buttons button:last-child {
+  /*  마지막 버튼은 오른쪽 간격 제거 */
+  margin-right: 0;
+}
+
+.dark .meeting-main-tab-buttons button {
+  color: #cbd5e1;
+}
+
+/*  활성 탭 버튼 */
+.meeting-main-tab-buttons button.active {
+  @apply text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] shadow-md;
+}
+
+/*  하단 콘텐츠 출력 영역 */
+.meeting-main-tab-content {
+  @apply flex-1 overflow-y-auto p-4;
+  background-color: #fefefe;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+}
+.dark .meeting-main-tab-content {
+  background-color: #1f2235;
+  border-color: #2e324a;
+}
+
+.dark .meeting-main-tab-buttons button {
+  background-color: #21243a;
+  color: #cbd5e1;
+  border: 1px solid #3f4c6b;
+}
+
+.schedule-btn.unselected:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+.dark .schedule-btn.unselected:hover {
+  background-color: #2a2e47;
 }

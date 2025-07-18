@@ -610,6 +610,12 @@ body {
 .notification-time {
   @apply text-xs text-gray-400 dark:text-gray-500 mt-0.5;
 }
+.notification-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+}
+.notification-modal-list {
+  @apply max-h-[70vh] overflow-y-auto space-y-4 pr-2;
+}
 
 
 /* ------------------------------
@@ -690,14 +696,14 @@ body {
 - 계약 이력, 일정 흐름 등 시각적 흐름 표현
 ------------------------------ */
 .timeline-list {
-  @apply space-y-4 pl-4 border-l-2 border-gray-200 dark:border-gray-600;
+  @apply space-y-4 pl-6 border-l-2 border-gray-200 dark:border-gray-600;
 }
 .timeline-item {
-  @apply relative pl-4;
+  @apply relative;
 }
 .timeline-item::before {
   content: '';
-  @apply absolute w-2 h-2 bg-blue-500 rounded-full left-[-6px] top-1.5;
+  @apply absolute w-2 h-2 bg-blue-500 rounded-full left-[-10px] top-2;
 }
 .timeline-content {
   @apply text-sm text-gray-700 dark:text-gray-200;

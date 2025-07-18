@@ -27,7 +27,7 @@ const Checklist = ({ items = [], onToggle }) => {
         </h2>
         <button
           onClick={() => setIsOpen(true)}
-          className="text-xl font-bold text-gray-500 dark:text-gray-300 hover:text-indigo-500"
+          className="text-xl font-bold text-gray-500 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-300"
           title="전체 보기"
         >
           ＋

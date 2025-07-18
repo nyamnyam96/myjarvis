@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Setting.css";
 import SwitchToggle from "../../components/control/SwitchToggle";
 import Button from "../../components/common/Button";
 import { useNavigate } from "react-router-dom";
 import MemberMain from "../member/MemberMain";
 import useThemeStore from '../../store/useThemeStore';
+import BgInsert from "./BgInsert";
 
 const Setting = () => {
   const { isDarkMode, toggleTheme, initializeTheme } = useThemeStore();
 
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [alarm, setAlarm] = React.useState(true);
   const [invoiceDefault, setInvoiceDefault] = React.useState(false);
   const [sessionTime, setSessionTime] = React.useState(true);
@@ -71,10 +72,11 @@ const Setting = () => {
               </h3>
               <Button
                 className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] hover:brightness-110"
-                onClick={() => alert("등록 기능은 추후 구현됩니다.")}
+                onClick={() => setIsModalOpen(true)}
               >
                 배경 등록
               </Button>
+              <BgInsert isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
             </div>
             <p className="text-xs text-gray-500 dark:text-gray-300">
               대시보드에 표시할 배경을 사용자 설정으로 등록할 수 있어요.

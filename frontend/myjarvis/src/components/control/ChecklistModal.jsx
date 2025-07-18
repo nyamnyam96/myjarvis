@@ -4,12 +4,6 @@ const ChecklistModal = ({ items = [], onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-[#1e213a] w-full max-w-3xl rounded-lg shadow-lg p-6 relative max-h-[80vh] overflow-y-auto">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-xl font-bold text-gray-400 hover:text-indigo-500"
-        >
-          ×
-        </button>
 
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           전체 TO-DO LIST
@@ -32,6 +26,16 @@ const ChecklistModal = ({ items = [], onClose }) => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* 하단 닫기 버튼 */}
+        <div className="mt-6 text-right">
+          <button
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition"
+            onClick={onClose}
+          >
+            닫기
+          </button>
         </div>
       </div>
     </div>

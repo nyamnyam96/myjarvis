@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import bgIntro1 from '../assets/bg_intro4.jpg';
 import MyJarvisLogo from "../assets/logo-myJarvis.png";
 import '../styles/default.css';
+import sample10 from '../assets/sample10.png';
+import sample11 from '../assets/sample11.png';
+import sample12 from '../assets/sample12.png';
 
 const IntroSchedule = () => {
   return (
@@ -132,7 +135,7 @@ const IntroSchedule = () => {
                 transition={{ duration: 0.6 }}
               >
                 <img
-                  src="/assets/sample1.jpg"
+                  src={sample10}
                   alt="일정 등록 화면"
                   className="w-[640px] h-[400px] object-cover rounded-xl shadow-xl"
                 />
@@ -161,7 +164,7 @@ const IntroSchedule = () => {
                 transition={{ duration: 0.6 }}
               >
                 <img
-                  src="/assets/sample2.jpg"
+                  src={sample11}
                   alt="자동 연동"
                   className="w-[640px] h-[400px] object-cover rounded-xl shadow-xl"
                 />
@@ -190,7 +193,7 @@ const IntroSchedule = () => {
                 transition={{ duration: 0.6 }}
               >
                 <img
-                  src="/assets/sample3.jpg"
+                  src={sample12}
                   alt="캘린더 통합 뷰"
                   className="w-[640px] h-[400px] object-cover rounded-xl shadow-xl"
                 />
