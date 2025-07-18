@@ -106,6 +106,42 @@ public class CompanyService {
         }
         return null;
     }
+
+	public HashMap<String, Object> selectOneCompany(String compCd) {
+		Company company = companyDao.selectOneCompany(compCd);
+        List<CompanyMember> companyMembers = companyDao.selectCompanyMembers(compCd);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("company", company);
+        map.put("companyMembers", companyMembers);
+        return map;		
+	}
+	
+	@Transactional
+	public int updateCompany(Company company) {
+		// 1. 회사 기본 정보 수정
+        int result = companyDao.updateCompany(company);
+
+        // 2. 기존 담당자 정보 모두 삭제
+        companyDao.deleteCompanyMembers(company.getCompCd());
+
+        // 3. 화면에서 전달된 담당자 정보 다시 삽입
+        List<CompanyMember> members = company.getCompanyMembers();
+        if(members != null && !members.isEmpty()) {
+            for(CompanyMember member : members) {
+                member.setCompCd(company.getCompCd());
+                member.setMemberNo(company.getMemberNo()); // 담당자를 등록/수정한 회원의 번호
+                companyDao.insertCompanyMember(member);
+            }
+        }
+        return result;
+	}
+
+	public int deleteCompany(String compCd) {
+		// trade_status를 2(거래중지)로 업데이트
+        return companyDao.deactivateCompany(compCd);
+		
+	}
 	
 	
 

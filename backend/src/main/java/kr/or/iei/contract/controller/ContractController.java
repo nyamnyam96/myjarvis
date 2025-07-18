@@ -91,6 +91,12 @@ public class ContractController {
         contractService.sendSignatureRequestEmail(contractNo, req);
         return ResponseEntity.ok().build();
     }
+    
+    //고객사 상세 페이지 > 계약 목록 조회
+    @GetMapping("/company/{compCd}")
+    public List<Contract> getContractListByCompany(@PathVariable String compCd) {
+        return contractService.selectContractListByCompany(compCd);
+    }
             
 	
 }

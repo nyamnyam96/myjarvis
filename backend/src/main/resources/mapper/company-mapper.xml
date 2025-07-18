@@ -154,5 +154,49 @@
     FROM TBL_COMPANY 
     WHERE MEMBER_NO = #{memberNo} AND ROWNUM = 1
 	</select>
+	
+	<!-- 고객사 상세 조회 -->
+	<select id="selectOneCompany" parameterType="string" resultType="Company">
+        SELECT 
+            COMP_CD        AS compCd,
+            MEMBER_NO      AS memberNo,
+            COMP_NAME      AS compName,
+            COMP_TEL       AS compTel,
+            COMP_ADDR      AS compAddr,
+            OWNER_NAME     AS ownerName,
+            TRADE_STATUS   AS tradeStatus,
+            COMP_TYPE      AS compType,
+            COMP_NO        AS compNo,
+            TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
+        FROM TBL_COMPANY
+        WHERE COMP_CD = #{compCd}
+    </select>
+    
+    <!-- 고객사 수정 -->
+    <update id="updateCompany" parameterType="Company">
+        UPDATE TBL_COMPANY
+        SET
+            COMP_NAME = #{compName},
+            OWNER_NAME = #{ownerName},
+            COMP_TEL = #{compTel},
+            COMP_ADDR = #{compAddr},
+            COMP_TYPE = #{compType},
+            COMP_NO = #{compNo}
+        WHERE COMP_CD = #{compCd}
+    </update>
+	
+	<!-- 담당자 삭제 -->
+    <delete id="deleteCompanyMembers" parameterType="string">
+        DELETE FROM TBL_COMPANY_MEMBER
+        WHERE COMP_CD = #{compCd}
+    </delete>
+	
+	<!-- 고객사 비활성화 처리 -->
+    <update id="deactivateCompany" parameterType="string">
+        UPDATE TBL_COMPANY
+        SET
+            TRADE_STATUS = 2
+        WHERE COMP_CD = #{compCd}
+    </update>
   
 </mapper>

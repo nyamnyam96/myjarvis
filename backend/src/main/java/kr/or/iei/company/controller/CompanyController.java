@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,6 +96,25 @@ public class CompanyController {
         if (newMember != null) {	    	
             return ResponseEntity.ok(newMember);        }
         return ResponseEntity.badRequest().build();
+    }
+	
+	@NoTokenCheck
+    @GetMapping("/{compCd}")
+    public HashMap<String, Object> selectOneCompany(@PathVariable String compCd) {
+        return companyService.selectOneCompany(compCd);
+    }
+
+    @NoTokenCheck
+    @PutMapping("/update")
+    public int updateCompany(@RequestBody Company company) {
+        return companyService.updateCompany(company);
+    }
+    
+    @NoTokenCheck
+    @DeleteMapping("/delete/{compCd}")
+    public int deleteCompany(@PathVariable String compCd) {
+        // 실제로는 trade_status를 2(거래중지)로 변경
+        return companyService.deleteCompany(compCd);
     }
 	
 	

@@ -30,4 +30,16 @@ public interface CompanyDao {
 
 	String findCompCdByMemberNo(String memberNo);
 
+	Company selectOneCompany(String compCd);
+
+	int updateCompany(Company company);
+
+	void deleteCompanyMembers(String compCd);
+
+	int deactivateCompany(String compCd);
+
+	
+
+	
+
 }

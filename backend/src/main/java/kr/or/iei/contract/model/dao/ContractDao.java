@@ -63,4 +63,6 @@ public interface ContractDao {
 	
 	String getMemberNoByContractNo(String contractNo);
 
+	List<Contract> selectContractListByCompany(String compCd);
+
 }

@@ -282,25 +282,39 @@ export default function ContractInsert() {
                 )}
 
                 {/* 👇 4. 파일 첨부 카드 */}
-                <div className="form-card">
-                    <h3 className="card-title">첨부 파일</h3>
-                    <div className="file-attachment-box">
-                        <div className="file-list">
-                            {attachedFiles.map((file, index) => (
-                                <div key={index} className="file-item">
-                                    <span>{file.name}</span>
-                                    <button type="button" onClick={() => removeFile(index)}>×</button>
-                                </div>
-                            ))}
+                <div className="form-card">                    
+                    <div className="card-header-flex">
+                        <h3 className="card-title">첨부 파일</h3>
+                        {/* 2. '파일 추가' 버튼(label)과 input을 이곳으로 이동시킵니다. */}
+                        <div>
+                            <label className="file-upload-btn" htmlFor="contract-file-input">파일 추가</label>
+                            <input 
+                                type="file" 
+                                id="contract-file-input" 
+                                multiple 
+                                onChange={handleFileChange} 
+                                style={{ display: 'none' }} 
+                            />
                         </div>
-                        <label className="file-upload-btn" htmlFor="contract-file-input">파일 추가</label>
-                        <input 
-                            type="file" 
-                            id="contract-file-input" 
-                            multiple 
-                            onChange={handleFileChange} 
-                            style={{ display: 'none' }} 
-                        />
+                    </div>
+
+                    {/* 3. 파일 목록이 표시될 영역입니다. 이제 버튼이 없어서 깔끔해집니다. */}
+                    <div className="file-attachment-box">
+                        {attachedFiles.length > 0 ? (
+                            <div className="file-list">
+                                {attachedFiles.map((file, index) => (
+                                    <div key={index} className="file-item">
+                                        <span>{file.name}</span>
+                                        <button type="button" onClick={() => removeFile(index)}>×</button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            // 파일이 없을 때 안내 문구 표시
+                            <div className="no-files-placeholder">                                
+                                <p>첨부할 파일을 '파일 추가' 버튼으로 등록해주세요.</p>
+                            </div>
+                        )}
                     </div>
                 </div>              
                 
