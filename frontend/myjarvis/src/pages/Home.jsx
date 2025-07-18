@@ -9,6 +9,10 @@ import BgGradient2 from '../assets/bg-gradient2.png';
 import BgGradient3 from '../assets/bg-gradient3.png';
 import { motion } from "framer-motion";
 import MyJarvisLogo from "../assets/logo-myJarvis.png";
+import HomeImage1 from '../assets/Home1.jpg';
+import HomeImage2 from '../assets/Home2.jpg';
+import HomeImage3 from '../assets/Home3.jpg';
+import HomeImage4 from '../assets/Home4.jpg';
 
 function Home() {
   return (
@@ -156,17 +160,17 @@ function Home() {
             </motion.div>
 
             {/* 우측 기능 이미지 영역 */}
-            <motion.div
-            initial={{ x: 40, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex-1 flex items-center justify-center"
-            >
-            <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl flex items-center justify-center text-gray-800 text-lg font-medium shadow-md">
-                실제 일정관리 기능 화면
-            </div>
-            </motion.div>
+                <motion.div
+                initial={{ x: 40, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="flex-1 flex items-center justify-center"
+                >
+                <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl flex items-center justify-center text-gray-800 text-lg font-medium shadow-md overflow-hidden">
+                    <img src={HomeImage1} alt="일정관리 기능 화면" className="w-full h-full object-cover" />
+                </div>
+                </motion.div>
 
             {/*  일정관리 태그: 카드 하단 왼쪽 고정 */}
             <motion.div
@@ -234,18 +238,23 @@ function Home() {
             </motion.div>
             </motion.div>
 
-            {/* 우측 기능 이미지 영역 */}
-            <motion.div
-            initial={{ x: 40, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex-1 flex items-center justify-center"
-            >
-            <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl flex items-center justify-center text-gray-800 text-lg font-medium shadow-md">
-                실제 계약관리 기능 화면
-            </div>
-            </motion.div>
+{/* 우측 기능 이미지 영역 */}
+<motion.div
+  initial={{ x: 40, opacity: 0 }}
+  whileInView={{ x: 0, opacity: 1 }}
+  transition={{ duration: 0.6 }}
+  viewport={{ once: true }}
+  className="flex-1 flex items-center justify-center"
+>
+  <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md">
+    <img
+      src={HomeImage2}
+      alt="계약관리 기능 화면"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</motion.div>
+
 
             {/* 계약관리 태그: 카드 하단 왼쪽 고정 */}
             <motion.div
@@ -314,18 +323,23 @@ function Home() {
             </motion.div>
             </motion.div>
 
-            {/* 우측 기능 이미지 영역 */}
-            <motion.div
-            initial={{ x: 40, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex-1 flex items-center justify-center"
-            >
-            <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl flex items-center justify-center text-gray-800 text-lg font-medium shadow-md">
-                실제 회의관리 기능 화면
-            </div>
-            </motion.div>
+{/* 우측 기능 이미지 영역 */}
+<motion.div
+  initial={{ x: 40, opacity: 0 }}
+  whileInView={{ x: 0, opacity: 1 }}
+  transition={{ duration: 0.6 }}
+  viewport={{ once: true }}
+  className="flex-1 flex items-center justify-center"
+>
+  <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md">
+    <img
+      src={HomeImage3}
+      alt="회의관리 기능 화면"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</motion.div>
+
 
             {/* 회의관리 태그: 카드 하단 왼쪽 고정 */}
             <motion.div
@@ -395,18 +409,22 @@ function Home() {
             </motion.div>
             </motion.div>
 
-            {/* 우측 기능 이미지 영역 */}
-            <motion.div
-            initial={{ x: 40, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex-1 flex items-center justify-center"
-            >
-            <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl flex items-center justify-center text-gray-800 text-lg font-medium shadow-md">
-                실제 결제관리 기능 화면
-            </div>
-            </motion.div>
+{/* 우측 기능 이미지 영역 */}
+<motion.div
+  initial={{ x: 40, opacity: 0 }}
+  whileInView={{ x: 0, opacity: 1 }}
+  transition={{ duration: 0.6 }}
+  viewport={{ once: true }}
+  className="flex-1 flex items-center justify-center"
+>
+  <div className="w-full h-[380px] max-w-lg bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md">
+    <img
+      src={HomeImage4}
+      alt="결제관리 기능 화면"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</motion.div>
 
             {/* 결제관리 태그: 카드 하단 왼쪽 고정 */}
             <motion.div
