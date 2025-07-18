@@ -1,11 +1,10 @@
 import "./CompanyList.css";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import PageNavi from "./companyCommon/PageNavi";
 import CompanyInsertModal from "./CompanyInsertModal";
 import createInstance from "../../axios/interceptor";
 import useUserStore from "../../store/useUserStore";
-
+import { useNavigate } from "react-router-dom";
 
 export default function CompanyList(){    
     
@@ -186,10 +185,17 @@ export default function CompanyList(){
 };
 
 function Company(props){
-    const company = props.company    
+    const company = props.company   
+    const navigate = useNavigate(); 
+
+    function moveToDetail(){
+    // App.jsx에 설정한 전체 경로를 정확하게 적어주어야 합니다.
+    // '/main' 레이아웃 하위에 있으므로 '/main'으로 시작합니다.
+    navigate(`/main/company/${company.compCd}`);
+    };
 
     return(
-        <tr>
+        <tr className="company-row" onClick={moveToDetail}>
             <td>{company.compName}</td>
             <td>                
                 {company.compType == 'C' 

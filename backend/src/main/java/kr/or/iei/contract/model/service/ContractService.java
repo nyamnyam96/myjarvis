@@ -465,7 +465,12 @@ public class ContractService {
             System.out.println("[추적 로그] 5. 이메일 발송 완료");
         }
         System.out.println("--- [서명 증발 추적] 이메일 발송 API 종료 ---\n\n");
-    }    
+    }
+
+
+	public List<Contract> selectContractListByCompany(String compCd) {
+		return contractDao.selectContractListByCompany(compCd);
+	}    
     
 
 }

@@ -16,6 +16,8 @@ import Dashboard from "./pages/Dashboard";
 
 //  4. 고객관리
 import CompanyList from "./component/company/CompanyList";
+import CompanyDetail from "./component/company/CompanyDetail";
+
 
 //  5. 계약관리
 import ContractList from "./component/contract/ContractList";
@@ -94,8 +96,10 @@ function App() {
         {/* ▶ 검색 */}
         <Route path="search" element={<Search />} />
 
-        {/* ▶ 고객관리 */}
+        {/* ▶ 고객사 관리 */}
         <Route path="company/list" element={<CompanyList />} />
+          {/* 고객사 상세 */}
+          <Route path="company/:compCd" element={<CompanyDetail />} />
 
         {/* ▶ 계약관리 */}
         <Route path="contract/list" element={<ContractList />} />

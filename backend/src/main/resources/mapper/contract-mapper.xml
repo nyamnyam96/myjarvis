@@ -306,6 +306,30 @@
         MEMBER_NO
     FROM TBL_CONTRACT
     WHERE CONTRACT_NO = #{contractNo}
-</select>
+	</select>
+	
+	
+	<!-- 고객사 상세 페이지 > 계약 목록 조회 -->
+	<select id="selectContractListByCompany" parameterType="string" resultType="kr.or.iei.contract.model.dto.Contract">
+    SELECT
+        C.CONTRACT_NO           AS contractNo,
+        CP.COMP_CD              AS compCd,
+        CO.COMP_NAME            AS companyName,      -- compName -> companyName 으로 수정
+        C.CONTRACT_TITLE        AS contractTitle,    -- contractName -> contractTitle 으로 수정
+        C.STATUS_CODE           AS statusCode,       -- contractStatus -> statusCode 으로 수정
+        C.CONTRACT_DEPOSIT      AS contractDeposit,  -- contractAmount -> contractDeposit 으로 수정
+        TO_CHAR(C.CONTRACT_START, 'YYYY-MM-DD') AS contractStart,  -- contractStartDate -> contractStart 으로 수정
+        TO_CHAR(C.CONTRACT_END, 'YYYY-MM-DD')   AS contractEnd      -- contractEndDate -> contractEnd 으로 수정
+    FROM
+        TBL_CONTRACT C
+    JOIN
+        TBL_CONTRACT_PARTY CP ON C.CONTRACT_NO = CP.CONTRACT_NO
+    JOIN
+        TBL_COMPANY CO ON CP.COMP_CD = CO.COMP_CD
+    WHERE
+        CP.COMP_CD = #{compCd}
+    ORDER BY
+        C.CONTRACT_START DESC
+	</select>
   
 </mapper>
