@@ -1,0 +1,165 @@
+
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  width: 700px;
+  max-width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: 300;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body-scrollable {
+  overflow-y: auto;
+}
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 입력 폼 공통 */
+.form-section { display: flex; flex-direction: column; gap: 12px; }
+.form-header { margin-bottom: 8px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+.form-group label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+.form-group label span {
+  color: #ff3b3b;
+  margin-left: 2px;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* 버튼 */
+.btn-secondary,
+.btn-primary {
+  height: 33px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.btn-secondary {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+}
+.btn-primary {
+  border: none;
+  color: white;
+  background-image: linear-gradient(to right, #1E1BFF, #7C3AED);
+  transition: filter 0.2s ease-in-out;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+}
+
+/* 다크모드 */
+.dark .modal-content {
+  background-color: #21243a;
+  color: #d4d9e3;
+}
+.dark .modal-header {
+  border-bottom: 1px solid #2a2e47;
+}
+.dark .modal-header h2 {
+  color: #fff;
+}
+.dark .close-btn {
+  color: #aaa;
+}
+.dark .form-group label {
+  color: #d4d9e3;
+}
+.dark .form-group input,
+.dark .form-group select {
+  background-color: #2d304b;
+  color: #d4d9e3;
+  border: 1px solid #44485c;
+}
+.dark .btn-secondary {
+  background-color: #2a2e47;
+  border-color: #44485c;
+  color: #d4d9e3;
+}
+.dark .btn-primary {
+  background-image: linear-gradient(to right, #3733c9, #6d2fbf);
+  color: white;
+}
+.dark .btn-primary:hover {
+  filter: brightness(1.15);
+}
+.dark .modal-footer {
+  border-top: 1px solid #2a2e47;
+}

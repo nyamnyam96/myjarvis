@@ -3,11 +3,33 @@
 =============================== */
 
 /* 페이지 전체 컨텐츠 영역 */
+/*  배경과 높이만 담당 */
 .setting-wrapper {
-  @apply p-6 grid grid-cols-1 md:grid-cols-2 gap-6;
-  min-height: calc(100vh - 45px); /*  스크롤 방지 */
-  margin-top: -45px;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e9eef5;
+  margin-top: -24px;
+  margin-bottom: -12px;
+  width: 100%;
+  height: calc(100% + 36px);
+  padding: 32px;
+  box-sizing: border-box;
+  /* 여기선 레이아웃 정렬 X */
 }
+
+/*  다크모드용 */
+.dark .setting-wrapper {
+  background-color:	#21243a;
+  color: #e0e0e0;
+  border-color: #2a2e47;
+}
+
+/* 내부 카드 레이아웃 (2단 구성) */
+.setting-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  width: 100%;
+}
+
 
 /* 카드 스타일 */
 .setting-card {

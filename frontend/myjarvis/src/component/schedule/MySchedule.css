@@ -1,0 +1,370 @@
+/* 📄 src/component/schedule/MySchedule.css */
+
+.content-wrap {
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e9eef5;
+  margin-top: -24px;
+  margin-bottom: -12px;
+  width: 100%;
+  padding: 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-grow: 1;
+}
+
+.content-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* 상단 버튼  */
+.schedule-btn {
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 140px;
+  max-width: 200px;        /* 📏 최대 너비 제한 */
+  flex-grow: 0 !important; /* ❌ 자동 확장 방지 */
+  display: inline-block;   /* 크기를 내용 기반으로 */
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 선택된 버튼 (시그니처 그라데이션) */
+.schedule-btn.selected {
+  @apply text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] shadow-md;
+}
+
+.schedule-btn.selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* 선택되지 않은 버튼 */
+.schedule-btn.unselected {
+  background-color: #f9fafb;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.schedule-btn.unselected:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+/* 🌙 다크모드 대응 */
+.dark .schedule-btn.unselected {
+  background-color: #21243a;
+  color: #cbd5e1;
+  border: 1px solid #3f4c6b;
+}
+
+.dark .schedule-btn.unselected:hover {
+  background-color: #2a2e47;
+}
+
+/* 탭 콘텐츠 영역 */
+.tab-area {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 16px;
+}
+
+.dark .tab-area {
+  background-color: #1f253d;
+  color: #cbd5e1;
+  border-color: #3f4c6b;
+}
+
+/* 일정 레이아웃 */
+.schedule-layout {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.calendar-container {
+  flex: 2;
+  min-width: 500px;
+}
+
+.schedule-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.schedule-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.schedule-list-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.register-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #1E1BFF, #7C3AED);
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.register-btn:hover {
+  opacity: 0.9;
+}
+
+/* 일정 카드 공통 */
+.schedule-card {
+  background-color: #f9fafb;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.schedule-card.contract {
+  border-left: 4px solid #6366f1;
+}
+
+.schedule-card.personal {
+  border-left: 4px solid #10b981;
+}
+
+.schedule-card.event {
+  border-left: 4px solid #f472b6; 
+}
+
+/* 다크모드 대응 */
+.dark .schedule-card {
+  background-color: #21243a;
+  color: #e2e8f0;
+}
+
+.dark .schedule-list-title {
+  color: #cbd5e1;
+}
+
+/* 폰트 전체 적용 */
+.rbc-calendar, .rbc-calendar * {
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* 캘린더 전체 배경 */
+.rbc-calendar {
+  background-color: #fefefe;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+/* 월간 셀 배경 */
+.rbc-month-view {
+  background-color: #ffffff;
+}
+
+/* 각 일(day) 셀 */
+.rbc-day-bg {
+  background-color: #fdfdfd;
+  transition: background-color 0.2s ease;
+}
+
+.rbc-day-bg:hover {
+  background-color: #f1f5f9;
+}
+
+/* 요일 헤더 (Sun ~ Sat) */
+.rbc-header {
+  font-weight: 600;
+  font-size: 14px;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f9fafb;
+  padding: 6px;
+  text-align: center;
+}
+
+/* 날짜 숫자 (셀 상단) */
+.rbc-date-cell {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* 다크모드 대응 */
+.dark .rbc-calendar {
+  background-color: #21243a;
+  border-color: #3f4c6b;
+  color: #ffffff;
+}
+
+.dark .rbc-month-view {
+  background-color: #1e2233;
+}
+
+.dark .rbc-day-bg {
+  background-color: #252b42;
+}
+
+.dark .rbc-day-bg:hover {
+  background-color: #2e3450;
+}
+
+.dark .rbc-header {
+  color: #94a3b8;
+  background-color: #1c2130;
+  border-bottom: 1px solid #3f4c6b;
+}
+
+.dark .rbc-date-cell {
+  color: #d1d5db;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #334155;
+}
+
+.dark .filter-select {
+  background-color: #1f253d;
+  color: #cbd5e1;
+  border-color: #3f4c6b;
+}
+
+.empty-message {
+  color: #94a3b8;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.two-panel {
+  display: flex;
+  gap: 24px;
+  align-items: stretch; /* 높이 맞춤 */
+  min-height: 600px; /* 하단 여백 없이 길게 유지 */
+}
+/* 좌우 패널 너비 고정 */
+.todo-panel-left,
+.todo-panel-right {
+  width: 50%;
+}
+
+/* 오른쪽 패널 (To-Do 작성 영역) */
+.todo-panel-right {
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff; /* 좌측 패널과 통일 */
+}
+
+.todo-panel-left {
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff; /* 좌측 패널과 통일 */
+}
+
+/* 다크모드 */
+.dark .todo-panel-right {
+  background-color: #1f253d;
+  border-color: #3f4c6b;
+}
+
+/* 다크모드 */
+.dark .todo-panel-left {
+  background-color: #1f253d;
+  border-color: #3f4c6b;
+}
+
+/* 입력창 스타일 */
+.todo-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+.dark .todo-input {
+  background-color: #2a2e47;
+  color: #cbd5e1;
+  border-color: #3f4c6b;
+}
+
+/*  추가 버튼 (MyJarvis 시그니처 버튼) */
+.todo-add-btn {
+  @apply bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] text-white font-semibold;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.todo-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/*  To-Do 카드 리스트 */
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dark .todo-list {
+  color: #cbd5e1;
+}
+
+/*  개별 카드 스타일 */
+.todo-card {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.dark .todo-card {
+  background-color: #2a2e47;
+  color: #cbd5e1;
+  border-color: #3f4c6b;
+}

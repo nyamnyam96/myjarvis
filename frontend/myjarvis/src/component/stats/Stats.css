@@ -87,11 +87,97 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* --- 내부 타이틀 --- */
+/* 카드 제목 강조 */
 .stats-card-title {
-  @apply p-6 text-base text-gray-800 font-semibold;
+  font-size: 1.5rem;   /* text-xl */
+  font-weight: 700;     /* font-bold */
+  padding: 20px 24px 24px 24px;
+  color: #1f2937;       /* 기본: Tailwind text-gray-800 */
 }
 
+/* 🌙 다크모드 전용 */
 .dark .stats-card-title {
-  color: #d4d9e3;
+  color: #d4d9e3;       /* 밝은 회색 (눈부심 방지) */
+}
+
+/* --- 카드 내부 값(Value) --- */
+.stats-card-value {
+  @apply px-6 text-3xl font-bold mb-1;
+  color: #3b82f6; 
+}
+
+.dark .stats-card-value {
+  color: #91aaff; 
+}
+
+/* --- 카드 내부 설명(Description) --- */
+.stats-card-desc {
+  @apply px-6 pb-6 text-sm text-gray-500 mt-auto;
+  white-space: pre-line;
+}
+
+.dark .stats-card-desc {
+  color: #a0aec0;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeUp {
+  animation: fadeUp 1s ease-out forwards;
+}
+
+/* 카드 내 지표 정렬 */
+.stats-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 0 24px 24px 24px;
+}
+
+
+.stats-card-desc {
+  @apply text-sm text-gray-500;
+  line-height: 1.25rem;
+}
+
+.dark .stats-card-desc {
+  color: #a0aec0;
+}
+
+.stats-ai-suggestion {
+  @apply px-6 pb-4 text-sm text-gray-600 leading-relaxed;
+  white-space: pre-line;
+}
+
+.dark .stats-ai-suggestion {
+  color: #a0aec0;
+}
+
+.stats-ai-suggestion strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.dark .stats-ai-suggestion strong {
+  color: #e2e8f0;
+}
+
+.ai-point {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.stats-ai-block {
+  @apply px-6 pb-5;
 }
