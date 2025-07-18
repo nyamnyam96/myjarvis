@@ -208,45 +208,28 @@
     text-align: left;
 }
 
-/* 유형 뱃지 색상 */
-.type-corp { /* 법인 */
-    background-color: #e6f4ff;
-    color: #007bff;
-}
-.type-indiv { /* 개인 */
-    background-color: #e7f7ef;
-    color: #28a745;
+/* 상태: 초안 (회색) */
+.status-draft {
+  background-color: #8A92A6; 
+  color: white;
 }
 
-/* 거래상태 뱃지 색상 */
-.status-active { /* 거래 중 */
-    background-color: #e7f7ef;
-    color: #28a745;
-}
-.status-inactive { /* 거래 중지 */
-    background-color: #fdeeee;
-    color: #dc3545;
+/* 상태: 진행 (파란색) */
+.status-progress {
+  background-color: #3A57E8; 
+  color: white;
 }
 
-
-/* 호버시, 유형 뱃지 색상 */
-.styled-table tbody tr:hover td .type-corp { /* 법인 */ 
-    background-color: #b2d9f7;
-    color: #0368d3; 
-}
-.styled-table tbody tr:hover td .type-indiv { /* 개인 */
-    background-color: #abebcb;
-    color: #1f8035;
+/* 상태: 완료 (초록색) */
+.status-completed {
+  background-color: #00D563; 
+  color: white;
 }
 
-/* 호버시, 거래상태 뱃지 색상 */
-.styled-table tbody tr:hover td .status-active { /* 거래 중 */
-    background-color: #abebcb;
-    color: #1f8035;
-}
-.styled-table tbody tr:hover td .status-inactive { /* 거래 중지 */
-    background-color: #facfcf;
-    color: #b32d3a;
+/* 상태: 취소 (빨간색) */
+.status-canceled {
+  background-color: #E53935; 
+  color: white;
 }
 
 
@@ -352,4 +335,169 @@ h4.card-title {
 
 .info-value.date {
     font-size: 12px;
+}
+
+/* 보드뷰 상세페이지 링크 */
+.card-title.clickable-title {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    display: inline-block; /* 밑줄이 텍스트 길이에 맞게 생기도록 */
+}
+.card-title.clickable-title:hover {
+    color: #3b48ff; /* 마우스를 올렸을 때 색상 변경 */
+}
+
+
+
+/* ------------ 다크모드 적용 --------------*/
+
+/* 전체 배경 카드 */
+.dark .content-wrap {
+  background-color: #21243a;
+  border-color: #3a3d5c;
+}
+
+/* 제목 & 부제목 텍스트 */
+.dark .content-title {
+  color: #fff;
+}
+.dark .content-subtitle {
+  color: #999;
+}
+
+/* 필터 카드 */
+.dark .filter-card {
+  border-color: #3a3d5c;
+  background-color: #282b45;
+}
+
+/* 검색창 */
+.dark .search-box > input {
+  background-color: #1e2035;
+  border-color: #3a3d5c;
+  color: #ccc;
+}
+.dark .search-box > .material-symbols-outlined {
+  color: #aaa;
+}
+
+/* 셀렉트 박스 */
+.dark .select-group label {
+  color: #ccc;
+}
+.dark .select-group select {
+  background-color: #1e2035;
+  color: #ccc;
+  border-color: #3a3d5c;
+}
+
+/* 뷰 전환 스위치 */
+.dark .view-switcher {
+  background-color: #2a2d48;
+}
+.dark .view-btn {
+  color: #bbb;
+}
+.dark .view-btn.active {
+  background-color: #1e2035;
+  color: #51A6FB;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* 신규 등록 버튼 */
+.dark .header-btn {
+  background-color: #51A6FB;
+  color: white;
+}
+.dark .header-btn:hover {
+  background-color: #3f91e5;
+}
+
+/* 테이블 */
+.dark .table-card-inner {
+  border-color: #3a3d5c;
+}
+.dark .styled-table th,
+.dark .styled-table td {
+  color: #ccc;
+  border-bottom: 1px solid #3a3d5c;
+}
+.dark .styled-table thead tr th {
+  color: #aaa;
+}
+.dark .styled-table tbody tr:hover td {
+  background-color: #2a2d48;
+}
+
+/* 뱃지 */
+.dark .type-corp {
+  background-color: #224466;
+  color: #66ccff;
+}
+.dark .type-indiv {
+  background-color: #1f4d40;
+  color: #60db93;
+}
+.dark .status-active {
+  background-color: #1f4d40;
+  color: #60db93;
+}
+.dark .status-inactive {
+  background-color: #6d2c3a;
+  color: #f59aa9;
+}
+
+.dark .styled-table tbody tr:hover td .type-corp {
+  background-color: #326e9c;
+  color: #a3dfff;
+}
+.dark .styled-table tbody tr:hover td .type-indiv {
+  background-color: #38977b;
+  color: #bbffe1;
+}
+.dark .styled-table tbody tr:hover td .status-active {
+  background-color: #38977b;
+  color: #bbffe1;
+}
+.dark .styled-table tbody tr:hover td .status-inactive {
+  background-color: #9c4256;
+  color: #fcd6dc;
+}
+
+/* 보드 뷰 */
+.dark .board-column {
+  background-color: #1e2035;
+}
+.dark .column-title {
+  color: #fff;
+}
+.dark .column-count {
+  background-color: #3a3d5c;
+  color: #ccc;
+}
+.dark .contract-card {
+  background-color: #2a2d48;
+  border-color: #3a3d5c;
+}
+.dark .contract-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.dark .column-header {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1); /* 약간의 흰색 계열 선 */
+}
+
+
+.dark .card-title {
+  color: #eee;
+}
+.dark .info-label {
+  color: #aaa;
+}
+.dark .info-value {
+  color: #fff;
+}
+.dark .info-value.date {
+  color: #ccc;
 }

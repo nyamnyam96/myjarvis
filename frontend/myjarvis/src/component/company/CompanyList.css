@@ -99,24 +99,26 @@
     padding: 0 20px; /* 세로 패딩 제거 */
     height: 32px; /* 기준 높이로 설정 */
     box-sizing: border-box; /* 패딩, 테두리를 높이에 포함 */
-    background-color: #3b48ff;
+    background-image: linear-gradient(to right, #1E1BFF, #7C3AED);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
+    transition: filter 0.2s ease-in-out;
 }
 .header-btn > .material-symbols-outlined {  
     font-size: 16px;
 }
-.header-btn:hover { background-color: #2C3AFF; }
+.header-btn:hover {
+    filter: brightness(1.1); /* 그라데이션 밝기 강조 */
+}
 
 /* --- 테이블 카드 --- */
 .table-card {    
     overflow: hidden;    
-    color: #4D4D4D;
-    flex-grow: 1; /* [추가] 이 카드가 남은 세로 공간을 모두 채우도록 설정 */
+    color: #4D4D4D;    
     display: flex; /* [추가] 내부 요소 정렬을 위해 flex 컨테이너로 설정 */
     flex-direction: column; /* [추가] 내부 요소를 세로로 정렬 */
     
@@ -227,3 +229,110 @@
     color: #b32d3a;
 }
 
+
+/* ===== 다크모드 ===== */
+
+
+.dark .content-wrap {
+    background-color: #21243a;
+    border: 1px solid transparent;
+}
+
+.dark .content-title {
+    color: #ffffff;
+}
+.dark .content-subtitle {
+    color: #aab2c5;
+}
+
+/* 필터 카드 */
+.dark .filter-card {
+    background-color: #2a2e47;
+    border: 1px solid transparent;
+}
+.dark .search-box > .material-symbols-outlined {
+    color: #ccc;
+}
+.dark .search-box > input {
+    background-color: #2d304b;
+    color: #d4d9e3;
+    border: 1px solid #44485c;
+}
+.dark .search-box > input::placeholder {
+    color: #aab2c5;
+}
+.dark .select-group label {
+    color: #d4d9e3;
+}
+.dark .select-group select {
+    background-color: #2d304b;
+    color: #d4d9e3;
+    border: 1px solid #44485c;
+}
+
+/* 버튼 */
+.dark .header-btn {
+    background-image: linear-gradient(to right, #3733c9, #6d2fbf); /* 다크톤 그라데이션 */
+    color: white;
+}
+.dark .header-btn:hover {
+    filter: brightness(1.15); /* 다크모드용 hover 강조 */
+}
+
+/* 테이블 카드 */
+.dark .table-card {
+    color: #d4d9e3;
+}
+.dark .table-card-inner {
+    background-color: #2a2e47;
+    border: 1px solid transparent;
+}
+.dark .styled-table thead tr th {
+    color: #7d859c;
+}
+.dark .styled-table th,
+.dark .styled-table td {
+    color: #d4d9e3;
+    border-bottom: 1px solid #343951;
+}
+.dark .styled-table tbody tr:hover td {
+    background-color: #313656;
+}
+
+/* 뱃지 - 유형 */
+.dark .type-corp {
+    background-color: #294d74;
+    color: #77b8ff;
+}
+.dark .type-indiv {
+    background-color: #2d5c47;
+    color: #6ae6a5;
+}
+
+/* 뱃지 - 상태 */
+.dark .status-active {
+    background-color: #2d5c47;
+    color: #6ae6a5;
+}
+.dark .status-inactive {
+    background-color: #663444;
+    color: #f2979d;
+}
+
+/* 뱃지 호버 */
+.dark .styled-table tbody tr:hover td .type-corp {
+    background-color: #3c618e;
+    color: #9acfff;
+}
+.dark .styled-table tbody tr:hover td .type-indiv {
+    background-color: #3e7a63;
+    color: #9cf2be;
+}
+.dark .styled-table tbody tr:hover td .status-active {
+    background-color: #3e7a63;
+    color: #9cf2be;
+}
+.dark .styled-table tbody tr:hover td .status-inactive {
+    background-color: #8d4b5c;
+    color: #fbbfc3;
+}

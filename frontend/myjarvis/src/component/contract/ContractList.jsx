@@ -5,10 +5,11 @@ import PageNavi from "../company/companyCommon/PageNavi";
 import BoardView from "./BoardView";
 import StatusChangeModal from "./StatusChangeModal";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../../store/useUserStore";
 
 
 // 각 계약 데이터를 테이블 행(row)으로 변환
-function ContractRow({contract}) {
+function ContractRow({contract, navigate}) {
 
   // 상태 코드에 따라 클래스와 텍스트를 반환하는 함수
   const getStatusInfo = (statusCode) => {
@@ -22,9 +23,12 @@ function ContractRow({contract}) {
   };
 
   const status = getStatusInfo(contract.statusCode);
+  const goToDetail = () => {
+    navigate(`/main/contract/${contract.contractNo}`);
+  }; 
 
   return (
-      <tr>
+      <tr onClick={goToDetail} style={{ cursor: 'pointer' }}>
           <td>{contract.contractTitle}</td>
           <td>{contract.companyName}</td>
           <td>{contract.memberName}</td>
@@ -44,6 +48,9 @@ export default function ContractList() {
 
   const serverUrl = import.meta.env.VITE_BACK_SERVER;
   const axiosInstance = createInstance();
+  const {loginMember} = useUserStore();
+
+
   const [contractList, setContractList] = useState([]);  
   const [reqPage, setReqPage] = useState(1);              //요청 페이지
   const [pageInfo, setPageInfo] = useState({});           //페이지 네비게이션
@@ -56,14 +63,15 @@ export default function ContractList() {
     navigate('/main/contract/new');
   }
     
-  // 목록을 새로고침하는 함수
-  function reloadList(){
-    let queryString = "";
+  // 보드뷰와 테이블뷰 리로드 펑션
+  function reloadList(){    
     const url = serverUrl + "/contract/list";
+    let queryString = `?memberNo=${loginMember.memberNo}`;
 
     if (viewMode === 'table') {
-        queryString = `?reqPage=${reqPage}`;
+        queryString += `&reqPage=${reqPage}`;
     }  
+    console.log("API 요청 URL:", url + queryString);
 
     axiosInstance(url + queryString) //백엔드 API 호출
       .then(function(res){    
@@ -173,7 +181,7 @@ export default function ContractList() {
                             </thead>
                             <tbody>
                                 {contractList.map(function(contract){
-                                    return <ContractRow key={contract.contractNo} contract={contract} />;
+                                    return <ContractRow key={contract.contractNo} contract={contract} navigate={navigate} />;
                                 })}
                             </tbody>
                         </table>

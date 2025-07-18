@@ -1,0 +1,17 @@
+/* SearchResultItem.css */
+
+.search-result-wrapper {
+  @apply bg-white dark:bg-[#21243a] 
+         p-4 rounded-xl w-full space-y-2;
+}
+
+.search-result-item {
+  @apply bg-[#f4f7fe] dark:bg-[#2c2e45]
+         text-gray-800 dark:text-white 
+         rounded-lg px-4 py-3
+         transition-colors;
+}
+
+.search-result-item:hover {
+  @apply bg-[#e9effd] dark:bg-[#353856];
+}

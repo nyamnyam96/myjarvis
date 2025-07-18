@@ -30,13 +30,14 @@ public class CompanyService {
 	*/
 	
 
-	public HashMap<String, Object> selectCompanyList(int reqPage, String sortKey, String sortDirection, String type, int status, String search) {
+	public HashMap<String, Object> selectCompanyList(int reqPage, String sortKey, String sortDirection, String type, int status, String search, String memberId) {
 		
 		// 1. 필터 & 검색 값 해쉬맵에 담기
 		HashMap<String, Object> params = new HashMap<>();		
 		params.put("type", type); // 사업자 유형 선택 조회
         params.put("status", status); // 거래 상태 선택 조회
-        params.put("search", search); // 검색 기능
+        params.put("search", search); // 검색 기능        
+        params.put("memberId", memberId); //특정 로그인 유저의 고객사만 조회
 		
 		int totalCount = companyDao.selectCompanyCount(params); //전체 고객사 수
 		
@@ -75,20 +76,36 @@ public class CompanyService {
 			for(CompanyMember member : members) {								
 				member.setCompCd(company.getCompCd()); // 방금 생성된 회사 코드(compCd)를 담당자 객체에 넣어줌.
 			
-			//4. 등록한 회원 정보도 담당자 객체에 전달
-		    member.setMemberNo(company.getMemberNo());
+				//4. 등록한 회원 정보도 담당자 객체에 전달
+				member.setMemberNo(company.getMemberNo());
 		    
-		    //5. 모든 정보가 채워진 담당자 정보를 TBL_COMPANY_MEMBER에 저장
-		    result += companyDao.insertCompanyMember(member); //회사 정보는 1개이고, 담당자 정보는 1개 이상일 수 있어 += 연산자 삽입.			
+				//5. 모든 정보가 채워진 담당자 정보를 TBL_COMPANY_MEMBER에 저장
+				result += companyDao.insertCompanyMember(member); //회사 정보는 1개이고, 담당자 정보는 1개 이상일 수 있어 += 연산자 삽입.			
 				
 			}
 		}		
 		return result;
 	}
+	
 
-	public List<Company> searchCompanyByName(String searchName) {
-		return companyDao.searchCompanyByName(searchName);
+	public List<Company> searchCompanyByName(String searchName, String memberId) {
+		return companyDao.searchCompanyByName(searchName, memberId);
+	}	
+	
+	// 담당자 목록 조회 서비스
+	public List<CompanyMember> selectCompanyMembers(String compCd) {
+		return companyDao.selectCompanyMembers(compCd);
 	}
+	
+	// 외부 API용 담당자 추가 서비스 (객체 반환)
+	@Transactional
+    public CompanyMember insertCompanyMember(CompanyMember member) {        
+        int result = companyDao.insertCompanyMember(member);
+        if (result > 0) {
+            return member;
+        }
+        return null;
+    }
 	
 	
 

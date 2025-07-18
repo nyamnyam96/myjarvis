@@ -34,7 +34,20 @@
   --border-radius: 0.75rem;
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+ /* 🌑 다크 모드 전용 변수 */
+.dark {
+  --bg-color: #242424;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --card-bg: #1a1a1a;
+  --button-bg: #1a1a1a;
+  --link-color: #646cff;
+  --link-hover: #535bf2;
+}
 
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 
 /* ------------------------------
  🔘 버튼 클래스 (버튼 컴포넌트 제작 시 이 기준 사용)
@@ -95,11 +108,47 @@
  - 페이지 내 박스형 섹션을 만들 때 사용
  - 예: 계약 요약, 회의 정보, 통계 블록 등
  ------------------------------ */
-.card {
-  @apply bg-white p-6 rounded-2xl;
-  box-shadow: 0 4px 12px rgba(17, 17, 26, 0.05); /* 더 Horizon스러운 soft shadow */
-  border: 1px solid var(--gray-200); /* 테두리 추가로 경계감 강화 */
+/* Card의 바깥 구조: 그림자, border, 높이 컨트롤 */
+/* 전역 변수 설정 */
+:root {
+  --card-bg: #ffffff;       /* 라이트모드 카드 배경 */
+  --text-color: #333333;    /* 라이트모드 텍스트 */
 }
+
+.dark {
+  --card-bg: #21243a;       /* 다크모드 카드 배경 */
+  --text-color: #cccccc;    /* 다크모드 텍스트 */
+}
+
+/* 카드 컴포넌트 스타일 */
+.card {
+  @apply bg-white rounded-2xl;
+  box-shadow: 0 4px 12px rgba(17, 17, 26, 0.05);
+  border: 1px solid var(--gray-200);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  background-color: var(--card-bg);  /* 변수 기반 배경색 */
+  color: var(--text-color);          /* 변수 기반 글자색 */
+}
+
+/* 다크모드 전용 추가 설정 */
+.dark .card {
+  border: none; /* 테두리 제거 */
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3); /* 다크모드용 그림자 */
+}
+
+/* 카드 내부 콘텐츠 */
+.card-inner {
+  @apply p-6;
+  flex: 1;
+  overflow-y: auto;
+}
+
+
 
 
 
@@ -168,7 +217,7 @@
  - Card 내부 제목에는 사용하지 말 것
  ------------------------------ */
 .section-title {
-  @apply text-lg font-semibold tracking-tight text-gray-800 mb-5;
+  @apply text-lg font-semibold tracking-tight text-gray-800 dark:text-white mb-5;
   letter-spacing: -0.015em; /* Horizon의 타이포 감성 반영 */
 }
 
@@ -373,20 +422,21 @@
 - 작업 관리, 할일 트래킹 등에 사용
 ------------------------------ */
 .checklist {
-  @apply w-full bg-white p-4 rounded-lg shadow-sm border border-gray-100;
+  @apply w-full bg-white dark:bg-[#2d314f] p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-600;
 }
 .todo-item {
   @apply flex items-center gap-2 py-2;
 }
 .todo-checkbox {
-  @apply w-4 h-4 rounded border-gray-300 text-primary focus:ring-0;
+  @apply w-4 h-4 rounded border-gray-300 dark:border-gray-500 text-primary focus:ring-0;
 }
 .todo-label {
-  @apply text-sm text-gray-700;
+  @apply text-sm text-gray-700 dark:text-gray-200;
 }
 .todo-checked .todo-label {
-  @apply line-through text-gray-400;
+  @apply line-through text-gray-400 dark:text-gray-500;
 }
+
 
 /* ------------------------------
  🗂️ 탭 그룹 (.tab-group, .tab-item)
@@ -513,20 +563,21 @@
 - 알림 센터 또는 팝오버 내부
 ------------------------------ */
 .notification {
-  @apply flex items-start gap-3 p-3 hover:bg-gray-50 cursor-pointer transition rounded-md;
+  @apply flex items-start gap-3 p-3 hover:bg-gray-50 dark:hover:bg-[#3a3e61] cursor-pointer transition rounded-md bg-white dark:bg-[#2d314f];
 }
 .notification-icon {
-  @apply w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600;
+  @apply w-8 h-8 rounded-full bg-gray-100 dark:bg-[#3f446a] flex items-center justify-center text-gray-600 dark:text-gray-300;
 }
 .notification-content {
   @apply flex flex-col text-sm;
 }
 .notification-title {
-  @apply font-medium text-gray-800;
+  @apply font-medium text-gray-800 dark:text-gray-100;
 }
 .notification-time {
-  @apply text-xs text-gray-400 mt-0.5;
+  @apply text-xs text-gray-400 dark:text-gray-500 mt-0.5;
 }
+
 
 /* ------------------------------
 🔍 검색 입력창 (.search-bar)
@@ -606,7 +657,7 @@
 - 계약 이력, 일정 흐름 등 시각적 흐름 표현
 ------------------------------ */
 .timeline-list {
-  @apply space-y-4 pl-4 border-l-2 border-gray-200;
+  @apply space-y-4 pl-4 border-l-2 border-gray-200 dark:border-gray-600;
 }
 .timeline-item {
   @apply relative pl-4;
@@ -616,10 +667,10 @@
   @apply absolute w-2 h-2 bg-blue-500 rounded-full left-[-6px] top-1.5;
 }
 .timeline-content {
-  @apply text-sm text-gray-700;
+  @apply text-sm text-gray-700 dark:text-gray-200;
 }
 .timeline-time {
-  @apply text-xs text-gray-400 mt-1;
+  @apply text-xs text-gray-400 dark:text-gray-500 mt-1;
 }
 
 

@@ -5,14 +5,17 @@
   <!-- 아래 필터 관련 where 부분 구문 -->
   <sql id="searchFilterCondition">
   	<where>
+  		<if test="memberId != null and memberId != ''">
+            AND M.MEMBER_ID = #{memberId}
+        </if>
   		<if test="type != null and type != '' and type != 'ALL'">
-  			AND COMP_TYPE = #{type}
+  			AND C.COMP_TYPE = #{type}
   		</if>
   		<if test="status > 0">
-  			AND TRADE_STATUS = #{status}
+  			AND C.TRADE_STATUS = #{status}
   		</if>
   		<if test="search != null and search != ''">
-  			AND COMP_NAME LIKE '%' || #{search} || '%'
+  			AND C.COMP_NAME LIKE '%' || #{search} || '%'
   		</if>  		
   	</where>
   </sql>
@@ -20,35 +23,38 @@
   <!-- 전체 고객사 수 조회 -->
   <select id="selectCompanyCount" resultType="_int">
   select count(*)
-    from tbl_company
+    from tbl_company C 
+    JOIN TBL_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
   	<include refid="searchFilterCondition" />
   </select>
   
   <!-- 전체 고객사 목록 조회 -->
   <select id="selectCompanyList" parameterType="map" resultType="Company">
     SELECT * FROM (
-        SELECT ROWNUM AS RNUM, C.* FROM (
+        SELECT ROWNUM AS RNUM, C_INNER.* FROM (
           
             SELECT 
-                COMP_CD        AS compCd,
-                MEMBER_NO      AS memberNo,
-                COMP_NAME      AS compName,
-                COMP_TEL       AS compTel,
-                COMP_ADDR      AS compAddr,
-                OWNER_NAME     AS ownerName,
-                TRADE_STATUS   AS tradeStatus,
-                COMP_TYPE      AS compType,
-                COMP_NO        AS compNo,
-                TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
-            FROM TBL_COMPANY
+                c.COMP_CD        AS compCd,
+                c.MEMBER_NO      AS memberNo,
+                c.COMP_NAME      AS compName,
+                c.COMP_TEL       AS compTel,
+                c.COMP_ADDR      AS compAddr,
+                c.OWNER_NAME     AS ownerName,
+                c.TRADE_STATUS   AS tradeStatus,
+                c.COMP_TYPE      AS compType,
+                c.COMP_NO        AS compNo,
+                TO_CHAR(c.REG_DATE, 'YYYY-MM-DD') AS regDate
+            FROM TBL_COMPANY C            
+            JOIN TBL_MEMBER M 
+              ON C.MEMBER_NO = M.MEMBER_NO            
             <include refid="searchFilterCondition" />           
             ORDER BY
             <choose>
-                <when test="sortKey == 'compName'">COMP_NAME ${sortDirection}</when>
-                <when test="sortKey == 'tradeStatus'">TRADE_STATUS ${sortDirection}</when>
-                <otherwise>REG_DATE ${sortDirection}</otherwise>
+                <when test="sortKey == 'compName'">C.COMP_NAME ${sortDirection}</when>
+                <when test="sortKey == 'tradeStatus'">C.TRADE_STATUS ${sortDirection}</when>
+                <otherwise>C.REG_DATE ${sortDirection}</otherwise>
             </choose>
-        ) C
+        ) C_INNER
     ) 
     WHERE RNUM BETWEEN #{pageInfo.start} AND #{pageInfo.end}
   </select> 
@@ -114,14 +120,39 @@
 	
 	<!-- 고객사 조회 -->
 	<select id="searchCompanyByName" parameterType="string" resultType="Company">
-    SELECT 
+    SELECT COMP_CD AS compCd,
+	       COMP_NAME AS compName,
+	       OWNER_NAME AS ownerName,
+	       COMP_TEL AS compTel,
+	       COMP_NO AS compNo		             
+      FROM TBL_COMPANY C
+      JOIN TBL_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
+     WHERE M.MEMBER_ID = #{memberId}
+           and COMP_NAME LIKE '%' || #{searchName} || '%'
+	</select>
+	
+	<!-- 고객사 멤버 조회 -->
+	<select id="selectCompanyMembers" resultType="kr.or.iei.company.model.dto.CompanyMember">
+    SELECT
+        CONTACT_IDX AS contactIdx,
         COMP_CD AS compCd,
-        COMP_NAME AS compName,
-        OWNER_NAME AS ownerName,
-        COMP_TEL AS compTel,
-        COMP_NO AS compNo
-    FROM TBL_COMPANY
-    WHERE COMP_NAME LIKE '%' || #{searchName} || '%'
+        MEMBER_NO AS memberNo,
+        CONTACT_NAME AS contactName,
+        CONTACT_EMAIL AS contactEmail,
+        CONTACT_PHONE AS contactPhone,
+        IS_MAIN_CONTACT AS isMainContact,
+        CONTACT_POSITION AS contactPosition,
+        CONTACT_DEPT AS contactDept,
+        TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
+    FROM TBL_COMPANY_MEMBER
+    WHERE COMP_CD = #{compCd}
+    ORDER BY IS_MAIN_CONTACT DESC, REG_DATE ASC
+	</select>
+	
+	<select id="findCompCdByMemberNo" parameterType="string" resultType="string">
+    SELECT COMP_CD 
+    FROM TBL_COMPANY 
+    WHERE MEMBER_NO = #{memberNo} AND ROWNUM = 1
 	</select>
   
 </mapper>

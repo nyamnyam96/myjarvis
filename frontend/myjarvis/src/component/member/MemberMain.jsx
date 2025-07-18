@@ -1,46 +1,63 @@
 import { useEffect, useState } from "react";
-
 import createInstance from "../../axios/interceptor";
 import useUserStore from "../../store/useUserStore";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import MemberUpd from "./MemberUpd";
 import "./MemberMain.css";
 
-export default function MemberMain(){
+export default function MemberMain() {
+  const [member, setMember] = useState({
+    memberId: "",
+    memberName: "",
+    memberEmail: "",
+    memberStatus: "",
+    memberPhone: ""
+  });
 
-    const [member, setMember] = useState({
-        memberId : "", memberName : "", memberEmail : "", memberStatus : ""
-    });
+  const serverUrl = import.meta.env.VITE_BACK_SERVER;
+  const axiosInstance = createInstance();
+  const {
+    loginMember,
+    setIsLogined,
+    setLoginMember,
+    setAccessToken,
+    setRefreshToken
+  } = useUserStore();
 
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
-    const {loginMember, setIsLogined, setLoginMember, setAccessToken, setRefreshToken} = useUserStore();
+  const navigate = useNavigate();
 
-    
+  useEffect(() => {
+    if (!loginMember || !loginMember.memberId) {
+      console.warn("🟡 [임시 로그인 모드] loginMember가 없어 mock 데이터로 대체합니다.");
+      setMember({
+        memberId: "devUser",
+        memberName: "홍길동",
+        memberEmail: "dev@myjarvis.com",
+        memberStatus: "y",
+        memberPhone: "010-1234-5678"
+      });
+      return;
+    }
 
+    const options = {
+      url: serverUrl + "/member/" + loginMember.memberId,
+      method: "get"
+    };
 
+    axiosInstance(options)
+      .then(function (res) {
+        if (res.data.resData != null) {
+          setMember(res.data.resData);
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []);
 
-    useEffect(function(){
-
-        let options = {};
-        options.url = serverUrl + "/member/" + loginMember.memberId;
-        options.method = 'get';
-        
-        axiosInstance(options)
-        .then(function(res){
-            if(res.data.resData != null){
-                setMember(res.data.resData);
-            }
-        })
-        .catch(function(err){
-            console.log(err);
-        });
-
-    }, []);
-
-
-    const navigate = useNavigate();
+    function updateMember() {
+      console.log("회원정보 수정 기능은 준비 중입니다.");
+    }
 
     function deleteMember(){
 
@@ -79,18 +96,14 @@ export default function MemberMain(){
                 });
             }
         });
-
-        
        
 }
-
-
 
     return (
         
         
-        <section className="member-container" >
-            
+        <section className="member-container bg-gray-50 dark:bg-gray-900 px-6 py-8 rounded-xl shadow-sm">
+                   
             <div className="member-title">{member.memberId}님의 마이페이지</div>
             <form onSubmit={function(e){
                 e.preventDefault();
@@ -179,3 +192,4 @@ export default function MemberMain(){
         </section>
     )
 }
+

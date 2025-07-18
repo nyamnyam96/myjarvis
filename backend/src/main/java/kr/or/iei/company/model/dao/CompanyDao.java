@@ -22,8 +22,12 @@ public interface CompanyDao {
 
 	int insertCompany(Company company);
 	
-	int insertCompanyMember(CompanyMember member);
+	int insertCompanyMember(CompanyMember member);	
 
-	List<Company> searchCompanyByName(String searchName);
+	List<Company> searchCompanyByName(String searchName, String memberId);
+
+	List<CompanyMember> selectCompanyMembers(String compCd);
+
+	String findCompCdByMemberNo(String memberNo);
 
 }

@@ -19,7 +19,7 @@ function setInterceptors(instance) {
             const accessToken = useUserStore.getState().accessToken;
 
             if(accessToken != null){ // 토큰이 있을 경우, 요청 헤더에 자동으로 추가함
-                config.headers['Authorization'] = accessToken; //로그인 후 서버에 요청 보낼 때마다 자동으로 토큰이 붙음
+                config.headers['Authorization'] = 'Bearer ' + accessToken; //로그인 후 서버에 요청 보낼 때마다 자동으로 토큰이 붙음
             }
             
             return config; //수정된 설정 config를 axios에 전달해서 요청이 실제로 나가도록 만듬

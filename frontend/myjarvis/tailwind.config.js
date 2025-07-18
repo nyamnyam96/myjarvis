@@ -6,6 +6,12 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
+    safelist: [
+    'content-wrap', // purge 대상에서 보호
+  ],
+  
+  darkMode : 'class', // 다크모드 구현
+
   theme: {
     extend: {
       //  공통 색상 정의 (default.css와 통일되도록 설정)

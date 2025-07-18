@@ -1,14 +1,15 @@
-// src/pages/Setting.jsx
-
-import React from 'react';
-import SwitchToggle from '../../components/control/SwitchToggle';
-import Button from '../../components/common/Button';
-import { useNavigate, Route, Routes } from 'react-router-dom';
-import MemberMain from '../member/MemberMain';
+import React, { useEffect } from "react";
+import "./Setting.css";
+import SwitchToggle from "../../components/control/SwitchToggle";
+import Button from "../../components/common/Button";
+import { useNavigate } from "react-router-dom";
+import MemberMain from "../member/MemberMain";
+import useThemeStore from '../../store/useThemeStore';
 
 const Setting = () => {
-  // 스위치 상태는 각 항목별로 독립적으로 useState로 관리
-  const [darkMode, setDarkMode] = React.useState(false);
+  const { isDarkMode, toggleTheme, initializeTheme } = useThemeStore();
+
+
   const [alarm, setAlarm] = React.useState(true);
   const [invoiceDefault, setInvoiceDefault] = React.useState(false);
   const [sessionTime, setSessionTime] = React.useState(true);
@@ -16,50 +17,79 @@ const Setting = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    initializeTheme();
+  }, [initializeTheme]);
+
   return (
-    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="setting-wrapper">
       {/* 환경 설정 카드 */}
-      <div className="card">
+      <div className="setting-card">
         <h2 className="section-title mb-4">환경 설정</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-base font-normal text-gray-800">다크모드 / 라이트모드 전환</span>
-              <SwitchToggle checked={darkMode} onChange={setDarkMode} />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-base font-normal text-gray-800">알람 수신 설정 ON / OFF</span>
-              <SwitchToggle checked={alarm} onChange={setAlarm} />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-base font-normal text-gray-800">청구서 기본 설정</span>
-              <SwitchToggle checked={invoiceDefault} onChange={setInvoiceDefault} />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-base font-normal text-gray-800">세션 시간 설정</span>
-              <SwitchToggle checked={sessionTime} onChange={setSessionTime} />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-base font-normal text-gray-800">개인 전자서명 저장하기</span>
-              <SwitchToggle checked={signatureSave} onChange={setSignatureSave} />
-            </div>
+        <div className="space-y-5">
+          <div className="setting-item">
+            <span className="setting-label">다크모드 / 라이트모드 전환</span>
+            <SwitchToggle checked={isDarkMode} onChange={toggleTheme} />
           </div>
+          <div className="setting-item">
+            <span className="setting-label">알람 수신 설정 ON / OFF</span>
+            <SwitchToggle checked={alarm} onChange={setAlarm} />
+          </div>
+          <div className="setting-item">
+            <span className="setting-label">청구서 기본 설정</span>
+            <button
+              onClick={() => alert("청구서 기본 설정 기능은 추후 제공됩니다.")}
+              className="setting-link"
+            >
+              설정
+            </button>
+          </div>
+          <div className="setting-item">
+            <span className="setting-label">세션 시간 설정</span>
+            <button
+              onClick={() => alert("세션 시간 설정 기능은 추후 제공됩니다.")}
+              className="setting-link"
+            >
+              설정
+            </button>
+          </div>
+          <div className="setting-item">
+            <span className="setting-label">개인 전자서명 저장하기</span>
+            <button
+              onClick={() => alert("전자서명 저장 기능은 추후 제공됩니다.")}
+              className="setting-link"
+            >
+              설정
+            </button>
+          </div>
+
+          <div className="setting-background">
+            <div className="setting-item mb-2">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-white">
+                사용자 설정 배경
+              </h3>
+              <Button
+                className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] hover:brightness-110"
+                onClick={() => alert("등록 기능은 추후 구현됩니다.")}
+              >
+                배경 등록
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-300">
+              대시보드에 표시할 배경을 사용자 설정으로 등록할 수 있어요.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* 마이페이지 카드 */}
-      
-
-      <div className="card flex flex-col justify-between">
+      <div className="setting-card flex flex-col">
         <div>
           <h2 className="section-title mb-2">마이 페이지</h2>
           <p className="text-sm text-gray-500 mb-4">개인정보, 로그인 정보 등 확인</p>
         </div>
         <div>
-        {/*
-          <Button size="sm" color="gray" onClick={() => navigate('/member/*')}>
-            마이페이지 바로 가기 
-          </Button> 
-          */}
-           <MemberMain />
+          <MemberMain />
         </div>
       </div>
     </div>

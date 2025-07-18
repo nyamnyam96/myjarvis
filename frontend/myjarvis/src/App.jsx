@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 //  0. 시작 페이지
 import Home from "./pages/Home";
@@ -18,6 +20,9 @@ import CompanyList from "./component/company/CompanyList";
 //  5. 계약관리
 import ContractList from "./component/contract/ContractList";
 import ContractInsert from "./component/contract/ContractInsert";
+import ContractDetail from "./component/contract/ContractDetail";
+import PublicSignPage from "./pages/PublicSignPage";
+
 
 //  6. 일정관리
 import MySchedule from "./component/schedule/MySchedule";
@@ -25,8 +30,8 @@ import MySchedule from "./component/schedule/MySchedule";
 //  7. 회의관리
 import MeetingList from "./component/meeting/MeetingList";
 
-//  8. 결제관리
-import Invoice from "./component/invoice/Invoice";
+//  8. 청구관리
+import InvoiceList from "./component/invoice/InvoiceList";
 
 //  9. 통계 확인
 import Stats from "./component/stats/Stats";
@@ -58,6 +63,7 @@ import MemberUpd from "./component/member/MemberUpd";
 
 function App() {
   return (
+    <>
     <Routes>
 
       {/* 🔹 시작 페이지 (로그인 전 랜딩용) */}
@@ -71,6 +77,9 @@ function App() {
       <Route path="/agree" element={<Agree />} />
       <Route path="/agreeText" element={<AgreeText />} />
       <Route path="/agreeTextSelect" element={<AgreeTextSelect />} />
+
+      {/* 로그인 없이 접근 가능한 공개 서명 페이지 경로 추가 */}
+      <Route path="/sign/:token" element={<PublicSignPage />} />
 
       {/* 🔹 마이페이지 관련 */}
       <Route path="/member/*" element={<MemberMain />} />
@@ -90,17 +99,20 @@ function App() {
 
         {/* ▶ 계약관리 */}
         <Route path="contract/list" element={<ContractList />} />
-          {/* 신규 계약 등록 페이지 경로 추가 */}
-          <Route path="contract/new" element={<ContractInsert />} /> 
+          {/* 신규 계약 등록 */}
+          <Route path="contract/new" element={<ContractInsert />} />
+            {/* 계약 상세 */}
+            <Route path="contract/:contractNo" element={<ContractDetail />} /> 
+            
+
+        {/* ▶ 청구관리 */}
+        <Route path="invoice/list" element={<InvoiceList />} />    
 
         {/* ▶ 일정관리 */}
         <Route path="schedule" element={<MySchedule />} />
 
         {/* ▶ 회의관리 */}
-        <Route path="meeting" element={<MeetingList />} />
-
-        {/* ▶ 결제관리 */}
-        <Route path="invoice" element={<Invoice />} />
+        <Route path="meeting" element={<MeetingList />} />        
 
         {/* ▶ 통계 확인 */}
         <Route path="stats" element={<Stats />} />
@@ -122,6 +134,22 @@ function App() {
       {/* 🔹 잘못된 경로 접근 시 홈으로 리다이렉트 */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+
+      {/* 👇 2. Routes와 같은 레벨에 ToastContainer를 추가합니다. */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+    
+    
   );
 }
 

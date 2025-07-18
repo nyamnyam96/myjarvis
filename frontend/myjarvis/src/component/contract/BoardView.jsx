@@ -1,11 +1,19 @@
 import "./ContractList.css";
+import { useNavigate } from "react-router-dom";
 
 
-function ContractCard({ contract, onCardClick }) {
+function ContractCard({ contract, onCardClick, navigate }) {
+    
+    function goToDetail(e) {
+        // 이벤트 버블링을 막아 부모(카드)의 onClick이 실행되지 않도록 함
+        e.stopPropagation(); 
+        navigate(`/main/contract/${contract.contractNo}`);
+    };
+
     return (
         // 카드를 클릭하면, 부모에게서 받은 onCardClick 함수를 호출합니다.
         <div className="contract-card" onClick={() => onCardClick(contract)}>
-            <h4 className="card-title">{contract.contractTitle}</h4>
+            <h4 className="card-title clickable-title" onClick={goToDetail}>{contract.contractTitle}</h4>
             <div className="card-info-row">
                 <span className="info-label">고객사</span>
                 <span className="info-value">{contract.companyName}</span>
@@ -28,6 +36,8 @@ function ContractCard({ contract, onCardClick }) {
 
 
 export default function BoardView({contractList, onCardClick }) {
+
+    const navigate = useNavigate();
     
     // 계약 상태별로 컬럼을 정의
     const statuses = [
@@ -53,7 +63,7 @@ export default function BoardView({contractList, onCardClick }) {
                     </div>
                     <div className="column-body">
                         {getContractsByStatus(status.code).map((contract) => (
-                            <ContractCard key={contract.contractNo} contract={contract} onCardClick={onCardClick} />
+                            <ContractCard key={contract.contractNo} contract={contract} onCardClick={onCardClick} navigate={navigate} />
                         ))}
                     </div>
                 </div>

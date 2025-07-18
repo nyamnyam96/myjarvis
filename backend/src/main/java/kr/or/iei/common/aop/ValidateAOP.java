@@ -1,11 +1,11 @@
 package kr.or.iei.common.aop;
 
-import org.aspectj.lang.annotation.Aspect;
+
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -19,8 +19,6 @@ import kr.or.iei.common.util.JwtUtils;
  * 		- 횡단 관심사 (트랜잭션, 로깅 등)를 비즈니스 로직과 분리.
  * */
 
-@Component
-@Aspect
 public class ValidateAOP {
 	
 	//Pointcut : 공통 기능을 수행할 메소드를 지정할 때 사용하는 어노테이션
