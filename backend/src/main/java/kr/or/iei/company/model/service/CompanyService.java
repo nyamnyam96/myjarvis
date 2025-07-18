@@ -76,19 +76,71 @@ public class CompanyService {
 			for(CompanyMember member : members) {								
 				member.setCompCd(company.getCompCd()); // 방금 생성된 회사 코드(compCd)를 담당자 객체에 넣어줌.
 			
-			//4. 등록한 회원 정보도 담당자 객체에 전달
-		    member.setMemberNo(company.getMemberNo());
+				//4. 등록한 회원 정보도 담당자 객체에 전달
+				member.setMemberNo(company.getMemberNo());
 		    
-		    //5. 모든 정보가 채워진 담당자 정보를 TBL_COMPANY_MEMBER에 저장
-		    result += companyDao.insertCompanyMember(member); //회사 정보는 1개이고, 담당자 정보는 1개 이상일 수 있어 += 연산자 삽입.			
+				//5. 모든 정보가 채워진 담당자 정보를 TBL_COMPANY_MEMBER에 저장
+				result += companyDao.insertCompanyMember(member); //회사 정보는 1개이고, 담당자 정보는 1개 이상일 수 있어 += 연산자 삽입.			
 				
 			}
 		}		
 		return result;
 	}
+	
 
 	public List<Company> searchCompanyByName(String searchName, String memberId) {
 		return companyDao.searchCompanyByName(searchName, memberId);
+	}	
+	
+	// 담당자 목록 조회 서비스
+	public List<CompanyMember> selectCompanyMembers(String compCd) {
+		return companyDao.selectCompanyMembers(compCd);
+	}
+	
+	// 외부 API용 담당자 추가 서비스 (객체 반환)
+	@Transactional
+    public CompanyMember insertCompanyMember(CompanyMember member) {        
+        int result = companyDao.insertCompanyMember(member);
+        if (result > 0) {
+            return member;
+        }
+        return null;
+    }
+
+	public HashMap<String, Object> selectOneCompany(String compCd) {
+		Company company = companyDao.selectOneCompany(compCd);
+        List<CompanyMember> companyMembers = companyDao.selectCompanyMembers(compCd);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("company", company);
+        map.put("companyMembers", companyMembers);
+        return map;		
+	}
+	
+	@Transactional
+	public int updateCompany(Company company) {
+		// 1. 회사 기본 정보 수정
+        int result = companyDao.updateCompany(company);
+
+        // 2. 기존 담당자 정보 모두 삭제
+        companyDao.deleteCompanyMembers(company.getCompCd());
+
+        // 3. 화면에서 전달된 담당자 정보 다시 삽입
+        List<CompanyMember> members = company.getCompanyMembers();
+        if(members != null && !members.isEmpty()) {
+            for(CompanyMember member : members) {
+                member.setCompCd(company.getCompCd());
+                member.setMemberNo(company.getMemberNo()); // 담당자를 등록/수정한 회원의 번호
+                companyDao.insertCompanyMember(member);
+            }
+        }
+        return result;
+	}
+
+	public int deleteCompany(String compCd) {
+		// trade_status를 2(거래중지)로 업데이트
+        return companyDao.deactivateCompany(compCd);
+		
 	}
 	
 	

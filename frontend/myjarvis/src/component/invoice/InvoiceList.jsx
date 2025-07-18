@@ -1,100 +1,83 @@
+// src/component/invoice/InvoiceList.jsx (최종 수정본)
+
 import "./InvoiceList.css";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import PageNavi from "../company/companyCommon/PageNavi"; 
 import createInstance from "../../axios/interceptor";
 import useUserStore from "../../store/useUserStore";
-// import CompanyInsertModal from "./CompanyInsertModal"; // 청구 등록 모달로 변경 필요
 
 
-export default function InvoiceList(){        
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;     //API 서버 주소 serverUrl에 저장    
-    const axiosInstance = createInstance();                 //중요!! interceptor에서 만들어놓은 axios
-    const {loginMember} = useUserStore();
+export default function InvoiceList(){
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+    const { loginMember } = useUserStore();
 
-    const [invoiceList, setInvoiceList] = useState([]);     //백엔드에서 받아온 데이터를 저장할   
-    const [reqPage, setReqPage] = useState(1);              //요청 페이지    
-    const [pageInfo, setPageInfo] = useState({});           //페이지 네비게이션    
-    const [sortConfig, setSortConfig] = useState({ key: 'regDate', direction: 'desc' }); //정렬을 위한 state      
-    const [filterStatus, setFilterStatus] = useState('ALL');    //청구상태 
-    const [searchTerm, setSearchTerm] = useState("");       //검색어
-    const [isModalOpen, setIsModalOpen] = useState(false);  //신규 고객사 모달창 관리
-    const [refetchKey, setRefetchKey] = useState(0);        //목록을 다시 불러오는 역할만 하는 "새로고침 키" 상태        
+    const [invoiceList, setInvoiceList] = useState([]);
+    const [reqPage, setReqPage] = useState(1);
+    const [pageInfo, setPageInfo] = useState({});
+    const [sortConfig, setSortConfig] = useState({ key: 'regDate', direction: 'desc' });
+    const [filterStatus, setFilterStatus] = useState('All');
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [refetchKey, setRefetchKey] = useState(0);
 
-    
-    
-    useEffect(function(){
-        //URL 뒤에 붙일 쿼리스트링(필터값을 포함하고 있음.)
-        const queryString = `?reqPage=${reqPage}&sortKey=${sortConfig.key}&sortDirection=${sortConfig.direction}&status=${filterStatus}&search=${searchTerm}&memberNo=${loginMember.memberNo}`;
+    useEffect(() => {
+        // [핵심 1] 로그인 아이디가 있는지 확인. 없으면 API 호출 자체를 막음.
+        const memberId = loginMember?.memberId; // 옵셔널 체이닝으로 안전하게 접근
+        if (!memberId) {
+            return; 
+        }
 
-        let options = {};
-        options.url = serverUrl + "/invoice/list" + queryString;
-        options.method = 'get';
+        const queryString = `?reqPage=${reqPage}&sortKey=${sortConfig.key}&sortDirection=${sortConfig.direction}&status=${filterStatus}&search=${searchTerm}&memberId=${memberId}`;
+        const url = `${serverUrl}/invoice/list${queryString}`;
         
-        //axios를 이용하여 백엔드 API 호출
-        axiosInstance(options)
-        .then(function(res){
-            //성공 시, 불러온 데이터 state에 저장
-            setInvoiceList(res.data.invoiceList);          
-            setPageInfo(res.data.pageInfo);
-        })
-        .catch(function(err){
-            console.log(err)
-        });      
+        axiosInstance.get(url)
+            .then(res => {
+                setInvoiceList(res.data.invoiceList);
+                setPageInfo(res.data.pageInfo || {});
+            })
+            .catch(err => {
+                console.error(err);
+            });
 
-    }, [reqPage, sortConfig, filterStatus, searchTerm,refetchKey]); // 의존성 배열
+    // [핵심 2] loginMember 객체가 아닌, loginMember.memberId 문자열 값의 변경을 감시합니다.
+    }, [reqPage, sortConfig, filterStatus, searchTerm, refetchKey, loginMember?.memberId]);
 
 
-    // 정렬 요청 함수
-    function requestSort(key){
+    const requestSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
         }
         setSortConfig({ key, direction });
-        setReqPage(1); // 정렬 시 1페이지로 이동
+        setReqPage(1);
     };
 
-    //(정렬 기능) 구글 아이콘을 반환 함수
-    function getSortIcon(key){
-        const iconName = sortConfig.key !== key ? 'unfold_more' // 기본 양방향 화살표
-            : sortConfig.direction === 'asc' ? 'expand_less' // 위쪽 화살표
-                : 'expand_more'; // 아래쪽 화살표
+    const getSortIcon = (key) => {
+        const iconName = sortConfig.key !== key ? 'unfold_more' 
+            : sortConfig.direction === 'asc' ? 'expand_less' 
+            : 'expand_more';
         return <span className="material-symbols-outlined">{iconName}</span>;
     };
 
-    //검색어 변경을 처리하는 새로운 함수
-    function handleSearchChange(e){
-        // 1. 검색어 상태를 업데이트하고,
+    const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        // 2. 페이지 번호를 1로 초기화
         setReqPage(1);
-    };  
+    };
 
-    //신규 고객사 추가 모달 펑션 SET
-    function openModal(){
-        setIsModalOpen(true); //모달 상태를 true로 바꿔 화면에 렌더링
-    }
-    function closeModal(){
-        setIsModalOpen(false); //모달 상태를 false로 바꿔 화면에서 숨기기
-    }
-    function reloadList (){
-        setRefetchKey(prevKey => prevKey + 1); // 'refetchKey' 값을 1씩 증가시키도록 수정(고객사 등록 후 새로고침)
-    }    
-  
-    return (        
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+    const reloadList = () => setRefetchKey(prevKey => prevKey + 1);
+
+    return (
         <div className="content-wrap">
-            
-            {/* 페이지 제목과 설명 */}
             <div className="content-header">
-                <span className="content-title">청구 관리</span> 
-                <span className="content-subtitle">전체 청구 목록을 확인하고 관리합니다.</span>                
+                <span className="content-title">청구 관리</span>
+                <span className="content-subtitle">전체 청구 목록을 확인하고 관리합니다.</span>
             </div>
             
-            {/* 필터 및 액션 카드 */}
             <div className="filter-card">
                 <div className="filter-controls">
-                    {/* 검색창 */}
                     <div className="search-box">
                         <span className="material-symbols-outlined">search</span>
                         <input
@@ -103,8 +86,7 @@ export default function InvoiceList(){
                             value={searchTerm}
                             onChange={handleSearchChange}
                         />
-                    </div>                    
-                    {/* 청구상태 필터 */}
+                    </div>
                     <div className="select-group">
                         <label htmlFor="status-filter">청구상태</label>
                         <select id="status-filter" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
@@ -116,14 +98,12 @@ export default function InvoiceList(){
                         </select>
                     </div>
                 </div>
-                {/* 신규 고객사 등록 버튼*/}
                 <button className="header-btn" onClick={openModal}>
                     <span className="material-symbols-outlined">add</span>
                     청구 등록
                 </button>
             </div>
 
-            {/* 테이블 카드 */}
             <div className="table-card">
                 <div className="table-card-inner">
                     <table className="styled-table">
@@ -139,29 +119,29 @@ export default function InvoiceList(){
                             </tr>
                         </thead>
                         <tbody>
-                            {invoiceList.map(function(invoice){                            
-                                return <InvoiceRow key={invoice.invoiceNo} invoice={invoice}/>
-                            })}
+                            {invoiceList.map(invoice => (
+                                <InvoiceRow key={invoice.invoiceNo} invoice={invoice}/>
+                            ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            {/* 페이지네이션 */}            
-            <div className="pagination">           
+            
+            <div className="pagination">
                 <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
             </div>
-
+            
+            {/* 추후 청구 등록 모달(InvoiceInsertModal)로 교체 필요 */}
+            {/* {isModalOpen && <InvoiceInsertModal closeModal={closeModal} reloadList={reloadList} />} */}
         </div>
     );
 };
 
 
 function InvoiceRow({ invoice }) {
-    // 청구 상태 코드에 따라 뱃지 스타일과 텍스트를 반환하는 함수
     const getStatusInfo = (statusCode) => {
         switch(statusCode) {
-            case 'P': return { className: 'status-before-send', text: '발송 전' };
+            case 'P': return { className: 'status-draft', text: '발송 전' };
             case 'U': return { className: 'status-unpaid', text: '미납' };
             case 'O': return { className: 'status-overdue', text: '기한초과' };
             case 'C': return { className: 'status-completed', text: '납부완료' };

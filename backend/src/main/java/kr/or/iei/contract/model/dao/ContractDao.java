@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import kr.or.iei.common.model.dto.FileDTO;
 import kr.or.iei.common.model.dto.PageInfo;
@@ -49,5 +50,19 @@ public interface ContractDao {
     List<Memo> selectContractMemos(String contractNo);
 
 	int updateSignature(SignatureUpdateDto signatureDto);
+
+	ContractDetailDto selectContractByToken(String signToken);
+
+	int updateSignatureByToken(SignatureUpdateDto signatureDto);
+
+	int updateSignToken(@Param("signToken") String signToken, @Param("contractNo") String contractNo, @Param("memberNo") String recipientMemberNo);
+
+	String getMemberNoBySignToken(String signToken);
+
+	String getContractNoBySignToken(String signToken);
+	
+	String getMemberNoByContractNo(String contractNo);
+
+	List<Contract> selectContractListByCompany(String compCd);
 
 }

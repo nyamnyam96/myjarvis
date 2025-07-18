@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public class SignatureUpdateDto {
 	
 	private String contractNo;
-    private int memberNo; // 누가 서명했는지 식별
+	private String partyId; // 누가 서명했는지 식별
     private String signatureImage; // Base64 인코딩된 이미지 데이터
+    private String signToken;
 
 }

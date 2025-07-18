@@ -1,0 +1,88 @@
+/* --- 전체 페이지 배경 및 레이아웃 --- */
+.public-sign-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7fe; /* 앱의 기본 배경색과 통일 */
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* --- 헤더 --- */
+.public-header {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.public-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1B254B;
+}
+
+/* --- 메인 컨텐츠 영역 (흰색 카드) --- */
+.public-main-content {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    border: 1px solid #e9eef5;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 요청 정보 카드 */
+.request-info-card {
+    background-color: #f9faff;
+    border: 1px solid #d6dfff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.request-info-card p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+}
+.request-info-card p strong {
+    font-weight: 700;
+    color: #3b48ff;
+}
+.request-info-card .request-date {
+    font-size: 13px;
+    color: #888;
+    margin-top: 12px;
+}
+
+/* 서명하기 버튼 영역 */
+.action-bar {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+/* 계약서 문서 영역 */
+.contract-document {
+    margin-top: 20px;
+}
+
+/* 공용 버튼 스타일 (기존 스타일 재사용 또는 커스텀) */
+.btn-primary {
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 700;
+    background-image: linear-gradient(to right, #1E1BFF, #7C3AED);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter 0.2s ease-in-out;
+}
+.btn-primary:hover {
+    filter: brightness(1.1);
+}

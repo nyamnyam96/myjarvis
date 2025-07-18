@@ -15,12 +15,15 @@ function Main() {
       // 서버에서 세션 파기 요청
       await axios.get("/logout", { withCredentials: true });
   
-      // 로그인 페이지로 이동
+      
       // 클라이언트 상태 초기화
       setIsLogined(false);
       setLoginMember(null);
       setAccessToken(null);
       setRefreshToken(null);
+
+      // 상태 초기화 후 /home 경로로 이동시킵니다.
+      navigate("/home"); 
       
     } catch (error) {
       console.error("로그아웃 실패:", error);

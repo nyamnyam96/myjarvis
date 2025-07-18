@@ -1,6 +1,9 @@
 package kr.or.iei.member.model.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,7 @@ import kr.or.iei.member.model.dto.LoginMember;
 import kr.or.iei.member.model.dto.Member;
 
 @Service
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
 	@Autowired
 	private MemberDao dao;
@@ -48,8 +51,8 @@ public class MemberService {
 		
 		if(encoder.matches(member.getMemberPw(), chkMember.getMemberPw())) {
 			//엄호화 비밀번호 일치한 경우
-			String accessToken = jwtUtils.createAccessToken(chkMember.getMemberId(), chkMember.getMemberStatus());
-			String refreshToken = jwtUtils.createRefreshToken(chkMember.getMemberId(), chkMember.getMemberStatus());
+			String accessToken = jwtUtils.createAccessToken(chkMember.getMemberId(), String.valueOf(chkMember.getMemberStatus()));
+			String refreshToken = jwtUtils.createRefreshToken(chkMember.getMemberId(), String.valueOf(chkMember.getMemberStatus()));
 		
 			
 			//스토리지에 저장되지 않도록 처리
@@ -106,7 +109,7 @@ public class MemberService {
 
 	public String refreshToken(Member member) {
 		//refreshToken 검증 통과 -> accessToken 재발급 처리 (성공)
-		String accessToken = jwtUtils.createAccessToken(member.getMemberId(), member.getMemberStatus());
+		String accessToken = jwtUtils.createAccessToken(member.getMemberId(), String.valueOf(member.getMemberStatus()));
 		return accessToken;
 	}
 
@@ -116,7 +119,18 @@ public class MemberService {
 	public int chkMemberEmail(String memberEmail) {
 		return dao.chkMemberEmail(memberEmail);
 	}
-
+	
+	@Override
+    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        // 전달받은 memberId를 이용해 DB에서 회원 정보를 조회
+        Member member = dao.memberLogin(memberId);
+        if (member == null) {
+            // 조회된 회원이 없으면, Spring Security에 에러를 발생시킴
+            throw new UsernameNotFoundException("회원을 찾을 수 없습니다.");
+        }
+        // 조회된 회원 정보(UserDetails 타입)를 반환
+        return member;
+    }
 
 	
 

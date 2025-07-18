@@ -22,13 +22,13 @@ public class InvoiceService {
 	
 	//청구 전체 조회
 	public HashMap<String, Object> selectInvoiceList(int reqPage, String sortKey, String sortDirection, String status,
-			String search, String memberNo) {
+			String search, String memberId) {
 		
 		// 1. 필터 & 검색 값 해쉬맵에 담기
 		HashMap<String, Object> params = new HashMap<>();		
         params.put("status", status); // 청구 상태 선택 조회
         params.put("search", search); // 검색 기능        
-        params.put("memberNo", memberNo); //특정 로그인 유저의 고객사만 조회
+        params.put("memberId", memberId); //특정 로그인 유저의 고객사만 조회
 		
 		int totalCount = invoiceDao.selectInvoiceCount(params); //전체 청구 수
 		

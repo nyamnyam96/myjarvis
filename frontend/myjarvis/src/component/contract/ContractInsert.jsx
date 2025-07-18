@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import createInstance from '../../axios/interceptor';
 import useUserStore from '../../store/useUserStore';
@@ -28,6 +28,31 @@ export default function ContractInsert() {
     const [isModalOpen, setIsModalOpen] = useState(false) //모달 열고 닫고       
     const [aiResult, setAiResult] = useState(null); //계약 내용(에디터)과 AI 분석 결과를 위한 state 추가 
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    // 👇 1. 새로운 state들을 추가합니다.
+    const [companyMembers, setCompanyMembers] = useState([]); // 선택된 회사의 담당자 목록
+    const [selectedMember, setSelectedMember] = useState(null); // 최종 선택된 담당자
+    const [isLoadingMembers, setIsLoadingMembers] = useState(false); // 담당자 로딩 상태
+
+    // 👇 2. 고객사가 선택될 때마다, 해당 회사의 담당자 목록을 불러오는 useEffect 추가
+    useEffect(() => {
+        if (selectedCompany) {
+            setIsLoadingMembers(true);
+            axiosInstance.get(`${serverUrl}/company/${selectedCompany.compCd}/members`)
+                .then(res => {
+                    setCompanyMembers(res.data);
+                    // 담당자가 있으면 첫 번째 사람을 기본으로 선택
+                    if (res.data.length > 0) {
+                        setSelectedMember(res.data[0]);
+                    } else {
+                        setSelectedMember(null);
+                    }
+                })
+                .catch(err => console.error(err))
+                .finally(() => setIsLoadingMembers(false));
+        }
+    }, [selectedCompany]);
+    
 
     // 입력 필드 변경 시 state를 업데이트하는 함수
     function handleContractChange(e) {
@@ -64,23 +89,26 @@ export default function ContractInsert() {
     
     // 최종 등록 함수
     function handleSubmit() {
-        if (!selectedCompany || !contract.contractTitle) {
-            Swal.fire('입력 오류', '계약명과 고객사는 필수입니다.', 'warning');
+        if (!selectedCompany || !selectedMember) {
+            Swal.fire('입력 오류', '고객사와 계약 담당자는 필수입니다.', 'warning');
             return;
-        }
+        }        
 
-        // 1. FormData 객체 생성
-        const formData = new FormData();
-        // 2. 계약 정보(JSON)를 'contract' 라는 이름의 파트로 추가
         const contractData = {
             ...contract,
             memberNo: loginMember.memberNo,
-            partyList: [{
-                compCd: selectedCompany.compCd,
-                memberNo: loginMember.memberNo,
-                role: '당사자'
-            }]
+            partyList: [
+            { 
+                compCd: selectedCompany.compCd, 
+                contactIdx: selectedMember.contactIdx, 
+                role: '고객사' 
+            }
+        ]
         };
+
+        const formData = new FormData();
+
+        // 2. 계약 정보(JSON)를 'contract' 라는 이름의 파트로 추가
         formData.append("contract", new Blob([JSON.stringify(contractData)], { type: "application/json" }));
 
         // 3. 첨부파일들을 'files' 라는 이름의 파트로 추가
@@ -191,6 +219,29 @@ export default function ContractInsert() {
                     <button type="button" className="btn-secondary full-width" onClick={() => setIsModalOpen(true)}>
                         {selectedCompany ? '고객사 변경' : '고객사 검색'}
                     </button>
+                    
+                    {/* 👇 담당자 선택 UI 추가 */}
+                    {selectedCompany && (
+                        <div className="form-group" style={{marginTop: '16px'}}>
+                            <label>계약 담당자 <span>*</span></label>
+                            {isLoadingMembers ? <p>담당자를 불러오는 중...</p> :
+                                companyMembers.length > 0 ? (
+                                    <select 
+                                        value={selectedMember?.contactIdx} // 선택된 담당자 값 설정
+                                        onChange={(e) => setSelectedMember(companyMembers.find(m => m.contactIdx === e.target.value))}
+                                    >
+                                        {companyMembers.map(member => (
+                                            <option key={member.contactIdx} value={member.contactIdx}>
+                                                {member.contactName} ({member.contactEmail || '이메일 없음'})
+                                            </option>
+                                        ))}
+                                    </select>
+                                ) : (
+                                    <p>등록된 담당자가 없습니다. 담당자를 먼저 추가해주세요.</p>
+                                )
+                            }
+                        </div>
+                    )}
                 </div>
 
                 {/* 계약 상세 내용 */}
@@ -231,25 +282,39 @@ export default function ContractInsert() {
                 )}
 
                 {/* 👇 4. 파일 첨부 카드 */}
-                <div className="form-card">
-                    <h3 className="card-title">첨부 파일</h3>
-                    <div className="file-attachment-box">
-                        <div className="file-list">
-                            {attachedFiles.map((file, index) => (
-                                <div key={index} className="file-item">
-                                    <span>{file.name}</span>
-                                    <button type="button" onClick={() => removeFile(index)}>×</button>
-                                </div>
-                            ))}
+                <div className="form-card">                    
+                    <div className="card-header-flex">
+                        <h3 className="card-title">첨부 파일</h3>
+                        {/* 2. '파일 추가' 버튼(label)과 input을 이곳으로 이동시킵니다. */}
+                        <div>
+                            <label className="file-upload-btn" htmlFor="contract-file-input">파일 추가</label>
+                            <input 
+                                type="file" 
+                                id="contract-file-input" 
+                                multiple 
+                                onChange={handleFileChange} 
+                                style={{ display: 'none' }} 
+                            />
                         </div>
-                        <label className="file-upload-btn" htmlFor="contract-file-input">파일 추가</label>
-                        <input 
-                            type="file" 
-                            id="contract-file-input" 
-                            multiple 
-                            onChange={handleFileChange} 
-                            style={{ display: 'none' }} 
-                        />
+                    </div>
+
+                    {/* 3. 파일 목록이 표시될 영역입니다. 이제 버튼이 없어서 깔끔해집니다. */}
+                    <div className="file-attachment-box">
+                        {attachedFiles.length > 0 ? (
+                            <div className="file-list">
+                                {attachedFiles.map((file, index) => (
+                                    <div key={index} className="file-item">
+                                        <span>{file.name}</span>
+                                        <button type="button" onClick={() => removeFile(index)}>×</button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            // 파일이 없을 때 안내 문구 표시
+                            <div className="no-files-placeholder">                                
+                                <p>첨부할 파일을 '파일 추가' 버튼으로 등록해주세요.</p>
+                            </div>
+                        )}
                     </div>
                 </div>              
                 

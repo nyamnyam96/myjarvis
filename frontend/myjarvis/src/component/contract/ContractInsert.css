@@ -86,12 +86,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
-.card-header-flex .card-title {
-    margin-bottom: 0;
-    border-bottom: none;
-    padding-bottom: 0;
-}
+
 .btn-ai-review {
     @apply text-sm font-bold text-white bg-gradient-to-r from-[#1E1BFF] to-[#7C3AED] hover:brightness-110;
     padding: 8px 16px;
@@ -125,6 +122,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    justify-content: center;
+    min-height: 120px; 
+}
+.file-attachment-box:has(.file-item) {
+    justify-content: space-between;
 }
 .file-list { width: 100%; margin-bottom: 16px; }
 .file-item {
@@ -151,12 +154,13 @@
     color: #999;
 }
 .file-upload-btn {
-    background-color: #f0f2f5;
-    color: #555;
-    padding: 10px 20px;
+    background-color: #0a81f0;
+    color: #ececec;
+    padding: 7px 20px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
+    font-size: 14px;
 }
 
 /* 버튼 공통 */
@@ -288,4 +292,43 @@
   background-color: #2a2d41;
   color: #f1f1f1;
   border: 1px solid #3a3f5c;
+}
+
+/* 카드 제목 스타일 조정 (파일 첨부 카드 제목에도 적용되도록) */
+.card-header-flex > .card-title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* 파일 첨부 영역 스타일 조정 (기존 코드에서 justify-content, align-items 수정) */
+.file-attachment-box {
+  border: 2px dashed #e9eef5;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 150px;
+  /* 👇 파일이 있을 때와 없을 때 모두 자연스럽도록 수정 */
+  display: flex; /* flex를 유지하여 내부 요소 정렬 */
+  justify-content: center;
+  align-items: center;
+}
+
+/* 파일 목록이 있을 때는 상단부터 정렬되도록 변경 */
+.file-attachment-box:has(.file-item) {
+    justify-content: flex-start;
+}
+
+/* 파일 없을 때 안내 문구 스타일 */
+.no-files-placeholder {
+    text-align: center;
+    color: #aaa;
+}
+
+.no-files-placeholder .material-symbols-outlined {
+    font-size: 40px;
+}
+
+.no-files-placeholder p {
+    margin: 8px 0 0 0;
+    font-size: 14px;
 }

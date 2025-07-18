@@ -1,0 +1,1026 @@
+-- 회원 테이블
+CREATE TABLE TBL_MEMBER (
+    MEMBER_NO VARCHAR2(20) NOT NULL,                             -- 회원고유번호
+    MEMBER_ID VARCHAR2(30) NOT NULL,                             -- 아이디(Unique)
+    MEMBER_PW VARCHAR2(100) NOT NULL,                            -- 비밀번호
+    MEMBER_NAME VARCHAR2(50) NOT NULL,                           -- 이름
+    MEMBER_STATUS CHAR(1)  DEFAULT 'Y' NOT NULL,                  -- 상태 'Y(기본값) 일반회원 / N 탈퇴회원 / A 관리자'
+    MEMBER_EMAIL VARCHAR2(100) NOT NULL,                         -- 이메일
+    MEMBER_PHONE VARCHAR2(20) NOT NULL,                          -- 전화번호
+    JOIN_DATE DATE DEFAULT SYSDATE NOT NULL ,                     -- 회원가입일
+    MEMBER_COMP_NAME VARCHAR2(100),			-- 회원 상호명
+    MEMBER_COMP_NO VARCHAR2(100),			-- 회원사업자번호
+
+    CONSTRAINT PK_TBL_MEMBER PRIMARY KEY (MEMBER_NO),            -- 기본키 제약조건
+    CONSTRAINT UQ_TBL_MEMBER_ID UNIQUE (MEMBER_ID)               -- 아이디는 유니크
+);
+
+-- 회원 정보를 저장하는 핵심 테이블로, 대부분의 기능(계약, 고객, 일정 등)의 기준이 되는 중심 테이블입니다.
+-- 각 컬럼은 회원 식별, 인증, 연락, 상태 관리에 필요한 정보를 포함합니다.
+-- MEMBER_NO: 회원 고유 식별 번호. 전 시스템에서 공통으로 참조되는 PK입니다.
+-- MEMBER_ID: 로그인용 아이디. 중복을 막기 위해 UNIQUE 제약을 설정했습니다.
+-- MEMBER_STATUS: 회원 상태 코드. 'Y': 일반회원(기본값), 'N': 탈퇴회원, 'A': 관리자 구분용입니다.
+-- JOIN_DATE: 회원 가입 일자. 기본값은 시스템 시간(SYSDATE)으로 자동 등록되도록 설정했습니다.
+-- PK는 MEMBER_NO 단일 컬럼이며, 아이디 중복을 막기 위한 UQ 제약도 함께 설정되어 있습니다.
+
+
+-- 계약 상태 테이블
+CREATE TABLE TBL_CONTRACT_STATUS (
+    STATUS_CODE VARCHAR2(20) NOT NULL,                       -- 계약 상태 코드 (예: 'W', 'C', 'X', 'T')
+    STATUS_NAME VARCHAR2(50) NOT NULL,                       -- 상태 설명 (예: 대기, 확정, 취소 등)
+
+    CONSTRAINT PK_TBL_CONTRACT_STATUS PRIMARY KEY (STATUS_CODE) -- 상태코드 단일 기본키
+);
+
+-- 계약 상태(W:대기, C:확정, X:취소 등)를 코드화해 관리하는 공통 코드 테이블입니다.
+-- 상태코드는 다른 테이블(TBL_CONTRACT, TBL_SCHEDULE 등)에서 참조되므로 단일 PK로 설정합니다.
+
+
+-- 고객사 테이블
+CREATE TABLE TBL_CLIENT (
+    CLIENT_NO VARCHAR2(20) NOT NULL,                             -- 고객 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                             -- 회원 고유번호 (등록자)
+    CLIENT_NAME VARCHAR2(50) NOT NULL,                           -- 고객 이름
+    CLIENT_PHONE VARCHAR2(20) NOT NULL,                          -- 고객 전화번호
+    CLIENT_EMAIL VARCHAR2(100) NOT NULL,                         -- 고객 이메일
+    REG_DATE DATE DEFAULT SYSDATE NOT NULL ,                      -- 고객 등록일자
+
+    CONSTRAINT PK_TBL_CLIENT PRIMARY KEY (CLIENT_NO, MEMBER_NO), -- 복합 기본키: 동일 회원이 보유한 고객 구분용
+    CONSTRAINT FK_CLIENT_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO) -- 등록 회원 외래키
+);
+
+-- 개인 고객 정보를 저장하는 테이블입니다.
+-- CLIENT_NO는 단일 기본키이며, 각 회원(MEMBER_NO)별로 구분됩니다.
+-- CLIENT_NO와 MEMBER_NO는 복합 유니크 관계로 구성되어 있으며, 계약(CONTRACT), 회의(MEETING) 등에서 MEMBER_NO와 함께 외래키로 참조됩니다.
+-- 개인 고객은 이름, 연락처, 이메일 등의 기본 정보를 갖고 있으며, 거래처 테이블과는 별도로 관리됩니다.
+
+
+-- 거래처 테이블
+CREATE TABLE TBL_COMPANY (
+    COMP_CD VARCHAR2(20) NOT NULL,                              -- 거래처 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                            -- 회원 고유번호 (등록자)
+    COMP_NAME VARCHAR2(100) NOT NULL,                           -- 거래처명
+    COMP_TEL VARCHAR2(100),                                     -- 거래처 전화번호
+    COMP_ADDR VARCHAR2(100),                                    -- 거래처 주소
+    OWNER_NAME VARCHAR2(30),				-- 대표자 이름
+    TRADE_STATUS CHAR(1)  DEFAULT '1' NOT NULL,                  -- 거래 상태 ('1': 거래, '2': 거래중지)
+   COMP_TYPE CHAR(1) NOT NULL,				-- 사업자 유형 ( C:법인 , P:개인 )    
+   COMP_NO VARCHAR2(100) NULL,				-- 사업자 번호
+   REG_DATE DATE DEFAULT SYSDATE NOT NULL ,                         -- 거래처 등록일자
+
+    CONSTRAINT PK_TBL_COMPANY PRIMARY KEY (COMP_CD, MEMBER_NO), -- 복합 기본키: 동일 회원이 가진 거래처 구분
+    CONSTRAINT FK_COMPANY_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO) -- 회원 외래키
+);
+
+-- 거래처(법인 고객) 정보를 저장하는 테이블입니다.
+-- 거래처는 회원 단위로 등록되며, 동일한 거래처 코드(COMP_CD)라도 회원(MEMBER_NO)에 따라 별도로 존재할 수 있습니다.
+-- 따라서 COMP_CD와 MEMBER_NO는 복합 기본키로 설정되어 있고, 계약 등 연계 테이블에서도 이 두 값을 함께 외래키로 참조합니다.
+
+
+-- 태그 테이블
+CREATE TABLE TBL_TAG (
+    TAG_NO VARCHAR2(20) NOT NULL,                              -- 태그 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                           -- 회원 고유번호 (태그 생성자)
+    TAG_NAME VARCHAR2(50) NOT NULL,                            -- 태그 이름
+    TAG_COLOR VARCHAR2(20),                                    -- 태그 색상 (시각 구분용)
+    REG_DATE DATE DEFAULT SYSDATE NOT NULL ,                    -- 태그 등록일자
+
+    CONSTRAINT PK_TBL_TAG PRIMARY KEY (TAG_NO, MEMBER_NO),     -- 복합 PK: 태그별 소유자 구분
+    CONSTRAINT FK_TAG_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO)
+);
+
+-- 회원이 생성한 태그 정보를 저장하는 테이블입니다.
+-- 동일한 TAG_NO가 여러 회원에게 존재할 수 있으므로, TAG_NO와 MEMBER_NO를 복합 PK로 사용합니다.
+-- 태그 색상은 시각적 구분용이며, MEMBER_NO는 생성자를 나타내는 외래키입니다.
+
+
+-- 파일첨부 테이블
+CREATE TABLE TBL_FILE (
+    FILE_NO VARCHAR2(20) NOT NULL,                               -- 파일 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                             -- 회원 고유번호 (업로더)
+    FILE_ORIGIN VARCHAR2(255) NOT NULL,                          -- 원본 파일명 (사용자 업로드 이름)
+    FILE_NAME VARCHAR2(255) NOT NULL,                            -- 서버 저장 파일명
+    FILE_PATH VARCHAR2(500) NOT NULL,                            -- 파일 경로 (서버 내부 또는 URL)
+    UPLOAD_DATE DATE DEFAULT SYSDATE NOT NULL ,                   -- 파일 등록일
+    FILE_TABLE VARCHAR2(200) NOT NULL,                           -- 대상 테이블 명 ('contract', 'memo' 등)
+    FILE_ID VARCHAR2(30) NOT NULL,                               -- 대상 테이블의 PK값
+    FILE_SIZE NUMBER,                                            -- 파일 크기 (byte)
+    FILE_DELETED CHAR(1) DEFAULT 'N' NOT NULL ,                   -- 삭제 여부 ('Y' / 'N')
+
+    CONSTRAINT PK_TBL_FILE PRIMARY KEY (FILE_NO, MEMBER_NO),
+    CONSTRAINT FK_FILE_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO)
+);
+
+-- 다양한 테이블(계약, 메모 등)에 첨부된 파일 정보를 저장하는 테이블입니다.
+-- FILE_TABLE은 연동 대상 테이블명을, FILE_ID는 해당 테이블의 PK값을 의미합니다.
+-- 이를 통해 유연하게 여러 테이블과 연결되도록 설계하였으며, FK 제약은 걸지 않습니다.
+-- 파일 업로더를 식별하기 위해 MEMBER_NO를 외래키로 연결하고, FILE_NO와 MEMBER_NO를 복합 PK로 사용하여 회원별 파일 구분이 가능합니다.
+
+
+-- 메모 테이블
+CREATE TABLE TBL_MEMO (
+    MEMO_NO VARCHAR2(20) NOT NULL,                               -- 메모 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                             -- 회원 고유번호 (작성자)
+    MEMO_TABLE VARCHAR2(30) NOT NULL,                            -- 메모 대상 테이블 유형 ('contract', 'schedule' 등)
+    MEMO_ID VARCHAR2(30) NOT NULL,                               -- 메모 대상 테이블의 PK 값
+    MEMO_CONTENT VARCHAR2(1000) NOT NULL,                        -- 메모 내용
+    REG_DATE DATE DEFAULT SYSDATE NOT NULL,                      -- 메모 등록일자
+    REVISE_DATE DATE,                                            -- 수정 일자 (NULL 허용)
+
+    CONSTRAINT PK_TBL_MEMO PRIMARY KEY (MEMO_NO, MEMBER_NO),
+    CONSTRAINT FK_MEMO_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO)
+);
+
+-- ERP 내 다양한 대상(계약, 일정 등)에 메모 기능을 부여하기 위한 테이블입니다.
+-- MEMO_TABLE은 메모가 연동될 대상 테이블명을 나타내며, MEMO_ID는 해당 테이블의 PK값을 저장하여 유연하게 연결합니다.
+-- FK는 걸지 않고, Java단에서 ENUM/상수 관리로 타입 일관성을 유지합니다.
+-- MEMBER_NO는 작성자를 식별하기 위한 외래키입니다.
+-- MEMO_NO와 MEMBER_NO를 복합 기본키로 사용하여 작성자 기준 고유 메모 관리가 가능합니다.
+
+
+-- 거래처 구성원 테이블
+CREATE TABLE TBL_COMPANY_MEMBER (
+    CONTACT_IDX VARCHAR2(20) NOT NULL,                             -- 구성원 고유번호
+    COMP_CD VARCHAR2(20) NOT NULL,                                 -- 거래처 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                               -- 회원 고유번호 (등록자)
+    CONTACT_NAME VARCHAR2(30) NOT NULL,                            -- 담당자 이름
+    CONTACT_EMAIL VARCHAR2(100),                                   -- 담당자 이메일
+    CONTACT_PHONE VARCHAR2(20),                                    -- 담당자 전화번호
+    IS_MAIN_CONTACT CHAR(3) DEFAULT 'N',                           -- 대표 여부 ('Y' / 'N')
+    CONTACT_POSITION VARCHAR2(30),                                 -- 담당자 직책
+    CONTACT_DEPT VARCHAR2(30),                                     -- 담당자 부서
+    REG_DATE DATE DEFAULT SYSDATE NOT NULL ,                            -- 구성원 등록일자
+
+    CONSTRAINT PK_TBL_COMPANY_MEMBER PRIMARY KEY (CONTACT_IDX),    -- 구성원 고유 기본키
+    CONSTRAINT FK_CM_COMP FOREIGN KEY (COMP_CD, MEMBER_NO) 
+        REFERENCES TBL_COMPANY(COMP_CD, MEMBER_NO),                -- 거래처 복합 외래키 (COMP_CD + MEMBER_NO)
+    CONSTRAINT FK_CM_MEMBER FOREIGN KEY (MEMBER_NO) 
+        REFERENCES TBL_MEMBER(MEMBER_NO)                           -- 회원 외래키
+);
+
+-- 거래처(COMPANY)에 소속된 담당자 정보를 관리하는 테이블입니다.
+-- CONTACT_IDX는 구성원 개별 식별자이며, 기본키로 사용됩니다.
+-- 하나의 거래처(COMP_CD)는 여러 담당자를 가질 수 있으므로, COMP_CD + MEMBER_NO를 복합 외래키로 지정합니다.
+-- IS_MAIN_CONTACT는 대표 담당자 여부를 표시하며, 내부 연락망이나 우선 발송 대상자 구분에 사용됩니다.
+-- 거래처와 회원 간 등록 관계를 명확히 하기 위해 MEMBER_NO도 별도로 외래키로 연결되어 있습니다.
+
+
+-- 계약원장 테이블
+CREATE TABLE TBL_CONTRACT (
+    CONTRACT_NO         VARCHAR2(20) NOT NULL,                  -- 계약 고유번호
+    MEMBER_NO           VARCHAR2(20) NOT NULL,                  -- 계약 등록 회원 번호
+    STATUS_CODE         VARCHAR2(20) NOT NULL,                  -- 계약 상태 코드 ('W', 'C', 'X', 'T')(대기,확정,취소,임시저장)
+    CONTRACT_TITLE      VARCHAR2(100) NOT NULL,                 -- 계약 제목
+    CONTRACT_CONTENT CLOB NOT NULL,			-- 계약 내용
+    REG_DATE            DATE DEFAULT SYSDATE NOT NULL,          -- 계약 등록일자
+    CONTRACT_START      DATE NOT NULL,                          -- 계약 시작일
+    CONTRACT_END        DATE NOT NULL,                          -- 계약 종료일
+    CONTRACT_DEPOSIT    NUMBER NOT NULL,                        -- 계약금
+    CONTRACT_CONFIRM    DATE,                                   -- 계약 확정일자
+
+    CONSTRAINT PK_TBL_CONTRACT PRIMARY KEY (CONTRACT_NO),
+    CONSTRAINT UQ_CONTRACT_STATUS UNIQUE (CONTRACT_NO, STATUS_CODE),
+    CONSTRAINT FK_CONTRACT_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO),
+    CONSTRAINT FK_CONTRACT_STATUS FOREIGN KEY (STATUS_CODE) REFERENCES TBL_CONTRACT_STATUS(STATUS_CODE)
+);
+
+ALTER TABLE TBL_CONTRACT MODIFY (CONTRACT_TITLE VARCHAR2(200));
+commit;
+
+-- 계약 정보를 저장하는 핵심 테이블입니다.
+-- CONTRACT_NO는 단일 기본키로 사용되며, 각 계약을 고유하게 식별합니다.
+-- 계약은 반드시 회원(MEMBER_NO)에 의해 등록되며, 계약 상대는 계약 대상 테이블과 연결되어 있습니다.
+-- 계약 상태는 STATUS_CODE로 표현되며, 상태코드별 관리 및 통제를 위해 보조 UNIQUE 제약(CONTRACT_NO + STATUS_CODE)이 설정되어 있습니다.
+-- 계약의 주요 정보로는 계약 제목, 계약금, 시작일, 종료일, 확정일이 포함되며, 등록일은 기본값으로 SYSDATE가 자동 설정됩니다.
+
+
+-- 계약대상 테이블
+CREATE TABLE TBL_CONTRACT_PARTY (
+    ID             NUMBER PRIMARY KEY,                               -- 고유 식별자 (시퀀스 사용 권장)
+    CONTRACT_NO    VARCHAR2(20) NOT NULL,                            -- 계약 번호
+    CLIENT_NO      VARCHAR2(20),                                     -- 개인 고객 번호 (nullable)
+    COMP_CD        VARCHAR2(20),                                     -- 거래처 고객사 번호 (nullable)
+    MEMBER_NO      VARCHAR2(20) NOT NULL,                            -- 대상 고객의 소속 회원
+    ROLE           VARCHAR2(50),                                     -- 계약 내 역할 (예: 당사자, 참조자 등)
+
+    CONSTRAINT FK_PARTY_CONTRACT FOREIGN KEY (CONTRACT_NO)
+        REFERENCES TBL_CONTRACT(CONTRACT_NO),
+
+    CONSTRAINT FK_PARTY_CLIENT FOREIGN KEY (CLIENT_NO, MEMBER_NO)
+        REFERENCES TBL_CLIENT(CLIENT_NO, MEMBER_NO),
+
+    CONSTRAINT FK_PARTY_COMPANY FOREIGN KEY (COMP_CD, MEMBER_NO)
+        REFERENCES TBL_COMPANY(COMP_CD, MEMBER_NO)
+);
+
+-- 계약의 대상자(개인 고객 또는 법인 고객사)를 저장하는 서브 테이블입니다.
+-- CONTRACT_NO를 기준으로 계약 원장 테이블(TBL_CONTRACT)과 연결되며, 1:N 구조로 구성됩니다.
+-- 대상자는 개인 고객(CLIENT_NO) 또는 법인 고객사(COMP_CD) 중 하나로 연결되며, 각각의 소속 회원(MEMBER_NO)을 기준으로 무결성을 확보합니다.
+-- CLIENT_NO와 COMP_CD는 동시에 사용되지 않으며, 애플리케이션 단에서 한 쪽만 입력되도록 제어해야 합니다.
+
+
+-- 회의 테이블
+CREATE TABLE TBL_MEETING (
+    MEETING_NO     VARCHAR2(20) NOT NULL,                          -- 회의 고유번호
+    MEMBER_NO      VARCHAR2(20) NOT NULL,                          -- 작성자 회원번호
+    MEET_TITLE     VARCHAR2(100) NOT NULL,                         -- 회의 제목
+    MEET_CONTENT   CLOB NOT NULL,                                  -- 회의 내용
+    MEET_DATE      DATE DEFAULT SYSDATE NOT NULL,                  -- 회의 일자
+    GPT_SUMMARY    VARCHAR2(1024),                                 -- AI 요약 내용
+
+    CONSTRAINT PK_TBL_MEETING PRIMARY KEY (MEETING_NO),
+    CONSTRAINT FK_MEETING_MEMBER FOREIGN KEY (MEMBER_NO)
+        REFERENCES TBL_MEMBER(MEMBER_NO)
+);
+
+-- 고객과의 사전 커뮤니케이션(회의, 상담 등) 내용을 기록하는 테이블입니다.
+-- MEETING_NO는 단일 기본키이며, 각 회의를 고유하게 식별합니다.
+-- 회의는 반드시 회원(MEMBER_NO)에 의해 등록되며, 회의의 대상자는 별도의 회의참석자 테이블(TBL_MEETING_PARTICIPANT)과 연결됩니다.
+-- 회의의 주요 정보로는 회의 제목, 회의 내용, AI 요약 결과가 있으며, 회의 일자는 기본값으로 SYSDATE가 자동 설정됩니다.
+
+
+-- 회의참여자 테이블
+CREATE TABLE TBL_MEETING_PARTICIPANT (
+    MEETING_PARTICIPANT_NO            NUMBER  PRIMARY KEY,                              -- 회의 참여자 고유번호
+    MEETING_NO    VARCHAR2(20) NOT NULL,                           -- 회의 고유번호
+    CLIENT_NO     VARCHAR2(20),                                    -- 개인 고객 번호 (nullable)
+    COMP_CD       VARCHAR2(20),                                    -- 거래처 고객사 번호 (nullable)
+    MEMBER_NO     VARCHAR2(20) NOT NULL,                           -- 고객 소속 회원
+
+    CONSTRAINT FK_PARTICIPANT_MEETING FOREIGN KEY (MEETING_NO)
+        REFERENCES TBL_MEETING(MEETING_NO),
+
+    CONSTRAINT FK_PARTICIPANT_CLIENT FOREIGN KEY (CLIENT_NO, MEMBER_NO)
+        REFERENCES TBL_CLIENT(CLIENT_NO, MEMBER_NO),
+
+    CONSTRAINT FK_PARTICIPANT_COMPANY FOREIGN KEY (COMP_CD, MEMBER_NO)
+        REFERENCES TBL_COMPANY(COMP_CD, MEMBER_NO)
+);
+
+-- 회의 대상자(참석자)를 저장하는 테이블입니다.
+-- MEETING_NO를 기준으로 TBL_MEETING과 연결되며, 1:N 구조로 회의 대상자를 다수 연결할 수 있습니다.
+-- 참석자는 개인 고객(CLIENT_NO) 또는 거래처 고객사(COMP_CD) 중 하나로 지정되며, 각각의 소속 회원(MEMBER_NO)을 통해 무결성을 확보합니다.
+
+
+-- 태그맵 테이블
+CREATE TABLE TBL_TAG_MAP (
+    TAG_MAP_NO VARCHAR2(20) NOT NULL,                              -- 태그 매핑 고유번호
+    TAG_NO VARCHAR2(20) NOT NULL,                                  -- 태그 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                               -- 태그 생성 회원 번호
+    TAG_TABLE VARCHAR2(255) NOT NULL,                              -- 태그 대상 테이블 명 (예: 'contract', 'schedule' 등)
+    TAG_ID VARCHAR2(30) NOT NULL,                                  -- 태그 대상 테이블의 PK 번호
+
+    CONSTRAINT PK_TBL_TAG_MAP PRIMARY KEY (TAG_MAP_NO),           
+    CONSTRAINT FK_TAGMAP_TAG FOREIGN KEY (TAG_NO, MEMBER_NO) REFERENCES TBL_TAG(TAG_NO, MEMBER_NO)
+);
+
+-- 다양한 대상 테이블에 태그를 연결하는 매핑 테이블입니다.
+-- TAG_MAP_NO는 태그 매핑의 고유 식별자이며, 단일 PK로 구성됩니다.
+-- TAG_NO와 MEMBER_NO는 함께 복합 외래키로 연결되며, TBL_TAG의 복합키(TAG_NO, MEMBER_NO)를 정확히 참조합니다.
+-- 태그 대상 테이블은 TAG_TABLE과 TAG_ID를 통해 식별되며, 다형적 연동 구조로 설계되어 유연성을 제공합니다.
+
+
+-- 일정표 테이블
+CREATE TABLE TBL_SCHEDULE (
+    SCHEDULE_NO VARCHAR2(20) NOT NULL,                            -- 일정 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                              -- 회원 고유번호 (일정 등록자)
+    CONTRACT_NO VARCHAR2(20) NOT NULL,                            -- 계약 고유번호
+    STATUS_CODE VARCHAR2(20) NOT NULL,                            -- 일정 상태코드 ('W', 'C', 'X', 'T')
+    SCHEDULE_TITLE VARCHAR2(20) NOT NULL,                         -- 일정 제목
+    SCHEDULE_START DATE NOT NULL,                                 -- 일정 시작일
+    SCHEDULE_END DATE NOT NULL,                                   -- 일정 종료일
+    REG_DATE DATE DEFAULT SYSDATE NOT NULL ,                       -- 일정 등록일
+    SCHEDULE_CONTENT VARCHAR2(1000),                              -- 일정 설명 내용
+    SCHEDULE_PROGRESS NUMBER  DEFAULT 0 NOT NULL,                   -- 일정 진행률 (%), TBL_TASK와 연동
+    SCHEDULE_COLOR VARCHAR2(20) NULL,                             -- 일정 색상 (캘린더용)
+    SCHEDULE_ALERT CHAR(1)  DEFAULT 'N' NOT NULL,                  -- 알림 여부 ('Y' / 'N')
+
+    CONSTRAINT PK_TBL_SCHEDULE PRIMARY KEY (SCHEDULE_NO),         --  단일 기본키
+    CONSTRAINT UQ_SCHEDULE_UNIQUE UNIQUE (MEMBER_NO, CONTRACT_NO, STATUS_CODE), --  보조 유니크 설정
+    CONSTRAINT FK_SCHEDULE_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO),
+    CONSTRAINT FK_SCHEDULE_CONTRACT FOREIGN KEY (CONTRACT_NO) REFERENCES TBL_CONTRACT(CONTRACT_NO),
+    CONSTRAINT FK_SCHEDULE_STATUS FOREIGN KEY (STATUS_CODE) REFERENCES TBL_CONTRACT_STATUS(STATUS_CODE)
+);
+
+-- 계약에 따른 업무 일정을 캘린더 형태로 관리하기 위한 테이블입니다.
+-- 각 일정은 SCHEDULE_NO로 구분되며, 등록자(MEMBER_NO)와 연결됩니다.
+-- 일정은 반드시 하나의 계약(CONTRACT_NO)에 속하며, 상태코드(STATUS_CODE)는 별도 상태 테이블과 연동됩니다.
+-- 일정 제목, 설명, 시작/종료일 외에도 진행률(SCHEDULE_PROGRESS)과 색상, 알림 여부 등의 시각적/기능적 속성을 포함합니다.
+-- 동일 계약 내 중복 일정 방지를 위해 MEMBER_NO + CONTRACT_NO + STATUS_CODE에 유니크 제약조건이 추가됩니다.
+
+
+-- 결제/청구 테이블
+CREATE TABLE TBL_INVOICE (
+    INVOICE_NO        VARCHAR2(20) NOT NULL,                       -- 청구서 고유번호
+    CONTRACT_NO       VARCHAR2(20) NOT NULL,                       -- 계약 고유번호
+    MEMBER_NO         VARCHAR2(20) NOT NULL,                       -- 작성자 회원번호
+    INVOICE_DEPOSIT   NUMBER NOT NULL,                             -- 청구 금액
+    INVOICE_SEND      DATE NOT NULL,                               -- 청구서 발송일
+    INVOICE_IS_SEND   CHAR(1) DEFAULT 'N' NOT NULL,                -- 발송 여부 ('Y'/'N')
+    INVOICE_PAID      DATE,                                        -- 입금일자
+    INVOICE_IS_PAID   CHAR(1) DEFAULT 'N' NOT NULL,                -- 입금 여부 ('Y'/'N')
+    INVOICE_METHOD    VARCHAR2(50) NOT NULL,                       -- 결제 수단
+    REG_DATE          DATE DEFAULT SYSDATE NOT NULL,               -- 청구서 생성일자
+
+    CONSTRAINT PK_TBL_INVOICE PRIMARY KEY (INVOICE_NO),
+    CONSTRAINT FK_INVOICE_CONTRACT FOREIGN KEY (CONTRACT_NO) REFERENCES TBL_CONTRACT(CONTRACT_NO),
+    CONSTRAINT FK_INVOICE_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO)
+);
+
+
+-- 청구 정보를 저장하는 원장 테이블입니다.
+-- INVOICE_NO는 단일 기본키이며, 각 청구서를 고유하게 식별합니다.
+-- 청구서는 반드시 회원(MEMBER_NO)에 의해 작성되며, 계약(CONTRACT_NO)과 연결됩니다.
+-- 고객 정보는 별도의 청구 대상자 테이블(TBL_INVOICE_TARGET)을 통해 관리됩니다.
+-- 청구 금액, 결제 방식, 발송 여부, 입금 여부 등의 청구 관련 정보는 이 테이블에 기록됩니다.
+
+-- 결제대상자 테이블
+CREATE TABLE TBL_INVOICE_TARGET (
+    ID                    NUMBER PRIMARY KEY,                         -- 고유 식별자
+    INVOICE_NO            VARCHAR2(20) NOT NULL,                      -- 청구서 고유번호
+    CLIENT_NO             VARCHAR2(20),                               -- 개인 고객 번호 (nullable)
+    COMP_CD               VARCHAR2(20),                               -- 거래처 고객사 번호 (nullable)
+    MEMBER_NO             VARCHAR2(20) NOT NULL,                      -- 고객 소속 회원
+    INVOICE_CLIENT_NAME   VARCHAR2(200) NOT NULL,                     -- 수신인 이름 또는 회사명
+    INVOICE_CLIENT_EMAIL  VARCHAR2(200) NOT NULL,                     -- 수신인 이메일
+
+    CONSTRAINT FK_TARGET_INVOICE FOREIGN KEY (INVOICE_NO)
+        REFERENCES TBL_INVOICE(INVOICE_NO),
+
+    CONSTRAINT FK_TARGET_CLIENT FOREIGN KEY (CLIENT_NO, MEMBER_NO)
+        REFERENCES TBL_CLIENT(CLIENT_NO, MEMBER_NO),
+
+    CONSTRAINT FK_TARGET_COMPANY FOREIGN KEY (COMP_CD, MEMBER_NO)
+        REFERENCES TBL_COMPANY(COMP_CD, MEMBER_NO)
+);
+
+-- 청구 대상자 정보를 저장하는 테이블입니다.
+-- INVOICE_NO를 기준으로 TBL_INVOICE와 연결되며, 하나의 청구서에 여러 명의 고객을 연결할 수 있습니다.
+-- 대상자는 개인 고객(CLIENT_NO) 또는 거래처 고객사(COMP_CD) 중 하나로 설정되며,
+-- 각각의 고객은 소속 회원(MEMBER_NO)을 통해 소유 관계를 유지합니다.
+-- 수신인의 이름과 이메일은 실제 청구서 발송을 위한 정보로 활용됩니다.
+-- CLIENT_NO와 COMP_CD는 동시에 입력되지 않으며, 애플리케이션 단에서 한 쪽만 입력되도록 제어해야 합니다.
+
+
+-- 작업관리 테이블
+CREATE TABLE TBL_TASK (
+    TASK_NO VARCHAR2(20) NOT NULL,                               -- 작업 고유번호
+    SCHEDULE_NO VARCHAR2(20) NOT NULL,                           -- 연동된 일정 고유번호
+    MEMBER_NO VARCHAR2(20) NOT NULL,                             -- 작업 등록자(회원 고유번호)
+    TASK_TITLE VARCHAR2(100) NOT NULL,                           -- 작업 제목
+    TASK_CONTENT VARCHAR2(3000) NOT NULL,                        -- 작업 상세 내용
+    TASK_DUE DATE,                                               -- 작업 마감일
+    REG_DATE DATE DEFAULT SYSDATE NOT NULL ,                      -- 작업 등록일자
+    TASK_COMPLETE CHAR(1) DEFAULT 'N' NOT NULL,                  -- 완료 여부 ('Y' / 'N')
+    TASK_PRIORITY VARCHAR2(10) DEFAULT '중' NOT NULL,            -- 작업 우선순위 ('상', '중', '하')
+    TASK_ALERT DATE,                                             -- 알림 발송일 (예: 마감 하루 전)
+
+    CONSTRAINT PK_TBL_TASK PRIMARY KEY (TASK_NO),               
+    CONSTRAINT FK_TASK_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO),
+    CONSTRAINT FK_TASK_SCHEDULE FOREIGN KEY (SCHEDULE_NO) REFERENCES TBL_SCHEDULE(SCHEDULE_NO)
+);
+
+
+-- 일정(SCHEDULE)에 소속된 개별 작업(To-Do)을 관리하는 테이블입니다.
+-- TASK_NO는 작업 고유 식별자로, 단일 기본키로 설정되어 있습니다.
+-- 각 작업은 일정(SCHEDULE_NO)과 연결되며, 등록자(MEMBER_NO) 정보도 함께 저장됩니다.
+-- 작업 제목, 상세 내용, 마감일(TASK_DUE), 등록일, 우선순위(TASK_PRIORITY), 완료 여부(TASK_COMPLETE) 등을 포함합니다.
+-- TASK_ALERT는 마감 이전 알림 기능을 위한 속성입니다.
+-- 일정 및 회원 테이블과 외래키로 연결되어 있어 일정 기반 작업 흐름 추적이 가능합니다.
+
+-- 계약 상태 변경 이력 관리 테이블
+CREATE TABLE TBL_CONTRACT_HISTORY (
+    CONTRACT_HISTORY_NO         NUMBER              CONSTRAINT PK_CONTRACT_HISTORY PRIMARY KEY,
+    CONTRACT_NO                 VARCHAR2(20)        NOT NULL,
+    MEMBER_NO                   VARCHAR2(20)        NOT NULL,
+    CONTRACT_HISTORY_CONTENT    VARCHAR2(1000)      NULL,
+    CONTRACT_HISTORY_DATE       DATE                DEFAULT SYSDATE NOT NULL,
+    
+    CONSTRAINT FK_HISTORY_CONTRACT FOREIGN KEY (CONTRACT_NO) REFERENCES TBL_CONTRACT(CONTRACT_NO),
+    CONSTRAINT FK_HISTORY_MEMBER FOREIGN KEY (MEMBER_NO) REFERENCES TBL_MEMBER(MEMBER_NO)
+);
+
+COMMENT ON COLUMN TBL_CONTRACT_HISTORY.CONTRACT_HISTORY_NO IS '계약 변경 이력 고유 번호 (PK)';
+COMMENT ON COLUMN TBL_CONTRACT_HISTORY.CONTRACT_NO IS '계약 고유 번호 (FK)';
+COMMENT ON COLUMN TBL_CONTRACT_HISTORY.MEMBER_NO IS '변경을 수행한 회원 번호 (FK)';
+COMMENT ON COLUMN TBL_CONTRACT_HISTORY.CONTRACT_HISTORY_CONTENT IS '변경 내용(사유)';
+COMMENT ON COLUMN TBL_CONTRACT_HISTORY.CONTRACT_HISTORY_DATE IS '변경 일시';
+
+--------------------------------------------------------------------------------
+
+-- 계약 상태 변경 이력 관리 시퀀스
+CREATE SEQUENCE SEQ_CONTRACT_HISTORY_NO
+START WITH 1
+INCREMENT BY 1;
+
+-- 계약번호(CONTRACT_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_CONTRACT_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 계약대상번호(CONTRACT_PARTY_NO)
+CREATE SEQUENCE SEQ_CONTRACT_PARTY_ID START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 거래처코드(COMP_CD) 시퀀스
+CREATE SEQUENCE SEQ_TBL_COMPANY_CD START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 개인고객번호(CLIENT_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_CLIENT_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 회의번호(MEETING_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_MEETING_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 회의참여자(MEETING_PARTICIPANT_NO) 시퀀스
+CREATE SEQUENCE SEQ_MEETING_PARTICIPANT_ID START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 일정번호(SCHEDULE_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_SCHEDULE_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 작업번호(TASK_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_TASK_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 청구번호(INVOICE_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_INVOICE_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 결제대상자번호(INVOICE_TARGET_NO) 시퀀스
+CREATE SEQUENCE SEQ_INVOICE_TARGET_ID START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 메모번호(MEMO_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_MEMO_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 태그번호(TAG_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_TAG_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 태그 매핑 번호(TAG_MAP_NO) 시퀀스
+CREATE SEQUENCE SEQ_TBL_TAG_MAP_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 거래처 구성원(CONTACT_IDX) 시퀀스
+CREATE SEQUENCE SEQ_TBL_COMPANY_MEMBER_IDX START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 회원 가입 시 시퀀스
+CREATE SEQUENCE seq_tbl_member_no START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 파일 번호 시퀀스
+CREATE SEQUENCE SEQ_TBL_FILE_NO START WITH 1 INCREMENT BY 1;
+
+commit;
+
+-----------------------------------------------------------------------------------------
+
+-- 임시 멤버 데이터 삽입
+INSERT INTO TBL_MEMBER (MEMBER_NO, MEMBER_ID, MEMBER_PW, MEMBER_NAME, MEMBER_STATUS, MEMBER_EMAIL, MEMBER_PHONE, JOIN_DATE)
+VALUES ('MEM_001', 'user01', '1234', '임동주', 'Y', 'dongju@example.com', '010-1111-2222', SYSDATE-150);
+
+INSERT INTO TBL_MEMBER (MEMBER_NO, MEMBER_ID, MEMBER_PW, MEMBER_NAME, MEMBER_STATUS, MEMBER_EMAIL, MEMBER_PHONE, JOIN_DATE)
+VALUES ('MEM_002', 'user02', '1234', '김기덕', 'Y', 'kideok@example.com', '010-3333-4444', SYSDATE-120);
+
+INSERT INTO TBL_MEMBER (MEMBER_NO, MEMBER_ID, MEMBER_PW, MEMBER_NAME, MEMBER_STATUS, MEMBER_EMAIL, MEMBER_PHONE, JOIN_DATE)
+VALUES ('MEM_003', 'user03', '1234', '김남후', 'Y', 'namhoo@example.com', '010-5555-6666', SYSDATE-110);
+
+-- 관리자 계정 예시 ('A' 상태)
+INSERT INTO TBL_MEMBER (MEMBER_NO, MEMBER_ID, MEMBER_PW, MEMBER_NAME, MEMBER_STATUS, MEMBER_EMAIL, MEMBER_PHONE, JOIN_DATE)
+VALUES ('MEM_004', 'admin', '1234', '관리자', 'A', 'admin@myjarvis.com', '010-9999-8888', SYSDATE-200);
+
+INSERT INTO TBL_MEMBER (MEMBER_NO, MEMBER_ID, MEMBER_PW, MEMBER_NAME, MEMBER_STATUS, MEMBER_EMAIL, MEMBER_PHONE, JOIN_DATE)
+VALUES ('MEM_005', 'user04', '1234', '임지헌', 'Y', 'jihun@example.com', '010-7777-8888', SYSDATE-90);
+
+-- 데이터가 잘 들어갔는지 확인
+COMMIT;
+
+select * from tbl_company;
+
+-- 임시 거래처 데이터 삽입
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '(주)가나다 솔루션', '홍길동', '123-45-67890', '02-1111-2222', '서울특별시 강남구 테헤란로 123', SYSDATE);
+
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '스마트 코딩 아카데미', '김철수', '222-33-44556', '031-777-8888', '경기도 성남시 분당구 판교역로 235', SYSDATE-10);
+
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '디자인 마스터즈', '이영희', '333-11-55887', '02-3456-7890', '서울특별시 마포구 월드컵북로 402', SYSDATE-25);
+
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '든든 로지스틱스', '박현수', '444-22-66998', '051-987-6543', '부산광역시 해운대구 센텀동로 57', SYSDATE-40);
+
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '글로벌 무역 상사', '최민준', '555-33-77119', '032-123-4567', '인천광역시 연수구 컨벤시아대로 165', SYSDATE-100);
+
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '(주)블루웨일 테크놀로지', '김민준', '110-86-12345', '02-555-0101', '서울특별시 강남구 역삼동 823-1', SYSDATE - 200);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '그린에너지 솔루션', '이서연', '211-81-67890', '031-777-0202', '경기도 성남시 분당구 삼평동 624', SYSDATE - 180);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '골드스타 물산', '박서준', '128-87-11223', '051-888-0303', '부산광역시 해운대구 우동 1407', SYSDATE - 150);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '해피데이 유통', '최지우', '220-81-33445', '032-444-0404', '인천광역시 연수구 송도동 29-1', SYSDATE - 145);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '알파시스템즈', '정하윤', '301-86-55667', '042-666-0505', '대전광역시 유성구 도룡동 3-1', SYSDATE - 140);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '넥스트 레벨 컨설팅', '강도윤', '135-81-77889', '02-999-0606', '서울특별시 서초구 서초동 1321-11', SYSDATE - 135);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '(주)피플웍스', '윤지아', '117-81-99001', '02-212-0707', '서울특별시 구로구 구로동 188-25', SYSDATE - 130);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '아이티네트웍스', '임서아', '214-85-12123', '031-313-0808', '경기도 수원시 영통구 이의동 1322-1', SYSDATE - 125);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '월드와이드 상사', '한지훈', '312-81-34345', '053-535-0909', '대구광역시 중구 동인동1가 29', SYSDATE - 120);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '비전 F&B', '송채원', '105-87-56567', '02-757-1010', '서울특별시 중구 명동2가 25-2', SYSDATE - 115);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '퍼스트 건설', '오은우', '101-81-78789', '02-345-1111', '서울특별시 강남구 논현동 278-29', SYSDATE - 110);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '케이-뷰티 코스메틱', '배수아', '208-86-90901', '02-600-1212', '서울특별시 강서구 마곡동 774-1', SYSDATE - 105);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '드림팩토리 스튜디오', '권유준', '113-81-13134', '02-888-1313', '서울특별시 마포구 상암동 1602', SYSDATE - 100);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '스카이 하이 로지스', '황하린', '124-86-35356', '032-747-1414', '인천광역시 중구 운서동 2850', SYSDATE - 95);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '미래에셋 투자자문', '안도현', '120-81-57578', '02-789-1515', '서울특별시 영등포구 여의도동 23-4', SYSDATE - 90);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '에코-프렌들리 화학', '장다은', '305-81-79790', '043-234-1616', '충청북도 청주시 흥덕구 송정동 707', SYSDATE - 85);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '밸류업 파트너스', '서예준', '107-86-91912', '02-621-1717', '서울특별시 강남구 삼성동 159', SYSDATE - 80);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '더 좋은 교육', '문서윤', '215-81-14144', '02-887-1818', '서울특별시 관악구 신림동 1523', SYSDATE - 75);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '헬스케어 메디컬', '양시우', '110-81-36366', '02-3410-1919', '서울특별시 강남구 일원동 50', SYSDATE - 70);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '(주)제주감귤농장', '고아라', '616-81-58588', '064-727-2020', '제주특별자치도 제주시 아라일동 3-1', SYSDATE - 65);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '글로벌 모터스', '유재석', '119-81-70701', '031-222-2121', '경기도 화성시 남양읍 77-1', SYSDATE - 60);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '코리아 인쇄', '조세호', '104-81-82823', '02-2266-2222', '서울특별시 중구 을지로3가 281', SYSDATE - 58);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '우리 동네 마트', '하하', '212-81-94945', '02-333-2323', '서울특별시 마포구 서교동 395-1', SYSDATE - 56);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '대박 수산', '김종국', '303-81-16167', '051-242-2424', '부산광역시 중구 남포동4가 37-1', SYSDATE - 54);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '착한 정육점', '이광수', '108-81-38389', '031-987-2525', '경기도 김포시 사우동 876', SYSDATE - 52);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '해피투게더 여행사', '송지효', '201-81-50501', '02-778-2626', '서울특별시 종로구 인사동 194-4', SYSDATE - 50);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '튼튼 정형외과', '지석진', '111-99-72723', '02-545-2727', '서울특별시 강남구 신사동 501-1', SYSDATE - 48);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '라이징스타 엔터테인먼트', '전소민', '138-81-94945', '02-3444-2828', '서울특별시 강남구 청담동 40-1', SYSDATE - 46);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '스피드 오토바이', '양세찬', '207-81-16167', '02-2279-2929', '서울특별시 중구 충무로5가 22-1', SYSDATE - 44);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '(주)세종대왕', '이도', '101-01-00001', '02-111-1418', '서울특별시 종로구 세종로 1-1', SYSDATE - 42);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '율곡 기획', '이이', '102-02-00002', '033-640-2323', '강원도 강릉시 죽헌동 201', SYSDATE - 40);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '퇴계 물류', '이황', '103-03-00003', '054-850-6114', '경상북도 안동시 도산면 680', SYSDATE - 38);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '다산 컨설팅', '정약용', '104-04-00004', '031-579-6000', '경기도 남양주시 조안면 60', SYSDATE - 36);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '충무공 해운', '이순신', '105-05-00005', '055-649-2222', '경상남도 통영시 무전동 1062', SYSDATE - 34);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '신사임당 갤러리', '신인선', '106-06-00006', '033-640-4457', '강원도 강릉시 죽헌동 201-1', SYSDATE - 32);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '광개토 건설', '담덕', '107-07-00007', '041-830-2114', '충청남도 부여군 부여읍 520', SYSDATE - 30);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'P', '온달 관광', '온달', '108-08-00008', '043-423-8820', '충청북도 단양군 영춘면 114', SYSDATE - 28);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'C', '평강 공주 컴퍼니', '평강', '109-09-00009', '031-958-3333', '경기도 파주시 적성면 334', SYSDATE - 26);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'C', '장보고 무역', '장보고', '110-10-00010', '061-550-6114', '전라남도 완도군 완도읍 1004', SYSDATE - 24);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'C', '대조영 필름', '대조영', '111-11-00011', '02-781-2222', '서울특별시 영등포구 여의도동 1', SYSDATE - 22);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'P', '김유신 화랑', '김유신', '112-12-00012', '054-779-6114', '경상북도 경주시 인왕동 76', SYSDATE - 20);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'P', '선덕여왕 향수', '김덕만', '113-13-00013', '054-779-8700', '경상북도 경주시 인왕동 839-1', SYSDATE - 18);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'P', '을지문덕 전략', '을지문덕', '114-14-00014', '031-953-2222', '경기도 파주시 문산읍 111', SYSDATE - 16);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'P', '강감찬 유통', '강감찬', '111-112-12000', '02-879-5114', '서울특별시 관악구 봉천동 218-14', SYSDATE - 14);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'P', '서희 외교원', '서희', '111-112-12001', '031-638-1111', '경기도 이천시 관고동 333', SYSDATE - 12);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_001', 'P', '원효대사 템플스테이', '원효', '111-112-12002', '054-762-1111', '경상북도 경주시 진현동 15-1', SYSDATE - 10);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_002', 'P', '의상 리서치', '의상', '111-112-12003', '054-633-2222', '경상북도 영주시 부석면 148', SYSDATE - 8);
+INSERT INTO TBL_COMPANY (COMP_CD, MEMBER_NO, COMP_TYPE, COMP_NAME, OWNER_NAME, COMP_NO, COMP_TEL, COMP_ADDR, REG_DATE) 
+VALUES ('COMP'||LPAD(SEQ_TBL_COMPANY_CD.NEXTVAL, 4, '0'), 'MEM_003', 'P', '지눌 명상센터', '지눌', '111-112-12000', '061-755-3333', '전라남도 순천시 송광면 12', SYSDATE - 5);
+
+-- 데이터가 잘 들어갔는지 확인
+COMMIT;
+select*from tbl_company;
+
+
+-- 계약 상태 코드 데이터 (먼저 실행)
+INSERT INTO TBL_CONTRACT_STATUS (STATUS_CODE, STATUS_NAME) VALUES ('W', '진행(대기)');
+INSERT INTO TBL_CONTRACT_STATUS (STATUS_CODE, STATUS_NAME) VALUES ('C', '완료(확정)');
+INSERT INTO TBL_CONTRACT_STATUS (STATUS_CODE, STATUS_NAME) VALUES ('X', '취소');
+INSERT INTO TBL_CONTRACT_STATUS (STATUS_CODE, STATUS_NAME) VALUES ('T', '임시저장');
+
+-- [계약 로우 데이터]
+
+-- 31
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'C', '2024년 1분기 SEO 컨설팅', '검색엔진 최적화를 통한 오가닉 트래픽 증대', TO_DATE('2024-01-15', 'YYYY-MM-DD'), TO_DATE('2024-03-31', 'YYYY-MM-DD'), 18000000, TO_DATE('2024-01-10', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0001', 'MEM_001', '당사자');
+END;
+/
+
+-- 32
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'W', '2025년 하반기 유튜브 광고', '신제품 홍보용 유튜브 영상 광고 집행', TO_DATE('2025-07-01', 'YYYY-MM-DD'), TO_DATE('2025-12-31', 'YYYY-MM-DD'), 50000000, TO_DATE('2025-06-20', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0002', 'MEM_002', '당사자');
+END;
+/
+
+-- 33
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'T', '내부 ERP 시스템 기능 고도화', '재고관리 및 회계 모듈 기능 추가 개발', TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2026-02-28', 'YYYY-MM-DD'), 45000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0003', 'MEM_003', '당사자');
+END;
+/
+
+-- 34
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'C', '2024년 2분기 웹툰 콘텐츠 제작', '브랜드 홍보용 웹툰 주 1회 연재', TO_DATE('2024-04-01', 'YYYY-MM-DD'), TO_DATE('2024-06-30', 'YYYY-MM-DD'), 25000000, TO_DATE('2024-03-25', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0004', 'MEM_004', '당사자');
+END;
+/
+
+-- 35
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'W', '유튜브 채널 운영 대행', '월 4회 영상 콘텐츠 기획, 촬영, 편집 및 업로드', TO_DATE('2025-07-01', 'YYYY-MM-DD'), TO_DATE('2025-12-31', 'YYYY-MM-DD'), 30000000, TO_DATE('2025-06-18', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0005', 'MEM_001', '당사자');
+END;
+/
+
+
+-- 36
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'C', '박람회 부스 디자인 및 설치', '코엑스 국제 IT 박람회 참가 부스', TO_DATE('2024-03-01', 'YYYY-MM-DD'), TO_DATE('2024-03-10', 'YYYY-MM-DD'), 9000000, TO_DATE('2024-02-15', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0006', 'MEM_002', '당사자');
+END;
+/
+
+-- 37
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'T', 'AI 챗봇 개발', '고객 문의 응대용 AI 챗봇 솔루션 개발', TO_DATE('2025-11-01', 'YYYY-MM-DD'), TO_DATE('2026-03-31', 'YYYY-MM-DD'), 60000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0007', 'MEM_003', '당사자');
+END;
+/
+
+-- 38
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'W', '서버 인프라 관리 및 보안', '24/7 서버 모니터링 및 보안 관제 서비스', TO_DATE('2025-01-01', 'YYYY-MM-DD'), TO_DATE('2025-12-31', 'YYYY-MM-DD'), 36000000, TO_DATE('2024-12-20', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0008', 'MEM_004', '당사자');
+END;
+/
+
+-- 39
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'C', '제품 카탈로그 디자인 및 인쇄', '2024년 하반기 신제품 카탈로그 1,000부', TO_DATE('2024-07-01', 'YYYY-MM-DD'), TO_DATE('2024-07-20', 'YYYY-MM-DD'), 5500000, TO_DATE('2024-06-25', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0009', 'MEM_001', '당사자');
+END;
+/
+
+-- 40
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'X', '글로벌 마켓 리서치', '동남아 시장 진출을 위한 시장 조사 및 분석', TO_DATE('2025-06-01', 'YYYY-MM-DD'), TO_DATE('2025-07-31', 'YYYY-MM-DD'), 15000000, TO_DATE('2025-05-20', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0010', 'MEM_002', '당사자');
+END;
+/
+
+-- 41
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'T', '키오스크 시스템 개발', '주문 및 결제용 키오스크 소프트웨어 개발', TO_DATE('2026-01-01', 'YYYY-MM-DD'), TO_DATE('2026-06-30', 'YYYY-MM-DD'), 70000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0001', 'MEM_003', '당사자');
+END;
+/
+
+-- 42
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'W', '회사 소개서 PPT 디자인', '투자 유치용 IR 자료 및 회사 소개서 디자인', TO_DATE('2025-07-15', 'YYYY-MM-DD'), TO_DATE('2025-07-30', 'YYYY-MM-DD'), 4000000, TO_DATE('2025-07-10', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0005', 'MEM_004', '당사자');
+END;
+/
+
+-- 43
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'C', '웹사이트 성능 개선', '페이지 로딩 속도 최적화 및 서버 응답 속도 개선', TO_DATE('2024-02-01', 'YYYY-MM-DD'), TO_DATE('2024-03-31', 'YYYY-MM-DD'), 8000000, TO_DATE('2024-01-25', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0006', 'MEM_001', '당사자');
+END;
+/
+
+-- 44
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'T', '온라인 교육 플랫폼 구축', '동영상 강의, 과제 제출, 커뮤니티 기능 포함 플랫폼', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2026-05-31', 'YYYY-MM-DD'), 90000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0007', 'MEM_002', '당사자');
+END;
+/
+
+-- 45
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'W', '모바일 게임 QA', '신규 출시 예정 모바일 게임 기능 및 호환성 테스트', TO_DATE('2025-08-01', 'YYYY-MM-DD'), TO_DATE('2025-09-30', 'YYYY-MM-DD'), 20000000, TO_DATE('2025-07-20', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0009', 'MEM_003', '당사자');
+END;
+/
+
+-- 46
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'C', '사내 네트워크 망 분리', '업무망과 인터넷망 분리를 통한 보안 강화', TO_DATE('2024-05-01', 'YYYY-MM-DD'), TO_DATE('2024-05-20', 'YYYY-MM-DD'), 13000000, TO_DATE('2024-04-15', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0002', 'MEM_004', '당사자');
+END;
+/
+
+-- 47
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'T', '데이터베이스 마이그레이션', 'Oracle DB에서 PostgreSQL로 데이터 이전', TO_DATE('2025-10-15', 'YYYY-MM-DD'), TO_DATE('2025-11-15', 'YYYY-MM-DD'), 10000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0004', 'MEM_001', '당사자');
+END;
+/
+
+-- 48
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'W', '보안 취약점 진단', '웹 애플리케이션 및 서버 인프라 보안 진단', TO_DATE('2025-08-10', 'YYYY-MM-DD'), TO_DATE('2025-08-25', 'YYYY-MM-DD'), 9000000, TO_DATE('2025-08-01', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0008', 'MEM_002', '당사자');
+END;
+/
+
+-- 49
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'C', '제품 홍보용 브로슈어 제작', '3단 접지 리플렛 디자인 및 2000부 인쇄', TO_DATE('2024-06-01', 'YYYY-MM-DD'), TO_DATE('2024-06-15', 'YYYY-MM-DD'), 3500000, TO_DATE('2024-05-25', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0005', 'MEM_003', '당사자');
+END;
+/
+
+-- 50
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'X', '스마트 팩토리 시스템 구축 컨설팅', '생산 공정 자동화 및 데이터 수집 시스템 컨설팅', TO_DATE('2025-09-01', 'YYYY-MM-DD'), TO_DATE('2025-10-31', 'YYYY-MM-DD'), 22000000, TO_DATE('2025-08-20', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0001', 'MEM_004', '당사자');
+END;
+/
+
+-- 51
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'C', '2024년 2분기 구글 광고 대행', '구글 검색, 디스플레이, 유튜브 광고 운영', TO_DATE('2024-04-01', 'YYYY-MM-DD'), TO_DATE('2024-06-30', 'YYYY-MM-DD'), 12000000, TO_DATE('2024-03-20', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0006', 'MEM_001', '당사자');
+END;
+/
+
+-- 52
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'W', '데이터 시각화 대시보드 개발', '매출 및 사용자 데이터 분석용 Tableau 대시보드 개발', TO_DATE('2025-11-10', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), 13000000, TO_DATE('2025-11-01', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0009', 'MEM_002', '당사자');
+END;
+/
+
+-- 53
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'T', '블록체인 기반 투표 시스템', '투명성 및 보안이 강화된 온라인 투표 시스템 개발', TO_DATE('2026-06-01', 'YYYY-MM-DD'), TO_DATE('2026-11-30', 'YYYY-MM-DD'), 180000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0004', 'MEM_003', '당사자');
+END;
+/
+
+-- 54
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'C', '2024년 1분기 웹호스팅', '회사 대표 사이트 및 블로그 웹호스팅', TO_DATE('2024-01-01', 'YYYY-MM-DD'), TO_DATE('2024-03-31', 'YYYY-MM-DD'), 150000, TO_DATE('2023-12-28', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0010', 'MEM_004', '당사자');
+END;
+/
+
+-- 55
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'W', '랜딩페이지 제작', '신규 프로모션 홍보를 위한 원페이지 랜딩페이지 제작', TO_DATE('2025-09-01', 'YYYY-MM-DD'), TO_DATE('2025-09-15', 'YYYY-MM-DD'), 2500000, TO_DATE('2025-08-25', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0007', 'MEM_001', '당사자');
+END;
+/
+
+-- 56
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'X', '사내 그룹웨어 디자인 리뉴얼', '기존 그룹웨어 사용성 개선을 위한 UI 디자인 변경', TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-11-30', 'YYYY-MM-DD'), 14000000, TO_DATE('2025-09-22', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0002', 'MEM_002', '당사자');
+END;
+/
+
+-- 57
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_003', 'C', '2024년 3분기 카드뉴스 제작', '페이스북, 인스타그램용 카드뉴스 월 8건 제작', TO_DATE('2024-07-01', 'YYYY-MM-DD'), TO_DATE('2024-09-30', 'YYYY-MM-DD'), 4500000, TO_DATE('2024-06-21', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0008', 'MEM_003', '당사자');
+END;
+/
+
+-- 58
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_004', 'W', '서버 및 DB 성능 튜닝', '서비스 지연 문제 해결을 위한 시스템 성능 튜닝', TO_DATE('2025-11-20', 'YYYY-MM-DD'), TO_DATE('2025-12-05', 'YYYY-MM-DD'), 6000000, TO_DATE('2025-11-15', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0003', 'MEM_004', '당사자');
+END;
+/
+
+-- 59
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_001', 'T', '사용자 매뉴얼 제작', '신규 소프트웨어 사용자 및 관리자용 매뉴얼 제작', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-31', 'YYYY-MM-DD'), 3000000, NULL)
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0005', 'MEM_001', '당사자');
+END;
+/
+
+-- 60
+DECLARE
+  v_contract_no VARCHAR2(20);
+BEGIN
+  INSERT INTO TBL_CONTRACT (CONTRACT_NO, MEMBER_NO, STATUS_CODE, CONTRACT_TITLE, CONTRACT_CONTENT, CONTRACT_START, CONTRACT_END, CONTRACT_DEPOSIT, CONTRACT_CONFIRM) 
+  VALUES ('CNO_'||LPAD(SEQ_TBL_CONTRACT_NO.NEXTVAL, 4, '0'), 'MEM_002', 'W', '고객 만족도 설문조사', '온라인 설문 시스템을 이용한 고객 만족도 조사 및 분석', TO_DATE('2025-08-20', 'YYYY-MM-DD'), TO_DATE('2025-09-10', 'YYYY-MM-DD'), 3000000, TO_DATE('2025-08-15', 'YYYY-MM-DD'))
+  RETURNING CONTRACT_NO INTO v_contract_no;
+  INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, COMP_CD, MEMBER_NO, ROLE) 
+  VALUES (SEQ_CONTRACT_PARTY_ID.NEXTVAL, v_contract_no, 'COMP0001', 'MEM_002', '당사자');
+END;
+/
+commit;
+-- [계약 로우데이터 끝]
+
+
+
+
+SELECT * FROM TBL_CONTRACT;
+select * from tbl_contract_party;
+
+delete from tbl_contract;
+delete from tbl_contract_party;
+commit;
+
+-- 데이터 저장 및 확인
+COMMIT;
+SELECT * FROM TBL_CONTRACT;
+SELECT * FROM TBL_CONTRACT_PARTY;
+
+SELECT * FROM TBL_COMPANY;
+
+UPDATE TBL_COMPANY
+SET 
+    TRADE_STATUS = '2'
+WHERE COMP_CD IN (
+    'COMP0011', 'COMP0012', 'COMP0013', 'COMP0014', 'COMP0015',
+    'COMP0016', 'COMP0017', 'COMP0018', 'COMP0019', 'COMP0020',
+    'COMP0021', 'COMP0022', 'COMP0023', 'COMP0024', 'COMP0025',
+    'COMP0026', 'COMP0027', 'COMP0028', 'COMP0029', 'COMP0030'
+);
+
+-- 데이터 변경 후 최종 저장
+COMMIT;
+
+-- 결과 확인 (거래 상태별로 갯수 세어보기)
+SELECT TRADE_STATUS, COUNT(*)
+FROM TBL_COMPANY
+GROUP BY TRADE_STATUS;
+
+select * from tbl_member;
+select * from tbl_company;
+select * from tbl_company_member;
+select * from TBL_CONTRACT_PARTY;   
+select * from TBL_CONTRACT_HISTORY;
+select * from tbl_contract order by contract_no desc;
+select * from tbl_file;
+commit;
+
+-- 파일 번호 시퀀스
+CREATE SEQUENCE SEQ_TBL_FILE_NO START WITH 1 INCREMENT BY 1;
+
+commit;

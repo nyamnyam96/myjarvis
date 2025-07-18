@@ -16,10 +16,15 @@ function setInterceptors(instance) {
         function(config) {
 
             //zustand 라이브러리에서 로그인된 사용자의 accessToken을 꺼내옴
-            const accessToken = useUserStore.getState().accessToken;
+            let accessToken = useUserStore.getState().accessToken;
+
+            // ✅ zustand에 값이 없을 경우 sessionStorage fallback
+            if (!accessToken) {
+                accessToken = sessionStorage.getItem("accessToken");
+            }
 
             if(accessToken != null){ // 토큰이 있을 경우, 요청 헤더에 자동으로 추가함
-                config.headers['Authorization'] = accessToken; //로그인 후 서버에 요청 보낼 때마다 자동으로 토큰이 붙음
+                config.headers['Authorization'] = 'Bearer ' + accessToken; //로그인 후 서버에 요청 보낼 때마다 자동으로 토큰이 붙음
             }
             
             return config; //수정된 설정 config를 axios에 전달해서 요청이 실제로 나가도록 만듬
@@ -46,7 +51,10 @@ function setInterceptors(instance) {
             
             const originalRequest = error.config; //실패한 요청 정보 config를 originalRequest라는 변수에 저장 
 
-            if(error.status == 403){ // HTTP 상태 코드가 403이면 권한없음, 토큰 만료인경우
+            // ✅ 오류 응답의 status 접근 방식 수정
+            const status = error.response?.status;
+
+            if(status === 403){ // HTTP 상태 코드가 403이면 권한없음, 토큰 만료인경우
 
                 if(error.config.headers.refreshToken === undefined
                     && !originalRequest._retry
@@ -67,28 +75,28 @@ function setInterceptors(instance) {
                     //데이터 : 로그인된 사용자 정보
                     //헤더 : 리프레시 토큰을 함께 보냄
 
-
                     //재발급 성공 요청 재시도
                     return instance(options)
                     .then(function(res){ 
-                    if(res.data.resData != null){
-                                //응답 데이터가 있다면 토큰 재발급 성공
-                                const reAccessToken = res.data.resData;
-                                useUserStore.getState().setAccessToken(reAccessToken);
+                        if(res.data.resData != null){
+                            //응답 데이터가 있다면 토큰 재발급 성공
+                            const reAccessToken = res.data.resData;
+                            useUserStore.getState().setAccessToken(reAccessToken);
 
-                                originalRequest.headers['Authorization'] = reAccessToken;
-                                originalRequest._retry = true;
-                                //원래 요청의 헤더에 새 토큰 설정하고 retry 를 true로 바꿈
+                            // ✅ Bearer prefix 누락 수정
+                            originalRequest.headers['Authorization'] = 'Bearer ' + reAccessToken;
+                            originalRequest._retry = true;
+                            //원래 요청의 헤더에 새 토큰 설정하고 retry 를 true로 바꿈
 
-                                return instance(originalRequest);
-                                //원래 요청을 새 토큰으로 다시 실행
-                            }
-                        })
-                        .catch(function(error){
-                            return Promise.reject(error);
-                        })
-                    }else {
-                        console.log('test2');
+                            return instance(originalRequest);
+                            //원래 요청을 새 토큰으로 다시 실행
+                        }
+                    })
+                    .catch(function(error){
+                        return Promise.reject(error);
+                    })
+                } else {
+                    console.log('test2');
                     //실패하거나 재시도 조건이 맞지않으면
                     Swal.fire({
                         title : '알림',
@@ -106,9 +114,9 @@ function setInterceptors(instance) {
                         }
                     })
                 }
-            }else if(error.status == 401){
+            } else if(status === 401){
 
-            }else {
+            } else {
                 const res = error.response.data;
                 Swal.fire({
                     title : '알림',

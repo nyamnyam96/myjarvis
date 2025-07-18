@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/member")
 public class MemberController {
 
@@ -183,7 +182,7 @@ public class MemberController {
 	}
 	
 	
-	
+	@NoTokenCheck
 	@PostMapping("/refresh")
 	public ResponseEntity<ResponseDTO> refreshToken(@RequestBody Member member){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 재발급 실패", null, "error");

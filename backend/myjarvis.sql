@@ -1059,6 +1059,13 @@ ALTER TABLE TBL_INVOICE ADD CONSTRAINT FK_INVOICE_STATUS
 FOREIGN KEY (INVOICE_STATUS_CODE)
 REFERENCES TBL_INVOICE_STATUS (INVOICE_STATUS_CODE);
 
+-- TBL_CONTRACT_PARTY 테이블에 서명 요청 토큰을 저장할 컬럼 추가
+ALTER TABLE TBL_CONTRACT_PARTY ADD (SIGN_TOKEN VARCHAR2(100));
+
+-- 추가된 컬럼에 대한 주석(설명) 추가
+COMMENT ON COLUMN TBL_CONTRACT_PARTY.SIGN_TOKEN IS '서명 요청 고유 토큰 (링크용)';
+
+COMMIT;
 
 select * from tbl_member;
 select * from tbl_company;
@@ -1092,4 +1099,39 @@ VALUES ('INV_'||LPAD(SEQ_TBL_INVOICE_NO.NEXTVAL, 4, '0'), 'CNO_0019', 'MEM_001',
 
 COMMIT;
 
+SELECT CONTRACT_NO, ROLE, SIGNATURE_IMAGE
+FROM TBL_CONTRACT_PARTY
+WHERE CONTRACT_NO = 'CNO_0005';
 
+
+SELECT ID, CONTRACT_NO, CLIENT_NO, COMP_CD, MEMBER_NO, ROLE, SIGNED, SIGNED_DATE, SIGNATURE_IMAGE, SIGN_TOKEN
+FROM TBL_CONTRACT_PARTY
+WHERE CONTRACT_NO = 'CNO_0027';
+
+INSERT INTO TBL_CONTRACT_PARTY (ID, CONTRACT_NO, CLIENT_NO, COMP_CD, MEMBER_NO, ROLE, SIGNED, SIGNED_DATE, SIGNATURE_IMAGE, SIGN_TOKEN)
+VALUES (
+    SEQ_CONTRACT_PARTY_ID.NEXTVAL, -- 시퀀스를 사용하여 고유 ID 생성
+    'CNO_0048',                    -- ? 문제되는 계약번호로 변경
+    NULL,                          -- 개인 고객이 아닌 경우 NULL
+    'COMP0001',                    -- ? 실제 계약 상대방 고객사의 COMP_CD로 변경 (예시 값: COMP0006)
+    'MEM_001',                     -- ? 고객사의 실제 담당자 MEMBER_NO로 변경 (예시 값: MEM_002)
+    '고객사',                        -- ? 역할은 '고객사'로 설정 (프론트엔드 find 조건과 일치)
+    'N',                           -- 초기 서명 상태는 'N' (서명 대기)
+    NULL,                          -- 서명일은 NULL
+    NULL,                          -- 초기 서명 이미지는 NULL
+    NULL                           -- 초기 서명 토큰은 NULL
+);
+COMMIT; -- 변경사항 저장
+
+SELECT * FROM TBL_CONTRACT_PARTY;
+
+-- 20250717 쿼리 수정 --
+-- 1. MEMBER_NO 컬럼을 NULL을 허용하도록 변경
+ALTER TABLE TBL_CONTRACT_PARTY MODIFY (MEMBER_NO VARCHAR2(20) NULL);
+
+-- 2. 고객사 담당자를 저장할 CONTACT_IDX 컬럼 추가
+ALTER TABLE TBL_CONTRACT_PARTY ADD (CONTACT_IDX VARCHAR2(20));
+
+-- 3. CONTACT_IDX에 대한 외래 키 제약 조건 추가
+ALTER TABLE TBL_CONTRACT_PARTY ADD CONSTRAINT FK_PARTY_COMPANY_MEMBER 
+FOREIGN KEY (CONTACT_IDX) REFERENCES TBL_COMPANY_MEMBER(CONTACT_IDX);
