@@ -3,6 +3,7 @@ package kr.or.iei.company.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,19 +122,48 @@ public class CompanyService {
 	public int updateCompany(Company company) {
 		// 1. 회사 기본 정보 수정
         int result = companyDao.updateCompany(company);
+        
+        // 2. 데이터베이스에 현재 저장된 담당자 목록을 불러옵니다.
+        List<CompanyMember> dbMembers = companyDao.selectCompanyMembers(company.getCompCd());
+        
+        // 3. 프론트엔드에서 보낸 최종 담당자 목록을 가져옵니다.
+        List<CompanyMember> frontMembers = company.getCompanyMembers();
+        
+        // 4. 두 목록을 비교하여 추가/수정/삭제할 대상을 찾아냅니다.
 
-        // 2. 기존 담당자 정보 모두 삭제
-        companyDao.deleteCompanyMembers(company.getCompCd());
+        // 4-1. [추가 대상] 프론트 목록에는 있지만 PK(contactIdx)가 없는(새로 추가된) 담당자
+        List<CompanyMember> toInsert = frontMembers.stream()
+                .filter(m -> m.getContactIdx() == null || m.getContactIdx().isEmpty())
+                .collect(Collectors.toList());
 
-        // 3. 화면에서 전달된 담당자 정보 다시 삽입
-        List<CompanyMember> members = company.getCompanyMembers();
-        if(members != null && !members.isEmpty()) {
-            for(CompanyMember member : members) {
-                member.setCompCd(company.getCompCd());
-                member.setMemberNo(company.getMemberNo()); // 담당자를 등록/수정한 회원의 번호
-                companyDao.insertCompanyMember(member);
-            }
+        // 4-2. [수정 대상] 두 목록에 모두 존재하는 (PK가 일치하는) 담당자
+        List<CompanyMember> toUpdate = frontMembers.stream()
+                .filter(fm -> fm.getContactIdx() != null && dbMembers.stream()
+                        .anyMatch(dbm -> dbm.getContactIdx().equals(fm.getContactIdx())))
+                .collect(Collectors.toList());
+
+        // 4-3. [삭제 대상] DB 목록에는 있지만 프론트 목록에는 없는 담당자
+        List<CompanyMember> toDelete = dbMembers.stream()
+                .filter(dbm -> frontMembers.stream()
+                        .noneMatch(fm -> dbm.getContactIdx().equals(fm.getContactIdx())))
+                .collect(Collectors.toList());
+
+        // 5. 분류된 목록에 따라 데이터베이스 작업을 수행합니다.
+
+        for (CompanyMember member : toInsert) {
+            member.setCompCd(company.getCompCd());
+            member.setMemberNo(company.getMemberNo()); // 등록자 정보 추가
+            result += companyDao.insertCompanyMember(member);
         }
+
+        for (CompanyMember member : toUpdate) {
+            result += companyDao.updateCompanyMember(member);
+        }
+
+        for (CompanyMember member : toDelete) {
+            result += companyDao.deactivateCompanyMember(member.getContactIdx());
+        }
+
         return result;
 	}
 
