@@ -20,5 +20,6 @@ public class CompanyMember {
     private String contactPosition; // CONTACT_POSITION
     private String contactDept;     // CONTACT_DEPT
     private String regDate;         // REG_DATE
+    private char contactStatus;
 
 }

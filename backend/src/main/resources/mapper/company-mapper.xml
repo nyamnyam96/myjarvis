@@ -131,7 +131,7 @@
            and COMP_NAME LIKE '%' || #{searchName} || '%'
 	</select>
 	
-	<!-- 고객사 멤버 조회 -->
+	<!-- 고객사 담당자 조회 -->
 	<select id="selectCompanyMembers" resultType="kr.or.iei.company.model.dto.CompanyMember">
     SELECT
         CONTACT_IDX AS contactIdx,
@@ -145,7 +145,7 @@
         CONTACT_DEPT AS contactDept,
         TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS regDate
     FROM TBL_COMPANY_MEMBER
-    WHERE COMP_CD = #{compCd}
+    WHERE COMP_CD = #{compCd} And CONTACT_STATUS = 'Y' 
     ORDER BY IS_MAIN_CONTACT DESC, REG_DATE ASC
 	</select>
 	
@@ -184,12 +184,28 @@
             COMP_NO = #{compNo}
         WHERE COMP_CD = #{compCd}
     </update>
+    
+    <!-- 담당자 정보 수정 -->
+    <update id="updateCompanyMember" parameterType="kr.or.iei.company.model.dto.CompanyMember">
+    UPDATE TBL_COMPANY_MEMBER
+    SET
+        CONTACT_NAME = #{contactName},
+        CONTACT_DEPT = #{contactDept},
+        CONTACT_POSITION = #{contactPosition},
+        CONTACT_PHONE = #{contactPhone},
+        CONTACT_EMAIL = #{contactEmail}
+    WHERE
+        CONTACT_IDX = #{contactIdx}
+	</update>
 	
-	<!-- 담당자 삭제 -->
-    <delete id="deleteCompanyMembers" parameterType="string">
-        DELETE FROM TBL_COMPANY_MEMBER
-        WHERE COMP_CD = #{compCd}
-    </delete>
+	<!-- 담당자 삭제>실제로는 비활성화 -->
+	<update id="deactivateCompanyMember" parameterType="string">
+    UPDATE TBL_COMPANY_MEMBER
+    SET
+        CONTACT_STATUS = 'N'
+    WHERE
+        CONTACT_IDX = #{contactIdx}
+	</update>
 	
 	<!-- 고객사 비활성화 처리 -->
     <update id="deactivateCompany" parameterType="string">

@@ -14,8 +14,6 @@ import kr.or.iei.company.model.dto.CompanyMember;
 public interface CompanyDao {
 	
 	
-	//List<Company> selectCompanyList();
-
 	int selectCompanyCount(HashMap<String, Object> params);
 
 	ArrayList<Company> selectCompanyList(HashMap<String, Object> params);
@@ -32,11 +30,13 @@ public interface CompanyDao {
 
 	Company selectOneCompany(String compCd);
 
-	int updateCompany(Company company);
-
-	void deleteCompanyMembers(String compCd);
+	int updateCompany(Company company);	
 
 	int deactivateCompany(String compCd);
+
+	int updateCompanyMember(CompanyMember member);	
+
+	int deactivateCompanyMember(String contactIdx);
 
 	
 
